@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:pub_semver/pub_semver.dart';
@@ -6,6 +7,7 @@ import 'package:pub_semver/pub_semver.dart';
 import '../../services/api_service.dart';
 import '/main.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 // 설정 페이지
 class SettingScreen extends StatefulWidget {
@@ -32,7 +34,6 @@ class SettingScreen extends StatefulWidget {
         currentVersion = packageInfo.version;  // 앱 버전 저장
       });
     }
-
 
     @override
     Widget build(BuildContext context) {
@@ -153,9 +154,20 @@ class SettingScreen extends StatefulWidget {
                   width: 90,
                   height: 30,
                   child: TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // context.read<MyAppState>().allRemove();
-                      showConfirm(context, "검색내역");
+
+                      try {
+
+                        http.Response response = await http.get(Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}&proc=del'));
+
+                        if (response.statusCode == 200) {
+                          showConfirm(context, "검색내역");
+                        }
+                      } catch (e) {
+                        print('searched song delete error');
+                      }
+
                     },
                     child: Text('삭제', style: TextStyle(fontSize: 10)),
                     style: TextButton.styleFrom(
