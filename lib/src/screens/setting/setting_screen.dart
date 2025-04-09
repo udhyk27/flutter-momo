@@ -154,20 +154,15 @@ class SettingScreen extends StatefulWidget {
                   width: 90,
                   height: 30,
                   child: TextButton(
-                    onPressed: () async {
-                      // context.read<MyAppState>().allRemove();
-
+                    onPressed: () async { // 검색목록 전체 삭제
                       try {
-
                         http.Response response = await http.get(Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}&proc=del'));
-
                         if (response.statusCode == 200) {
                           showConfirm(context, "검색내역");
                         }
                       } catch (e) {
-                        print('searched song delete error');
+                        print('searched song delete all error');
                       }
-
                     },
                     child: Text('삭제', style: TextStyle(fontSize: 10)),
                     style: TextButton.styleFrom(
