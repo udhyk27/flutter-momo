@@ -113,6 +113,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       song_recommends = searchList['song_recommend'];
       track_no = searchList['TRACKNO'];
 
+      print('##debug song_cnts :: $song_cnts');
       // 검색 리스트에 추가 // MODIFY
       // context.read<MyAppState>().addSong(searchList);
 

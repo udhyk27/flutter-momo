@@ -52,10 +52,14 @@ class _DetailScreenState extends State<DetailScreen> {
       String programs_json = programs_response.body;
       List<dynamic> programsList = jsonDecode(programs_json);
 
+      print(programsList);
+
       setState(() {
         detailProgram = programsList.map((item) => DetailProgram.fromJson(item as Map<String, dynamic>)).toList();
         isLoading = false;
       });
+
+      print(detailProgram);
 
     } catch (e) {
       print('상세화면 API 통신 오류 ################# : $e');
@@ -239,7 +243,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor),
                               ),
                               Text(
-                                detailProgram[index].programId,
+                                detailProgram[index].name,
                                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor),
                               ),
                               Text(
