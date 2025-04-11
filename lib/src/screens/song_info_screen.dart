@@ -69,7 +69,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
   List<DetailProgram> infoProgram = [];
   bool isLoading = true;
 
-
   // API 요청
   Future<String> fetchData() async {
 
@@ -112,6 +111,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       song_cnts = searchList['song_cnts'];
       song_recommends = searchList['song_recommend'];
       track_no = searchList['TRACKNO'];
+
+      print(song_recommends);
 
       print('##debug song_cnts :: $song_cnts');
       // 검색 리스트에 추가 // MODIFY
