@@ -91,8 +91,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       }
       // TEST ANDROID PHONE ID => QQ3A.200805.001
 
-
-
     ///// 곡 상세화면 API 요청 & 응답 /////
     try {
       http.Response response = await http.get(Uri.parse('${ApiService.searchUrl}/json?id=${widget.songId}&uid=$_uid'));
@@ -112,18 +110,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       song_recommends = searchList['song_recommend'];
       track_no = searchList['TRACKNO'];
 
-      print(song_recommends);
-
-      print('##debug song_cnts :: $song_cnts');
-      // 검색 리스트에 추가 // MODIFY
-      // context.read<MyAppState>().addSong(searchList);
-
-      // print(searchList);
-
-
-      // print('검색한 곡 ::::::::::::::::::::::: ${searchList['SONG_ID'].toString()}');
-      // print('저장한 곡 ::::::::::::::::::::::: ${context.read<MyAppState>().searchSongs}');
-
     } catch (e) {
       print('노래 상세화면 API 통신 오류 ################ $e');
       setState(() {
@@ -132,7 +118,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     }
 
     // print('곡 코드 :::::::::::::::: ${widget.songId}');
-
 
     ///// 프로그램 API 요청 & 응답 /////
     try {
