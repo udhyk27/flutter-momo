@@ -153,7 +153,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       });
     }
 
-
     try {
       List _contain = [];  // 실데이타 파싱
       sum = 0;
@@ -177,7 +176,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       var _year;
 
       // 차트 x 축 기준 만들기
-      for (var i = 1; i < 13; i++) {
+      for (var i = 0; i < 12; i++) {
         _dateTime = DateTime(now.year, now.month - i, 1);
         _month = DateFormat('MM').format(_dateTime);
         _year = DateFormat('yyyy').format(_dateTime);
@@ -726,21 +725,24 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     text = '';
 
     try {
-      int i = 1;
+      int i = 0;
       dateList = [];
-      for (i; i < 13; i++) {
+      for (i; i < 12; i++) {
         dateTime = DateTime(now.year, now.month - i, 1);
         date = DateFormat('MM').format(dateTime);
         year = DateFormat('yy').format(now);
-// print(dateTime);
+      // print(dateTime);
 
         dateList.add(date);
       }
     } catch (e) {
       print('bottom title : $e');
     }
+
     reversedDate = [];
     reversedDate = List.from(dateList.reversed);
+
+    // print(reversedDate);
 
     switch (value.toInt()) {
       case 1:
