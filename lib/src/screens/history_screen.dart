@@ -60,14 +60,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
       http.Response response = await http.get(Uri.parse('${ApiService.recommendUrl}/json?uid=${MyApp.uid}'));
 
       String jsonData = response.body;
-      List<dynamic> map = jsonDecode(jsonData);
-      print('추천 음악 리스트 ::::::::::::::::::: $map');
+      List<dynamic> apiRecommend = jsonDecode(jsonData);
+      print('추천 음악 리스트 ::::::::::::::::::: $apiRecommend');
 
       if (mounted) {
         setState(() {
-          recommendList = map.sublist(0, map.length >= 4 ? 4 : map.length)
-              .map((item) => ApiRecommend.fromJson(item as Map<String, dynamic>))
-              .toList();
+          recommendList = apiRecommend.map((item) => ApiRecommend.fromJson(item as Map<String, dynamic>)).toList();
           isLoading = false;
         });
       }

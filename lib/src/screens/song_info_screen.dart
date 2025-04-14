@@ -106,7 +106,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       album = searchList['ALBUM'];
       date_ = searchList['date'];
       count = searchList['count'];
-      song_cnts = searchList['song_cnts'];
+      // song_cnts = searchList['song_cnts'];
       song_recommends = searchList['song_recommend'];
       track_no = searchList['TRACKNO'];
 
