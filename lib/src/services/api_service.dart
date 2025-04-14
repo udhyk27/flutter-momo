@@ -8,7 +8,6 @@ class ApiService {
   static String recommendUrl = '';
   static String searchUrl = '';
   static String programsUrl = '';
-  static String ranksUrl = '';
   static String mmchartUrl = '';
   static String airchartUrl = '';
   static String shareUrl = '';
@@ -17,7 +16,6 @@ class ApiService {
   static String termsUrl = '';
   static String vmidcUrl = '';
   static String rateUrl = '';
-  static String serverUrl = '';
 
   static String appVersion = '';
   static String storeUrl = '';
@@ -41,8 +39,6 @@ class ApiService {
       }
 
       // print("RemoteConfig mainURL : ${config['mainURL']}");
-      // print("Remote Config app version : ${ApiService.appVersion}");
-      // print("Remote Config store url : ${ApiService.storeUrl}");
 
     } catch (e) {
       print('REMOTE CONFIG ERROR: $e');
@@ -65,7 +61,6 @@ class ApiService {
       ApiService.recommendUrl = 'https://${apiData['recommend']}';
       ApiService.searchUrl = 'https://${apiData['search']}';
       ApiService.programsUrl = 'https://${apiData['programs']}';
-      ApiService.ranksUrl = 'https://${apiData['ranks']}';
       ApiService.mmchartUrl = 'https://${apiData['mmchart']}';
       ApiService.airchartUrl = 'https://${apiData['airchart']}';
       ApiService.shareUrl = 'https://${apiData['share']}';
@@ -74,7 +69,6 @@ class ApiService {
       ApiService.termsUrl = 'https://${apiData['terms']}';
       ApiService.vmidcUrl = apiData['vmidc'];
       ApiService.rateUrl = apiData['rate'];
-      ApiService.serverUrl = apiData['server'];
 
     } catch (e) {
       print('API DATA RESPONSE ERROR : $e');
