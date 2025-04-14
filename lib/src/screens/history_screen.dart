@@ -69,6 +69,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           isLoading = false;
         });
       }
+
     } catch (e) {
       print('추천 음악 리스트 API 오류 : $e');
       if (!mounted) {
