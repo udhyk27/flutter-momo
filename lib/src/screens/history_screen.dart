@@ -57,11 +57,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     // 추천 음악
     try {
-      http.Response response = await http.get(Uri.parse(ApiService.recommendUrl));
+      http.Response response = await http.get(Uri.parse('${ApiService.recommendUrl}/json?uid=${MyApp.uid}'));
 
       String jsonData = response.body;
       List<dynamic> map = jsonDecode(jsonData);
-      // print('추천 음악 리스트 ::::::::::::::::::: $map');
+      print('추천 음악 리스트 ::::::::::::::::::: $map');
 
       if (mounted) {
         setState(() {
