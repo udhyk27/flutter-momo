@@ -61,7 +61,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
       String jsonData = response.body;
       List<dynamic> apiRecommend = jsonDecode(jsonData);
-      print('추천 음악 리스트 ::::::::::::::::::: $apiRecommend');
+      // print('추천 음악 리스트 ::::::::::::::::::: $apiRecommend');
 
       if (mounted) {
         setState(() {
