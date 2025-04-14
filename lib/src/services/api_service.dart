@@ -40,9 +40,9 @@ class ApiService {
         ApiService.storeUrl = remoteConfig.getString('storeUrl_IOS');
       }
 
-      print("RemoteConfig mainURL : ${config['mainURL']}");
-      print("Remote Config app version : ${ApiService.appVersion}");
-      print("Remote Config store url : ${ApiService.storeUrl}");
+      // print("RemoteConfig mainURL : ${config['mainURL']}");
+      // print("Remote Config app version : ${ApiService.appVersion}");
+      // print("Remote Config store url : ${ApiService.storeUrl}");
 
     } catch (e) {
       print('REMOTE CONFIG ERROR: $e');
