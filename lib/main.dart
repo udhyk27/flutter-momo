@@ -16,6 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'src/services/api_service.dart';
 
 /**
+ * 스토어 기준 소스
+ *
  * 앱 시작 시
  * API 데이터 요청
  */

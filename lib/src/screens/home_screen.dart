@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -39,32 +40,72 @@ class _HomeScreenState extends State<HomeScreen> {
   final _ctrl = StreamController<List>();
   String _id = '';
 
+  // final Vmid _vmid = Vmid();
+  String _cur= 'null';
+  List<List<dynamic>> _meta=[];
+  List<List<dynamic>> _meta_all=[];
+  List _curMeta=[];
+  final _time= Stopwatch();
+
 
   // 상태 변수 (0이면 음악 검색 X, 1이면 기본 화면)
   // int stateVal = 1; // 1 => 기본 화면
   Future<void>? _asyncTask; // 비동기 작업을 추적하기 위한 변수 (null 허용)
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   controller.changeState(1);
+  //
+  //   _vmidc.init(ip: "${ApiService.vmidcUrl}", port: 8551, sink: _ctrl.sink).then((ret) { // ip, port 번호 변경시 여기만 변경
+  //     if (!ret) {
+  //       print('server error');
+  //     } else {
+  //       _ctrl.stream.listen((data) async {
+  //         if (data.length == 2) {
+  //           _id = '${data[0]} (${data[1]})';
+  //         } else {
+  //           _id = 'error';
+  //         }
+  //         await _vmidc.stop();
+  //         setState(() {});
+  //       });
+  //     }
+  //   });
+  // }
+
+  // @override
+  // void initState() {
+  //   _vmidc.init().then((ret) {
+  //     Fluttertoast.showToast(msg: 'vmid.init $ret');
+  //     _vmidc.stream.listen((m) async {
+  //       if (m['id'] == null)
+  //         _cur = 'null';
+  //       else {
+  //         final id = m['id'];
+  //         _cur = '$id (${m['score']})';
+  //         _curMeta = _meta.firstWhere((e) => e[0] == id, orElse: () => []);
+  //         if (_curMeta.isEmpty) {
+  //           _time.start();
+  //           _curMeta =
+  //               _meta_all.firstWhere((e) => e[0] == id, orElse: () => []);
+  //           print("%%% ${_time.elapsed}");
+  //           _time.stop();
+  //         }
+  //         await _vmidc.stop();
+  //         HapticFeedback.lightImpact();
+  //       }
+  //       setState(() {});
+  //     });
+  //   });
+  // }
+
   @override
   void initState() {
     super.initState();
-    controller.changeState(1);
-
-    _vmidc.init(ip: "${ApiService.vmidcUrl}", port: 8551, sink: _ctrl.sink).then((ret) { // ip, port 번호 변경시 여기만 변경
-      if (!ret) {
-        print('server error');
-      } else {
-        _ctrl.stream.listen((data) async {
-          if (data.length == 2) {
-            _id = '${data[0]} (${data[1]})';
-          } else {
-            _id = 'error';
-          }
-          await _vmidc.stop();
-          setState(() {});
-        });
-      }
-    });
+    // 필요 시 초기 UI 상태 세팅만
   }
+
 
   // 음성 인식 시작
   Future<void> asyncFunction() async {
@@ -74,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (connectivityResult == ConnectivityResult.none) {
       return;
     }
-    
+
     // 마이크 권한 요청
     PermissionStatus status = await Permission.microphone.status;
     if (status == PermissionStatus.permanentlyDenied) { // 마이크 권한 영구적으로 거부된 경우
@@ -90,8 +131,12 @@ class _HomeScreenState extends State<HomeScreen> {
     controller.changeState(0);
 
     try {
-      // print('HOME에서 음악인식 호출 중 ......................');
+      print('HOME에서 음악인식 호출 중 ......................');
       await _vmidc.start(); // 녹음 시작
+
+
+      // test
+      // _vmidc.init();
     } catch (e) {
       print('녹음 실패! ################## $e');
       controller.changeState(2);
@@ -104,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_asyncTask != null) {
       await _vmidc.stop(); // 녹음 중지
     }
-    
+
     // X 또는 아이콘 누르면 실패 화면
     controller.changeState(2);
   }
@@ -186,16 +231,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                       :
                   IconButton(
-                    onPressed: () {
-                      controller.stateVal.value == 0
-                        ? cancelAsyncTask()
-                        : controller.changeState(1);
-                    }, // X 버튼 클릭 시 비동기 작업 X , 함수참조
-                    icon: Icon(
-                      Icons.close,
-                      size: 25,
-                      color: themeValue == 2 ? Colors.white : Colors.black,
-                    )
+                      onPressed: () {
+                        controller.stateVal.value == 0
+                            ? cancelAsyncTask()
+                            : controller.changeState(1);
+                      }, // X 버튼 클릭 시 비동기 작업 X , 함수참조
+                      icon: Icon(
+                        Icons.close,
+                        size: 25,
+                        color: themeValue == 2 ? Colors.white : Colors.black,
+                      )
                   ),
                 ),
               ),
@@ -207,30 +252,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       controller.stateVal.value == 0
                           ? Text(
-                              '노래 분석 중',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900,
-                                color:  themeValue == 0 ? Colors.black : Colors.white
-                              ), // 텍스트 스타일
-                            )
+                        '노래 분석 중',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                            color:  themeValue == 0 ? Colors.black : Colors.white
+                        ), // 텍스트 스타일
+                      )
                           : controller.stateVal.value == 1 // 기본 화면
-                              ? Text(
-                                  '지금 이 곡을 찾으려면 모모를 눌러주세요',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w900,
-                                    color: themeValue == 0 ? Colors.black : Colors.white
-                                  ), // 텍스트 스타일
-                                )
-                              : Text(
-                                  '노래를 인식할 수 없습니다.',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900,
-                                    color:  themeValue == 0 ? Colors.black : Colors.white
-                                  ), // 텍스트 스타일
-                                ),
+                          ? Text(
+                        '지금 이 곡을 찾으려면 모모를 눌러주세요',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900,
+                            color: themeValue == 0 ? Colors.black : Colors.white
+                        ), // 텍스트 스타일
+                      )
+                          : Text(
+                        '노래를 인식할 수 없습니다.',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                            color:  themeValue == 0 ? Colors.black : Colors.white
+                        ), // 텍스트 스타일
+                      ),
 
                       const SizedBox(height: 30), // 버튼과 텍스트 사이 간격
 
@@ -238,8 +283,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () async {
                           // 비동기 작업 호출
                           controller.stateVal.value == 0
-                            ? cancelAsyncTask()
-                            : _asyncTask = asyncFunction(); // 함수 호출
+                              ? cancelAsyncTask()
+                              : _asyncTask = asyncFunction(); // 함수 호출
                         },
                         child: Container(
                           width: 250,
@@ -247,18 +292,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: controller.stateVal.value == 0
-                                ? themeValue == 1 ? AssetImage('assets/loading1_blue2.gif') : AssetImage('assets/loading1_pink2.gif')
-                                : controller.stateVal.value == 1
+                                  ? themeValue == 1 ? AssetImage('assets/loading1_blue2.gif') : AssetImage('assets/loading1_pink2.gif')
+                                  : controller.stateVal.value == 1
                                   ? AssetImage( // 기본 화면
-                                      themeValue == 1
-                                        ? 'assets/momo_assets/blue_logo.png'
-                                        : 'assets/momo_assets/berry_logo.png'
-                                    )
+                                  themeValue == 1
+                                      ? 'assets/momo_assets/blue_logo.png'
+                                      : 'assets/momo_assets/berry_logo.png'
+                              )
                                   : AssetImage( // 노래 인식 X 화면
-                                      themeValue == 1
-                                        ? 'assets/momo_assets/blue_logo.png'
-                                        : 'assets/momo_assets/berry_logo.png'
-                                    ),
+                                  themeValue == 1
+                                      ? 'assets/momo_assets/blue_logo.png'
+                                      : 'assets/momo_assets/berry_logo.png'
+                              ),
                               fit: BoxFit.cover, // 이미지를 버튼 크기에 맞게 꽉 채움
                             ),
                             borderRadius: BorderRadius.circular(110), // 원 모양을 유지
@@ -293,10 +338,10 @@ Future<bool> requestMicPermission(BuildContext context) async {
   PermissionStatus status = await Permission.microphone.request();
   if (!status.isGranted) {  // 마이크 승인상태가 아닐시
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return _showDialog(context);
-      });
+        context: context,
+        builder: (BuildContext context) {
+          return _showDialog(context);
+        });
     return false;
   }
   return true;
@@ -306,7 +351,7 @@ _showDialog(BuildContext context) { // 휴대폰 권한설정으로 이동
   final themeValue = context.watch<MyAppState>().selectedValue;
   return AlertDialog(
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10))
+        borderRadius: BorderRadius.all(Radius.circular(10))
     ),
     content: Builder(
       builder: (context) {
@@ -321,31 +366,31 @@ _showDialog(BuildContext context) { // 휴대폰 권한설정으로 이동
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                        text: '음악 인식을 위해 마이크 권한을 ',
-                        style: TextStyle(
-                            color: themeValue == 2 ? Colors.white : Colors.black,
-                            fontSize: 17
+                  text: TextSpan(
+                      children: [
+                        TextSpan(
+                            text: '음악 인식을 위해 마이크 권한을 ',
+                            style: TextStyle(
+                                color: themeValue == 2 ? Colors.white : Colors.black,
+                                fontSize: 17
+                            )
+                        ),
+                        TextSpan(
+                            text: '허용',
+                            style: TextStyle(
+                                color: themeValue == 2 ? Colors.white : Colors.black,
+                                fontSize: 17
+                            )
+                        ),
+                        TextSpan(
+                            text: ' 해주세요',
+                            style: TextStyle(
+                                color: themeValue == 2 ? Colors.white : Colors.black,
+                                fontSize: 17
+                            )
                         )
-                    ),
-                    TextSpan(
-                        text: '허용',
-                        style: TextStyle(
-                            color: themeValue == 2 ? Colors.white : Colors.black,
-                            fontSize: 17
-                        )
-                    ),
-                    TextSpan(
-                        text: ' 해주세요',
-                        style: TextStyle(
-                            color: themeValue == 2 ? Colors.white : Colors.black,
-                            fontSize: 17
-                        )
-                    )
-                  ]
-                )
+                      ]
+                  )
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

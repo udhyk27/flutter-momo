@@ -5,9 +5,12 @@ import 'dart:typed_data';
 import 'dart:math';
 
 class WaveBuf {
-  final Uint8List _buf= Uint8List(48000*2*4);
+  final Uint8List _buf= Uint8List(48000*2);
   int _cur=0;
   bool push(Uint8List v) {
+
+    print('wavbuf push 하는 중 ###');
+
     if (_cur+v.length>_buf.length)
       return false;
     for (int i=0; i<v.length; i++, _cur++) {
@@ -41,4 +44,5 @@ class WaveBuf {
   }
   int get length => _cur;
   void clear() => _cur=0;
+
 }
