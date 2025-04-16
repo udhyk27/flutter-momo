@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_print, curly_braces_in_flow_control_structures, avoid_single_cascade_in_expression_statements
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
 import 'package:ffi/ffi.dart';
@@ -41,21 +42,18 @@ class VMIDC {
     // final String serverUrl = 'http://mo-mo.co.kr/Vmidcapi/get_dna_test';
     final String serverUrl = 'http://10.84.255.9:8080';
 
-    // 헤더
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json',
-    };
-    // 바디
-    final Map<String, dynamic> body = {
-      // 'dna': base64Encode(Uint8List.fromList(dna)), // 바이트(배열) 문자열로 인코딩
-      'dna': Uint8List.fromList(dna), // 소켓에 바이너리 데이터로 보내야 함
-    };
+    print('전송할 데이터 크기 ::::::: ${dna.length}');
+
+
+    // final Map<String, String> headers = {
+    //   'Content-Type': 'application/octet-stream',
+    // };
 
     try {
       final response = await http.post(
         Uri.parse(serverUrl),
-        headers: headers,
-        body: jsonEncode(body),
+        // headers: headers,
+        body: Uint8List.fromList(dna),
       );
 
       if (response.statusCode == 200) {
