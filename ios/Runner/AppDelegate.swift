@@ -66,7 +66,7 @@ import WatchConnectivity
 
     // 필수 메서드 (WCSession 활성화)
     func session(_ session: WCSession, activationDidCompleteWith state: WCSessionActivationState, error: Error?) {
-        print("✅ iOS 세션 활성화 완료: \(state.rawValue)")
+        print("iOS 세션 활성화 완료: \(state.rawValue)")
     }
 
     func sessionDidBecomeInactive(_ session: WCSession) {}

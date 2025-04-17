@@ -40,74 +40,17 @@ class _HomeScreenState extends State<HomeScreen> {
   final _ctrl = StreamController<List>();
   String _id = '';
 
-  // final Vmid _vmid = Vmid();
   String _cur= 'null';
   List<List<dynamic>> _meta=[];
   List<List<dynamic>> _meta_all=[];
   List _curMeta=[];
   final _time= Stopwatch();
 
-
-  // 상태 변수 (0이면 음악 검색 X, 1이면 기본 화면)
-  // int stateVal = 1; // 1 => 기본 화면
   Future<void>? _asyncTask; // 비동기 작업을 추적하기 위한 변수 (null 허용)
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   controller.changeState(1);
-  //
-  //   _vmidc.init(ip: "${ApiService.vmidcUrl}", port: 8551, sink: _ctrl.sink).then((ret) { // ip, port 번호 변경시 여기만 변경
-  //     if (!ret) {
-  //       print('server error');
-  //     } else {
-  //       _ctrl.stream.listen((data) async {
-  //         if (data.length == 2) {
-  //           _id = '${data[0]} (${data[1]})';
-  //         } else {
-  //           _id = 'error';
-  //         }
-  //         await _vmidc.stop();
-  //         setState(() {});
-  //       });
-  //     }
-  //   });
-  // }
-
-  // @override
-  // void initState() {
-  //   _vmidc.init().then((ret) {
-  //     Fluttertoast.showToast(msg: 'vmid.init $ret');
-  //     _vmidc.stream.listen((m) async {
-  //       if (m['id'] == null)
-  //         _cur = 'null';
-  //       else {
-  //         final id = m['id'];
-  //         _cur = '$id (${m['score']})';
-  //         _curMeta = _meta.firstWhere((e) => e[0] == id, orElse: () => []);
-  //         if (_curMeta.isEmpty) {
-  //           _time.start();
-  //           _curMeta =
-  //               _meta_all.firstWhere((e) => e[0] == id, orElse: () => []);
-  //           print("%%% ${_time.elapsed}");
-  //           _time.stop();
-  //         }
-  //         await _vmidc.stop();
-  //         HapticFeedback.lightImpact();
-  //       }
-  //       setState(() {});
-  //     });
-  //   });
-  // }
 
   @override
   void initState() {
-
-    // _vmidc.init();
-
     _vmidc.init().then((ret){
-      Fluttertoast.showToast(msg: 'vmid.init $ret');
-
       _vmidc.stream.listen((m) async {
         if (m['data']['SONG_ID']==null)
           _cur= 'null';
@@ -155,15 +98,9 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    controller.changeState(0);
-
     try {
-      print('HOME에서 음악인식 호출 중 ......................');
+      if (!mounted) return;
       await _vmidc.start(); // 녹음 시작
-
-
-      // test
-      // _vmidc.init();
     } catch (e) {
       print('녹음 실패! ################## $e');
       controller.changeState(2);

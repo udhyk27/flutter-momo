@@ -40,6 +40,7 @@ class VMIDC {
   Map _cur = {};
 
   bool isOpened = false;
+  bool isNavigated = false;
   var num = 1;
 
   Future<bool> init() async {
@@ -61,7 +62,7 @@ class VMIDC {
           Map m = await sendDnaToServer(_dna.pack());
 
           print('돌아온 값 :: $m');
-          print('song_cnts :::: ${m['song_cnts']}');
+          // print('song_cnts :::: ${m['song_cnts']}');
 
           if (m['err_msg'] != '') {
             print('error msg O');
@@ -79,10 +80,13 @@ class VMIDC {
 
             final song = ApiSearch.fromJson(m['data']);
 
+            // song.songId = (m['song_id']);
+
             _ctrl.sink.add(m);
             _cur = m;
 
             Get.to(() => SongInfoScreen(song: song));
+            isNavigated = true;
 
           }
 
@@ -176,9 +180,10 @@ class VMIDC {
       print('녹음이 정상적으로 시작됨!');
 
       Future.delayed(Duration(seconds: 15), () async {
-        if (_recorder.isRecording) {
+        if (_recorder.isRecording && !isNavigated) {
           print('15초 경과 - 녹음 중이므로 자동 종료합니다.');
           await stop();
+
         } else {
           print('15초 경과 - 이미 녹음이 종료됨.');
         }

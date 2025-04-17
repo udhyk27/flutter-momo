@@ -89,6 +89,23 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       count = detailList['count'] ?? 0;
       song_cnts = detailList['song_cnts'] ?? [];
 
+      print('song_cnts :::: ${song_cnts}');
+      // test
+      // song_cnts = [
+      //   {"CTN": 29, "F_MONTH": 202405},
+      //   {"CTN": 85, "F_MONTH": 202406},
+      //   {"CTN": 56, "F_MONTH": 202407},
+      //   {"CTN": 90, "F_MONTH": 202408},
+      //   {"CTN": 52, "F_MONTH": 202409},
+      //   {"CTN": 99, "F_MONTH": 202410},
+      //   {"CTN": 75, "F_MONTH": 202411},
+      //   {"CTN": 66, "F_MONTH": 202412},
+      //   {"CTN": 21, "F_MONTH": 202501},
+      //   {"CTN": 65, "F_MONTH": 202502},
+      //   {"CTN": 31, "F_MONTH": 202503},
+      //   {"CTN": 26, "F_MONTH": 202504}
+      // ];
+
       setState(() {
         isLoading = false;
       });
