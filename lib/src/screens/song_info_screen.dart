@@ -10,6 +10,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'package:http/http.dart' as http;
 import '../model/api_detail_programs.dart';
+import '../model/api_search.dart';
 import '../services/api_service.dart';
 import 'package:provider/provider.dart';
 import '/main.dart';
@@ -48,6 +49,9 @@ var artist;
 var album;
 var date_;
 var count;
+
+List detailList = [];
+
 List song_recommends = [];
 
 List reversedDate = [];
@@ -56,9 +60,8 @@ List dateList = [];
 class SongInfoScreen extends StatefulWidget {
 
   // 넘어온 값
-  final String songId;
-
-  const SongInfoScreen({super.key, required this.songId});
+  final ApiSearch song;
+  const SongInfoScreen({super.key, required this.song});
 
   @override
   State<SongInfoScreen> createState() => _SongInfoScreenState();
@@ -66,62 +69,36 @@ class SongInfoScreen extends StatefulWidget {
 
 class _SongInfoScreenState extends State<SongInfoScreen> {
 
+
   List<DetailProgram> infoProgram = [];
   bool isLoading = true;
 
   // API 요청
   Future<String> fetchData() async {
-
-    String? _uid;
-
-    // DEVICE ID 가져오기
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
-      try {
-        if (Platform.isAndroid) {
-          AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-          _uid = androidInfo.id;  // 안드로이드 디바이스 ID
-        } else if (Platform.isIOS) {
-          IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-          _uid = iosInfo.identifierForVendor;  // iOS 디바이스 ID
-        }
-        // print('device uid ::::::::::::::::::::::: $_uid');
-      } catch (e) {
-        _uid = 'Failed to get id';
-      }
-      // TEST ANDROID PHONE ID => QQ3A.200805.001
-
     ///// 곡 상세화면 API 요청 & 응답 /////
     try {
-      http.Response response = await http.get(Uri.parse('${ApiService.searchUrl}/json?id=${widget.songId}&uid=$_uid'));
+
+      http.Response response = await http.get(Uri.parse('${ApiService.detailUrl}/json?id=${widget.song.songId}&uid=${MyApp.uid}&genre=${widget.song.genre}'));
 
       String jsonData = response.body;
-      Map<String, dynamic> searchList = jsonDecode(jsonData);
+      Map<String, dynamic> detailList = jsonDecode(jsonData);
 
-      // print('API 통신해서 받은 검색 리스트 :::::::::::::::::::::: $searchList');
+      song_recommends = detailList['song_recommend'] ?? [];
 
-      image = searchList['IMAGE'];
-      title = searchList['TITLE'];
-      artist = searchList['ARTIST'];
-      album = searchList['ALBUM'];
-      date_ = searchList['date'];
-      count = searchList['count'];
-      song_cnts = searchList['song_cnts'];
-      song_recommends = searchList['song_recommend'];
-      track_no = searchList['TRACKNO'];
+      count = detailList['count'] ?? 0;
+      song_cnts = detailList['song_cnts'] ?? [];
 
     } catch (e) {
       print('노래 상세화면 API 통신 오류 ################ $e');
+
       setState(() {
         isLoading = false;
       });
     }
 
-    // print('곡 코드 :::::::::::::::: ${widget.songId}');
-
     ///// 프로그램 API 요청 & 응답 /////
     try {
-      http.Response programs_response = await http.get(Uri.parse('${ApiService.programsUrl}/json?id=${widget.songId}'));
+      http.Response programs_response = await http.get(Uri.parse('${ApiService.programsUrl}/json?id=${widget.song.songId}'));
 
       // programs data 파싱
       String programs_json = programs_response.body;
@@ -206,6 +183,22 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
   void initState() {
     super.initState();
     fetchData();
+
+    image = widget.song.image;
+    title = widget.song.title;
+    artist = widget.song.artist;
+    album = widget.song.album;
+    date_ = widget.song.date;
+
+    // image = searchList['IMAGE'];
+    // title = searchList['TITLE'];
+    // artist = searchList['ARTIST'];
+    // album = searchList['ALBUM'];
+    // date_ = searchList['date'];
+    // count = searchList['count'];
+    // song_cnts = searchList['song_cnts'];
+    // song_recommends = searchList['song_recommend'];
+    // track_no = searchList['TRACKNO'];
   }
 
   @override
@@ -234,7 +227,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
               Share.share(
                   // "${ApiService.shareUrl}?f_id=${widget.songId}",
-                  'Momo\n${ApiService.shareUrl}?f_id=${widget.songId}\n\n${ApiService.share_msgUrl}',
+                  'Momo\n${ApiService.shareUrl}?f_id=${widget.song.songId}\n\n${ApiService.share_msgUrl}',
                   sharePositionOrigin:
                   Rect.fromLTRB(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5)
               );
@@ -456,8 +449,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                       deviceId: "",
                                       title: title,
                                       image: image,
-                                      artist:artist,
-                                      songId: widget.songId,
+                                      artist: artist,
+                                      songId: widget.song.songId,
                                       album: album,
                                     )
                                 )

@@ -14,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../main.dart';
 import '../controller/home_controller.dart';
+import '../model/api_search.dart';
 import 'dnabuf.dart';
 import 'wavbuf.dart';
 
@@ -40,6 +41,48 @@ class VMIDC {
 
   bool isOpened = false;
   var num = 1;
+
+  Future<bool> init() async {
+    _wbuf.clear();
+    _dna.clear();
+
+    _audioStream = recCtrl.stream.listen((buffer) async {
+
+      _wbuf.push(buffer);
+
+      if (_wbuf.length >= fftN * 2) {
+        _wbuf.read(fftN * 2, _pcm);
+        _dna.push(_pcm);
+        _wbuf.pop(fftHop * 2);
+
+        if (_dna.length == qLen) {
+
+          // 여기서 HTTP 요청 호출
+          Map m = await sendDnaToServer(_dna.pack());
+
+          print('돌아온 값 :: $m');
+          print('ret : ${m['ret']}');
+          print('data : ${m['data']}');
+          print('err_msg : ${m['err_msg']}');
+
+          if (m['data'] != '') {
+            print('곡 있음 !!!!!!');
+
+            final song = ApiSearch.fromJson(m['data']);
+
+            _ctrl.sink.add(m);
+            _cur = m;
+
+            Get.to(() => SongInfoScreen(song: song));
+
+          }
+
+          _dna.pop(qLen);
+        }
+      }
+    });
+    return true;
+  }
 
   // HTTP 요청 함수
   Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
@@ -85,12 +128,11 @@ class VMIDC {
 
   // 녹음 시작
   Future<void> start() async {
-    num = 1;
+    num = 1; // 몇 번째 녹음 데이터 전송인지
 
     controller.changeState(0);
 
     if (_recorder.isRecording) {
-      // controller.stateVal(2);
       print('녹음중이기 때문에 녹음 종료 #031');
       return;
     }
@@ -116,79 +158,6 @@ class VMIDC {
 
       print('녹음이 정상적으로 시작됨!');
 
-      _wbuf.clear();
-      _dna.clear();
-
-      _audioStream = recCtrl.stream.listen((buffer) async {
-
-        _wbuf.push(buffer);
-
-        if (_wbuf.length >= fftN * 2) {
-          _wbuf.read(fftN * 2, _pcm);
-          _dna.push(_pcm);
-          _wbuf.pop(fftHop * 2);
-
-          if (_dna.length == qLen) {
-
-            // print('## 서버로 보낼 dna 길이: ${_dna.length}');
-            // print('## 서버로 보낼 dna 32개 ::::::::::::: ${_dna.pack()}');
-
-
-
-
-
-
-
-            // 여기서 HTTP 요청 호출
-            Map m = await sendDnaToServer(_dna.pack());
-
-            print('돌아온 값 :: $m');
-            print('ret : ${m['ret']}');
-            print('data : ${m['data']}');
-            print('err_msg : ${m['err_msg']}');
-
-
-            // if (m['err_msg'] != '') {
-            //   print('error msg 있음 !!');
-            //   controller.stateVal(2);
-            //   stop();
-            // } else if (m['ret'] == 0) { // 소켓 통신 성공
-            //
-            //   if (m['data']['TITLE'] != '') { // 곡이 있으면
-            //     print('곡 찾음 !!');
-            //
-            //     controller.stateVal(1);
-            //     stop();
-            //     // 결과 화면 띄우기
-            //     Get.to(() => SongInfoScreen(songId: m['data']['SONG_ID'])); // 전체 data 넘기는 것으로 수정해야 함 ##
-            //   } else if (num == 5) { // 곡이 없고 요청횟수가 5이면
-            //     controller.stateVal(2);
-            //     stop();
-            //   }
-            // } else if (m['ret'] == 3){
-            //   print('네트워크 오류');
-            //   controller.stateVal(2);
-            //   stop();
-            // } else {
-            //   print('노래 인식 X');
-            //   controller.stateVal(2);
-            //   stop();
-            // }
-
-
-
-
-            if (m['data']['SONG_ID'] != null) {
-              print('곡 있음 !!!!!!');
-              _ctrl.sink.add(m);
-              _cur = m;
-            }
-
-            _dna.pop(qLen);
-          }
-        }
-      });
-
     } catch (e) {
       print('녹음 중 예외 발생 $e');
       stop();
@@ -199,12 +168,9 @@ class VMIDC {
     num = 1;
 
     if (!_recorder.isRecording) return false;
-
     print('vmid.stop()');
 
     await _recorder.stopRecorder();
-    // recCtrl.stream.listen((buffer) async
-    recCtrl.close();
 
     _wbuf.clear();
     _dna.clear();

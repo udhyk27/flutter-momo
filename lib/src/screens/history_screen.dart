@@ -316,7 +316,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             context,
                             MaterialPageRoute(
                               // 페이지 호출하면서 값 넘기기
-                               builder: (context) => SongInfoScreen(songId: searchList[index].songId),
+                               builder: (context) => SongInfoScreen(song: searchList[index]),
                             ),
                           );
                         },

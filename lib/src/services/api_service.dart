@@ -17,6 +17,8 @@ class ApiService {
   static String vmidcUrl = '';
   static String rateUrl = '';
 
+  static String detailUrl = '';
+
   static String appVersion = '';
   static String storeUrl = '';
 
@@ -69,6 +71,8 @@ class ApiService {
       ApiService.termsUrl = 'https://${apiData['terms']}';
       ApiService.vmidcUrl = apiData['vmidc'];
       ApiService.rateUrl = apiData['rate'];
+
+      ApiService.detailUrl = 'https://${apiData['detail']}';
 
     } catch (e) {
       print('API DATA RESPONSE ERROR : $e');

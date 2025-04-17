@@ -102,6 +102,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+
+    // _vmidc.init();
+
+    _vmidc.init().then((ret){
+      Fluttertoast.showToast(msg: 'vmid.init $ret');
+
+      _vmidc.stream.listen((m) async {
+        if (m['data']['SONG_ID']==null)
+          _cur= 'null';
+        else {
+          final id= m['data']['SONG_ID'];
+          // _cur = '$id (${m['score']})';
+          _curMeta= _meta.firstWhere((e) => e[0]==id, orElse: ()=>[]);
+          if (_curMeta.isEmpty) {
+            _time.start();
+            _curMeta= _meta_all.firstWhere((e) => e[0]==id, orElse: ()=>[]);
+            print("%%% ${_time.elapsed}");
+            _time.stop();
+          }
+          await _vmidc.stop();
+          HapticFeedback.lightImpact();
+        }
+        setState(() {});
+      });
+    });
+
+
     super.initState();
     // 필요 시 초기 UI 상태 세팅만
   }
