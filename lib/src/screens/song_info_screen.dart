@@ -188,7 +188,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
   @override
   void initState() {
-    super.initState();
     fetchData();
 
     image = widget.song.image;
@@ -196,10 +195,15 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     artist = widget.song.artist;
     album = widget.song.album;
     date_ = widget.song.date;
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    if (isLoading) return Center(child: CircularProgressIndicator());
+
     int themeValue = context.watch<MyAppState>().selectedValue;
     Color textColor = themeValue == 2 ? Colors.white : Colors.black;
 
@@ -600,7 +604,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     int themeValue = context.watch<MyAppState>().selectedValue;
     List<FlSpot> FlSpotData = [];
     FlSpotData.addAll(FlSpotDataAll);
-    final minCnt = listY.last >= 50;
+    final minCnt = listY.isNotEmpty ? listY.last >= 50 : false;
 
     var result = LineChart(
       LineChartData(
