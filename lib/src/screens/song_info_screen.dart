@@ -72,6 +72,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
   List<DetailProgram> infoProgram = [];
   bool isLoading = true;
+  bool programLoading = true;
 
   // API 요청
   Future<String> fetchData() async {
@@ -88,12 +89,11 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       count = detailList['count'] ?? 0;
       song_cnts = detailList['song_cnts'] ?? [];
 
-    } catch (e) {
-      print('노래 상세화면 API 통신 오류 ################ $e');
-
       setState(() {
         isLoading = false;
       });
+    } catch (e) {
+      print('노래 상세화면 API 통신 오류 ################ $e');
     }
 
     ///// 프로그램 API 요청 & 응답 /////
@@ -106,13 +106,11 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
       setState(() {
         programs = programList;
+        programLoading = false;
       });
 
     } catch (e) {
       print('상세화면 프로그램 API 통신 에러 : $e');
-      setState(() {
-        isLoading = false;
-      });
     }
 
     try {
@@ -163,18 +161,10 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
         }
       }
       FlSpotDataAll.removeWhere((items) => items.y == 0.0);
-      setState(() {
-        isLoading = false;
-      });
     } catch (e) {
-      print('fail to make FlSpotData');
       print(e);
-      setState(() {
-        isLoading = false;
-      });
     }
     // HapticFeedback.vibrate();
-
     return 'done';
   }
 
@@ -189,16 +179,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     artist = widget.song.artist;
     album = widget.song.album;
     date_ = widget.song.date;
-
-    // image = searchList['IMAGE'];
-    // title = searchList['TITLE'];
-    // artist = searchList['ARTIST'];
-    // album = searchList['ALBUM'];
-    // date_ = searchList['date'];
-    // count = searchList['count'];
-    // song_cnts = searchList['song_cnts'];
-    // song_recommends = searchList['song_recommend'];
-    // track_no = searchList['TRACKNO'];
   }
 
   @override
@@ -239,9 +219,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       ),
 
       /////////////////////////////////// 곡 정보 ///////////////////////////////////
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+      body: SingleChildScrollView(
             child: Container(
               width: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 10),
@@ -349,26 +327,33 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
                         SizedBox(height: 10,),
 
-                        isCNTS
+                        isLoading
                           ?
-                        ChartContainer(
-                          color: themeValue == 2
-                          ? Colors.black
-                          : Colors.white,
-                          chart: line_chart(song_cnts),
+                        Container(
+                          child: CircularProgressIndicator(),
                         )
                           :
-                        const SizedBox(
-                          height: 200,
-                          child: Center(
-                            child: Text('차트 정보가 없습니다.',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20
+
+                          isCNTS
+                            ?
+                          ChartContainer(
+                            color: themeValue == 2
+                            ? Colors.black
+                            : Colors.white,
+                            chart: line_chart(song_cnts),
+                          )
+                            :
+                          const SizedBox(
+                            height: 200,
+                            child: Center(
+                              child: Text('차트 정보가 없습니다.',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20
+                                )
                               )
                             )
                           )
-                        )
                       ],
                     ),
 
@@ -469,23 +454,30 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       height: 440,
-                      child: isExist
-                        ?
-                      Center(
-                        child: Text(
-                          '최신 방송 재생정보가 없습니다.',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColorLight,
-                            fontSize: 20
-                          )
+                      child:
+                        programLoading
+                          ?
+                        Center(
+                          child: CircularProgressIndicator(), // 로딩 인디케이터
                         )
-                      )
-                        :
-                      Row(
-                        children: [
-                          _listView(programs)
-                        ],
-                      )
+                            :
+                          isExist
+                            ?
+                          Center(
+                            child: Text(
+                              '최신 방송 재생정보가 없습니다.',
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColorLight,
+                                fontSize: 20
+                              )
+                            )
+                          )
+                            :
+                          Row(
+                            children: [
+                              _listView(programs)
+                            ],
+                          )
                     ),
                     Container(
                       margin: const EdgeInsets.fromLTRB(
@@ -532,7 +524,14 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                     SizedBox(
                       height: 450,
                       child: Container(
-                        child: isExist2
+                        child:
+                          isLoading
+                            ?
+                          Center(
+                            child: CircularProgressIndicator(), // 로딩 인디케이터
+                          )
+                            :
+                        isExist2
                           ?
                         Center(
                           child: Text('추천 음악이 없습니다.',
@@ -578,8 +577,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       ),
     );
   }
-
-
 
   // 차트
   Widget line_chart(song_cnts) {

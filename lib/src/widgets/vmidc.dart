@@ -61,12 +61,21 @@ class VMIDC {
           Map m = await sendDnaToServer(_dna.pack());
 
           print('돌아온 값 :: $m');
-          print('ret : ${m['ret']}');
-          print('data : ${m['data']}');
-          print('err_msg : ${m['err_msg']}');
+          print('song_cnts :::: ${m['song_cnts']}');
+
+          if (m['err_msg'] != '') {
+            print('error msg O');
+            stop();
+          } else {
+            print('error msg X');
+          }
+
+
+
+
 
           if (m['data'] != '') {
-            print('곡 있음 !!!!!!');
+            print('곡 인식 성공 !!');
 
             final song = ApiSearch.fromJson(m['data']);
 
@@ -89,6 +98,14 @@ class VMIDC {
     final String serverUrl = 'http://mo-mo.co.kr/api/getdnasong';
     // final String serverUrl = 'http://10.84.255.9:8080';
 
+    if (num == 6) { // 요청횟수 초과하면 녹음 종료
+      await _recorder.stopRecorder();
+
+      _wbuf.clear();
+      _dna.clear();
+      controller.changeState(2);
+      print('요청횟수 초과 !!');
+    }
 
     final arr = {
       'uid' : MyApp.uid,
@@ -157,6 +174,15 @@ class VMIDC {
       );
 
       print('녹음이 정상적으로 시작됨!');
+
+      Future.delayed(Duration(seconds: 15), () async {
+        if (_recorder.isRecording) {
+          print('15초 경과 - 녹음 중이므로 자동 종료합니다.');
+          await stop();
+        } else {
+          print('15초 경과 - 이미 녹음이 종료됨.');
+        }
+      });
 
     } catch (e) {
       print('녹음 중 예외 발생 $e');
