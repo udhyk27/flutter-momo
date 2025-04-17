@@ -9,7 +9,10 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
+import 'package:momo_final/src/screens/song_info_screen.dart';
+import 'package:path_provider/path_provider.dart';
 
+import '../../main.dart';
 import '../controller/home_controller.dart';
 import 'dnabuf.dart';
 import 'wavbuf.dart';
@@ -36,31 +39,41 @@ class VMIDC {
   Map _cur = {};
 
   bool isOpened = false;
+  var num = 1;
 
   // HTTP 요청 함수
   Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
-    // final String serverUrl = 'http://mo-mo.co.kr/Vmidcapi/get_dna_test';
-    final String serverUrl = 'http://10.84.255.9:8080';
-
-    print('전송할 데이터 크기 ::::::: ${dna.length}');
+    final String serverUrl = 'http://mo-mo.co.kr/api/getdnasong';
+    // final String serverUrl = 'http://10.84.255.9:8080';
 
 
-    // final Map<String, String> headers = {
-    //   'Content-Type': 'application/octet-stream',
-    // };
+    final arr = {
+      'uid' : MyApp.uid,
+      'req_times' : num,
+      'max_req_times' : 5,
+      'dna_data' : base64Encode(Uint8List.fromList(dna))
+    };
+
+    final body = jsonEncode(arr);
+
+    // 헤더
+    final Map<String, String> headers = {
+      'Content-Type': 'application/octet-stream',
+    };
 
     try {
       final response = await http.post(
         Uri.parse(serverUrl),
-        // headers: headers,
-        body: Uint8List.fromList(dna),
+        headers: headers,
+        body: body,
       );
 
       if (response.statusCode == 200) {
-        print('서버에서 되돌아온 값 ::::::: ${response.body}');
+        num ++;
         return jsonDecode(response.body);
       } else {
         print('서버 요청 실패: ${response.statusCode}');
+        controller.changeState(2);
         return {'error': '서버 오류'};
       }
     } catch (e) {
@@ -69,9 +82,15 @@ class VMIDC {
     }
   }
 
+
   // 녹음 시작
   Future<void> start() async {
+    num = 1;
+
+    controller.changeState(0);
+
     if (_recorder.isRecording) {
+      // controller.stateVal(2);
       print('녹음중이기 때문에 녹음 종료 #031');
       return;
     }
@@ -96,13 +115,11 @@ class VMIDC {
       );
 
       print('녹음이 정상적으로 시작됨!');
-      print('========================================================================================================================');
 
       _wbuf.clear();
       _dna.clear();
 
       _audioStream = recCtrl.stream.listen((buffer) async {
-        print('debug #3');
 
         _wbuf.push(buffer);
 
@@ -113,19 +130,56 @@ class VMIDC {
 
           if (_dna.length == qLen) {
 
-            print('## 서버로 보낼 dna 길이: ${_dna.length}');
-            print('## 서버로 보낼 dna 32개 ::::::::::::: ${_dna.pack()}');
+            // print('## 서버로 보낼 dna 길이: ${_dna.length}');
+            // print('## 서버로 보낼 dna 32개 ::::::::::::: ${_dna.pack()}');
 
-            // ## DEBUG
-            // Uint8List dnaBytes = _dna.pack();
-            // String dnaBase64 = base64Encode(dnaBytes);
-            // print('## 서버로 보낼 DNA 문자열: $dnaBase64');
+
+
+
+
 
 
             // 여기서 HTTP 요청 호출
             Map m = await sendDnaToServer(_dna.pack());
 
-            if (m['id'] != null) {
+            print('돌아온 값 :: $m');
+            print('ret : ${m['ret']}');
+            print('data : ${m['data']}');
+            print('err_msg : ${m['err_msg']}');
+
+
+            // if (m['err_msg'] != '') {
+            //   print('error msg 있음 !!');
+            //   controller.stateVal(2);
+            //   stop();
+            // } else if (m['ret'] == 0) { // 소켓 통신 성공
+            //
+            //   if (m['data']['TITLE'] != '') { // 곡이 있으면
+            //     print('곡 찾음 !!');
+            //
+            //     controller.stateVal(1);
+            //     stop();
+            //     // 결과 화면 띄우기
+            //     Get.to(() => SongInfoScreen(songId: m['data']['SONG_ID'])); // 전체 data 넘기는 것으로 수정해야 함 ##
+            //   } else if (num == 5) { // 곡이 없고 요청횟수가 5이면
+            //     controller.stateVal(2);
+            //     stop();
+            //   }
+            // } else if (m['ret'] == 3){
+            //   print('네트워크 오류');
+            //   controller.stateVal(2);
+            //   stop();
+            // } else {
+            //   print('노래 인식 X');
+            //   controller.stateVal(2);
+            //   stop();
+            // }
+
+
+
+
+            if (m['data']['SONG_ID'] != null) {
+              print('곡 있음 !!!!!!');
               _ctrl.sink.add(m);
               _cur = m;
             }
@@ -137,18 +191,25 @@ class VMIDC {
 
     } catch (e) {
       print('녹음 중 예외 발생 $e');
-      controller.changeState(2);
+      stop();
     }
   }
 
   Future<bool> stop() async {
+    num = 1;
+
     if (!_recorder.isRecording) return false;
 
     print('vmid.stop()');
 
     await _recorder.stopRecorder();
+    // recCtrl.stream.listen((buffer) async
+    recCtrl.close();
+
     _wbuf.clear();
     _dna.clear();
+    controller.changeState(1);
+
     return true;
   }
 

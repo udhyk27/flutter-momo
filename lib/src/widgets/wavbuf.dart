@@ -9,8 +9,6 @@ class WaveBuf {
   int _cur=0;
   bool push(Uint8List v) {
 
-    print('wavbuf push 하는 중 ###');
-
     if (_cur+v.length>_buf.length)
       return false;
     for (int i=0; i<v.length; i++, _cur++) {

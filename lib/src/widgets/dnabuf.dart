@@ -30,11 +30,7 @@ class DnaBuf {
 
   void push(Pointer<Uint8> pcm) {
 
-    print('DNA buf push 하는 중');
     __pcm_to_dna(pcm.cast<Int16>(), _frame.cast<Uint8>());
-
-    print('DNA 형 변환 완료');
-
 
     for (int i=0; i<8; i++)
       H[_cur*8+i] = _frame[i];

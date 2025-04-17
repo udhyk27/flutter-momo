@@ -75,7 +75,7 @@ class WatchAudioManager: NSObject, WCSessionDelegate, ObservableObject {
     func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
         DispatchQueue.main.async {
             if let result = message["result"] as? String {
-                print("📡 iPhone 분석 결과: \(result)")
+                print("iPhone 분석 결과: \(result)")
             }
         }
     }
