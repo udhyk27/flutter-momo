@@ -89,22 +89,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       count = detailList['count'] ?? 0;
       song_cnts = detailList['song_cnts'] ?? [];
 
-      print('song_cnts :::: ${song_cnts}');
-      // test
-      // song_cnts = [
-      //   {"CTN": 29, "F_MONTH": 202405},
-      //   {"CTN": 85, "F_MONTH": 202406},
-      //   {"CTN": 56, "F_MONTH": 202407},
-      //   {"CTN": 90, "F_MONTH": 202408},
-      //   {"CTN": 52, "F_MONTH": 202409},
-      //   {"CTN": 99, "F_MONTH": 202410},
-      //   {"CTN": 75, "F_MONTH": 202411},
-      //   {"CTN": 66, "F_MONTH": 202412},
-      //   {"CTN": 21, "F_MONTH": 202501},
-      //   {"CTN": 65, "F_MONTH": 202502},
-      //   {"CTN": 31, "F_MONTH": 202503},
-      //   {"CTN": 26, "F_MONTH": 202504}
-      // ];
+      // print('song_cnts :::: ${song_cnts}');
 
       setState(() {
         isLoading = false;
@@ -165,6 +150,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
       // 현재월
       // 차트 실데이터 파싱
+      FlSpotDataAll.clear(); // 데이터 초기화
       for (int j = 0; j < _reverse.length; j++) {
 
         // 없는 월 제외
@@ -581,7 +567,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                       child: Center(
                         child: SmoothPageIndicator(
                           controller: pageController2,
-                          count: (programs.isNotEmpty ? programs.length : 12 / 4).ceil(),
+                          count: (song_recommends.length/ 4).ceil(),
                           effect: const WormEffect(
                             activeDotColor: Color.fromRGBO(254, 36, 61, 1),
                             dotHeight: 7,
@@ -714,8 +700,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     );
     return result;
   }
-
-
 
   late String text;
 

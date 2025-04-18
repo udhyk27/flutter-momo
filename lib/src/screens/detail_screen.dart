@@ -63,9 +63,6 @@ class _DetailScreenState extends State<DetailScreen> {
 
     } catch (e) {
       print('상세화면 API 통신 오류 ################# : $e');
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
@@ -75,7 +72,6 @@ class _DetailScreenState extends State<DetailScreen> {
     super.initState();
     fetchData();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -229,6 +225,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           ),
                         ),
                         Container(
+                          width: MediaQuery.of(context).size.width * 0.5,
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,11 +237,11 @@ class _DetailScreenState extends State<DetailScreen> {
                               ),
                               Text(
                                 detailProgram[index].channelName,
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor),
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor, overflow: TextOverflow.ellipsis),
                               ),
                               Text(
                                 detailProgram[index].name,
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor),
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor, overflow: TextOverflow.ellipsis),
                               ),
                               Text(
                                 detailProgram[index].date,

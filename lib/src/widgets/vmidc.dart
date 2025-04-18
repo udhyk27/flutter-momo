@@ -32,6 +32,8 @@ class VMIDC {
   final WaveBuf _wbuf = WaveBuf();
   final DnaBuf _dna = DnaBuf();
 
+  Timer? _recordTimer;
+
   final Pointer<Uint8> _pcm = malloc.allocate<Uint8>(fftN * 2);
 
   final _ctrl = StreamController<Map>();
@@ -70,8 +72,10 @@ class VMIDC {
           }
 
 
-          if (m['data'] != '') {
+          if (m['data'] != '' && m.containsKey('data')) {
             print('곡 인식 성공 !!');
+
+            controller.changeState(1);
 
             final song = ApiSearch.fromJson(m['data']);
 
@@ -97,6 +101,9 @@ class VMIDC {
 
     if (num == 6) { // 요청횟수 초과하면 녹음 종료
       await _recorder.stopRecorder();
+
+      _recordTimer?.cancel();
+      _recordTimer = null;
 
       _wbuf.clear();
       _dna.clear();
@@ -172,18 +179,18 @@ class VMIDC {
 
       print('녹음이 정상적으로 시작됨!');
 
-      Future.delayed(Duration(seconds: 15), () async {
+      _recordTimer = Timer(Duration(seconds: 15), () async {
+        // 곡 인식하거나 서버 연결 실패했는데 녹음만 되고있을 때 방지
         if (_recorder.isRecording && !isNavigated) {
           print('15초 경과 - 녹음 중이므로 자동 종료합니다.');
+          controller.changeState(1);
           await stop();
-
-        } else {
-          print('15초 경과 - 이미 녹음이 종료됨.');
         }
       });
 
     } catch (e) {
       print('녹음 중 예외 발생 $e');
+      controller.changeState(2);
       stop();
     }
   }
@@ -198,7 +205,11 @@ class VMIDC {
 
     _wbuf.clear();
     _dna.clear();
-    controller.changeState(1);
+    // controller.changeState(2);
+
+    if (controller.stateVal == 0) {
+      controller.changeState(2);
+    }
 
     return true;
   }
