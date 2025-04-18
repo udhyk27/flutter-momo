@@ -134,10 +134,12 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       List _contain = [];  // 실데이타 파싱
       sum = 0;
       for (int i = 0; i <= song_cnts.length - 1; i++) {
-        intX = int.parse(song_cnts[i]['F_MONTH'].toString());
+        intX = int.parse(song_cnts[i]['F_MONTH'].toString().substring(4, 6));
         intY = int.parse(song_cnts[i]['CTN']);
+
         listX.add(intX);
         listY.add(intY);
+
         listX.sort();
         listY.sort();
         _contain.add(song_cnts[i]['F_MONTH'].toString());
@@ -188,6 +190,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
   @override
   void initState() {
+
     fetchData();
 
     image = widget.song.image;
@@ -578,7 +581,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                       child: Center(
                         child: SmoothPageIndicator(
                           controller: pageController2,
-                          count: (programs.length / 4).ceil(),
+                          count: (programs.isNotEmpty ? programs.length : 12 / 4).ceil(),
                           effect: const WormEffect(
                             activeDotColor: Color.fromRGBO(254, 36, 61, 1),
                             dotHeight: 7,
@@ -633,10 +636,10 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
           drawHorizontalLine: true,
           horizontalInterval: minCnt ? avgY / 8 : 30
         ),
-        minX: 1,
-        minY: 0,
-        maxX: 12,
-        maxY: double.parse((listY.last).toString()) + 100,
+        minX: 1, // 최소 1월
+        minY: 0, // 최소 횟수 0
+        maxX: 12, // 최대 12월
+        maxY: double.parse((listY.isNotEmpty ? listY.last : 100).toString()) + 100, // 최대 횟수 마지막 요소 + 100
         lineBarsData: [
           LineChartBarData(
             dotData: FlDotData(
@@ -705,8 +708,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
             )
           ),
-
-
         ),
         lineTouchData: LineTouchData(enabled: true)
     )

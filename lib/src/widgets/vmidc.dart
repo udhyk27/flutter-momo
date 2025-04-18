@@ -67,20 +67,13 @@ class VMIDC {
           if (m['err_msg'] != '') {
             print('error msg O');
             stop();
-          } else {
-            print('error msg X');
           }
-
-
-
 
 
           if (m['data'] != '') {
             print('곡 인식 성공 !!');
 
             final song = ApiSearch.fromJson(m['data']);
-
-            // song.songId = (m['song_id']);
 
             _ctrl.sink.add(m);
             _cur = m;
