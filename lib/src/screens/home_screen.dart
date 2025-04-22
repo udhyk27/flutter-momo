@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _vmidc.init().then((ret){
-      _vmidc.stream.listen((m) async {
+      _vmidc.stream.listen((m) async { // 결과 오면 화면 업뎃
         if (m['data']['SONG_ID']==null)
           _cur= 'null';
         else {
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
             print("%%% ${_time.elapsed}");
             _time.stop();
           }
-          await _vmidc.stop();
+          // await _vmidc.stop();
           HapticFeedback.lightImpact();
         }
         setState(() {});

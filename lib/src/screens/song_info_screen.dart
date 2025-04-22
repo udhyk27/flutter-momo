@@ -13,6 +13,7 @@ import '../model/api_detail_programs.dart';
 import '../model/api_search.dart';
 import '../services/api_service.dart';
 import 'package:provider/provider.dart';
+import '../widgets/vmidc.dart';
 import '/main.dart';
 
 import 'package:share_plus/share_plus.dart';
@@ -69,7 +70,7 @@ class SongInfoScreen extends StatefulWidget {
 
 class _SongInfoScreenState extends State<SongInfoScreen> {
 
-
+  final VMIDC _vmidc = VMIDC();
   List<DetailProgram> infoProgram = [];
   bool isLoading = true;
   bool programLoading = true;
@@ -176,6 +177,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
   @override
   void initState() {
+    // vmidc stop하
+    _vmidc.stop();
 
     fetchData();
 

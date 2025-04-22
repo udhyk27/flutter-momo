@@ -4,6 +4,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
+  // api data
   static String historyUrl = '';
   static String recommendUrl = '';
   static String searchUrl = '';
@@ -14,11 +15,10 @@ class ApiService {
   static String share_msgUrl = '';
   static String privacyUrl = '';
   static String termsUrl = '';
-  static String vmidcUrl = '';
-  static String rateUrl = '';
-
+  static String serverUrl = '';
   static String detailUrl = '';
 
+  // remote config
   static String appVersion = '';
   static String storeUrl = '';
 
@@ -69,10 +69,8 @@ class ApiService {
       ApiService.share_msgUrl = apiData['share_msg'];
       ApiService.privacyUrl = 'https://${apiData['privacy']}';
       ApiService.termsUrl = 'https://${apiData['terms']}';
-      ApiService.vmidcUrl = apiData['vmidc'];
-      ApiService.rateUrl = apiData['rate'];
-
       ApiService.detailUrl = 'https://${apiData['detail']}';
+      ApiService.serverUrl = 'https://${apiData['server']}';
 
     } catch (e) {
       print('API DATA RESPONSE ERROR : $e');

@@ -15,6 +15,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../main.dart';
 import '../controller/home_controller.dart';
 import '../model/api_search.dart';
+import '../services/api_service.dart';
 import 'dnabuf.dart';
 import 'wavbuf.dart';
 
@@ -41,14 +42,18 @@ class VMIDC {
   bool get isRunning => _recorder.isRecording;
   Map _cur = {};
 
-  bool isOpened = false;
-  bool isNavigated = false;
+  // bool isOpened = false;
+  // bool isNavigated = false; // 인식 성공해서 결과 화면으로 넘어갔는지 여부
   var num = 1;
 
   Future<bool> init() async {
+    print('vmidc init');
+    await _recorder.openRecorder(); // 오디오 세션 오픈
+
     _wbuf.clear();
     _dna.clear();
 
+    // 마이크 데이터를 수신할 스트림을 설정
     _audioStream = recCtrl.stream.listen((buffer) async {
 
       _wbuf.push(buffer);
@@ -62,29 +67,23 @@ class VMIDC {
 
           // 여기서 HTTP 요청 호출
           Map m = await sendDnaToServer(_dna.pack());
-
           print('돌아온 값 :: $m');
-          // print('song_cnts :::: ${m['song_cnts']}');
 
+          // 에러 메시지가 존재할 때
           if (m['err_msg'] != '') {
-            print('error msg O');
-            stop();
+            print('error msg 1 / 음악 인식 STOP');
+            await stop();
           }
-
 
           if (m['data'] != '' && m.containsKey('data')) {
             print('곡 인식 성공 !!');
 
-            controller.changeState(1);
-
-            final song = ApiSearch.fromJson(m['data']);
-
             _ctrl.sink.add(m);
             _cur = m;
 
-            Get.to(() => SongInfoScreen(song: song));
-            isNavigated = true;
-
+            final song = ApiSearch.fromJson(m['data']);
+            await Get.to(() => SongInfoScreen(song: song));
+            controller.changeState(1);
           }
 
           _dna.pop(qLen);
@@ -96,22 +95,8 @@ class VMIDC {
 
   // HTTP 요청 함수
   Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
-    final String serverUrl = 'http://mo-mo.co.kr/api/getdnasong';
-    // final String serverUrl = 'http://10.84.255.9:8080';
 
-    if (num == 6) { // 요청횟수 초과하면 녹음 종료
-      await _recorder.stopRecorder();
-
-      _recordTimer?.cancel();
-      _recordTimer = null;
-
-      _wbuf.clear();
-      _dna.clear();
-      controller.changeState(2);
-      print('요청횟수 초과 !!');
-    }
-
-    final arr = {
+    final arr = { // 서버로 전송할 값
       'uid' : MyApp.uid,
       'req_times' : num,
       'max_req_times' : 5,
@@ -127,22 +112,25 @@ class VMIDC {
 
     try {
       final response = await http.post(
-        Uri.parse(serverUrl),
+        Uri.parse(ApiService.serverUrl),
         headers: headers,
         body: body,
       );
 
-      if (response.statusCode == 200) {
-        num ++;
-        return jsonDecode(response.body);
-      } else {
-        print('서버 요청 실패: ${response.statusCode}');
-        controller.changeState(2);
-        return {'error': '서버 오류'};
-      }
+      // if (response.statusCode == 200) {
+      //   num ++;
+      //   return jsonDecode(response.body);
+      // } else {
+      //   return {'error': '서버 오류'};
+      // }
+
+      num ++;
+      return jsonDecode(response.body);
+
     } catch (e) {
       print('HTTP 요청 중 오류 발생: $e');
-      return {'error': '요청 실패'};
+      // await stop();
+      return {'err_msg': '요청 실패'};
     }
   }
 
@@ -151,10 +139,12 @@ class VMIDC {
   Future<void> start() async {
     num = 1; // 몇 번째 녹음 데이터 전송인지
 
-    controller.changeState(0);
+    controller.changeState(0); // 검색 중
 
     if (_recorder.isRecording) {
-      print('녹음중이기 때문에 녹음 종료 #031');
+      print('start() 호출되었는데 녹음중이어서 Return');
+      // await _recorder.stopRecorder();
+      // await stop();
       return;
     }
 
@@ -162,13 +152,13 @@ class VMIDC {
 
     try {
 
-      if (!isOpened) {
-        print('첫 실행이므로 오디오 세션 열기 @@');
-        await _recorder.openRecorder();
-        isOpened = true;
-      } else {
-        print('재실행이므로 오디오 세션 유지한것 그대로 사용');
-      }
+      // if (!isOpened) {
+      //   print('첫 실행이므로 오디오 세션 열기 @@');
+      //   // await _recorder.openRecorder();
+      //   isOpened = true;
+      // } else {
+      //   print('재실행이므로 오디오 세션 유지한것 그대로 사용');
+      // }
 
       await _recorder.startRecorder(
         toStream: recCtrl,
@@ -181,9 +171,10 @@ class VMIDC {
 
       _recordTimer = Timer(Duration(seconds: 15), () async {
         // 곡 인식하거나 서버 연결 실패했는데 녹음만 되고있을 때 방지
-        if (_recorder.isRecording && !isNavigated) {
+        if (_recorder.isRecording) {
+          controller.changeState(2);
+          // isNavigated = false;
           print('15초 경과 - 녹음 중이므로 자동 종료합니다.');
-          controller.changeState(1);
           await stop();
         }
       });
@@ -196,33 +187,39 @@ class VMIDC {
   }
 
   Future<bool> stop() async {
+    print('vmid.stop()');
     num = 1;
 
     if (!_recorder.isRecording) return false;
-    print('vmid.stop()');
 
     await _recorder.stopRecorder();
 
+    _recordTimer?.cancel();
+    _recordTimer = null;
+
     _wbuf.clear();
     _dna.clear();
-    // controller.changeState(2);
 
     if (controller.stateVal == 0) {
-      controller.changeState(2);
+        controller.changeState(2);
     }
 
     return true;
   }
 
+
+
   Future<void> dispose() async {
+    print('vmidc dispose');
+
     if (_recorder.isRecording) {
       print('녹음중이면 stop');
       await stop();
     }
 
-    await _audioStream.cancel();
-    await _recorder.closeRecorder();
-    recCtrl.close();
-    malloc.free(_pcm);
+    await _audioStream.cancel(); // 스트림 구독 리스닝 해제
+    await _recorder.closeRecorder(); // 오디오 세션 닫기
+    recCtrl.close(); // 스트림 컨트롤러 닫기
+    malloc.free(_pcm); // 메모리 해제
   }
 }
