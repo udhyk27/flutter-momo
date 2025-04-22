@@ -177,8 +177,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
   @override
   void initState() {
-    // vmidc stop하
-    _vmidc.stop();
+    // _vmidc.stop();
 
     fetchData();
 

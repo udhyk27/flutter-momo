@@ -35,45 +35,23 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   final HomeController controller = Get.put(HomeController());
-
   final VMIDC _vmidc = VMIDC();
-  final _ctrl = StreamController<List>();
-  String _id = '';
 
-  String _cur= 'null';
-  List<List<dynamic>> _meta=[];
-  List<List<dynamic>> _meta_all=[];
-  List _curMeta=[];
-  final _time= Stopwatch();
+  // final _ctrl = StreamController<List>();
+  // String _id = '';
+  //
+  // String _cur= 'null';
+  // List<List<dynamic>> _meta=[];
+  // List<List<dynamic>> _meta_all=[];
+  // List _curMeta=[];
+  // final _time= Stopwatch();
 
   Future<void>? _asyncTask; // 비동기 작업을 추적하기 위한 변수 (null 허용)
 
   @override
   void initState() {
-    _vmidc.init().then((ret){
-      _vmidc.stream.listen((m) async { // 결과 오면 화면 업뎃
-        if (m['data']['SONG_ID']==null)
-          _cur= 'null';
-        else {
-          final id= m['data']['SONG_ID'];
-          // _cur = '$id (${m['score']})';
-          _curMeta= _meta.firstWhere((e) => e[0]==id, orElse: ()=>[]);
-          if (_curMeta.isEmpty) {
-            _time.start();
-            _curMeta= _meta_all.firstWhere((e) => e[0]==id, orElse: ()=>[]);
-            print("%%% ${_time.elapsed}");
-            _time.stop();
-          }
-          // await _vmidc.stop();
-          HapticFeedback.lightImpact();
-        }
-        setState(() {});
-      });
-    });
-
-
+    _vmidc.init();
     super.initState();
-    // 필요 시 초기 UI 상태 세팅만
   }
 
 

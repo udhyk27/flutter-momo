@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -42,8 +43,6 @@ class VMIDC {
   bool get isRunning => _recorder.isRecording;
   Map _cur = {};
 
-  // bool isOpened = false;
-  // bool isNavigated = false; // 인식 성공해서 결과 화면으로 넘어갔는지 여부
   var num = 1;
 
   Future<bool> init() async {
@@ -77,6 +76,8 @@ class VMIDC {
 
           if (m['data'] != '' && m.containsKey('data')) {
             print('곡 인식 성공 !!');
+            print('print::${_recorder.isRecording}');
+            HapticFeedback.lightImpact();
 
             _ctrl.sink.add(m);
             _cur = m;
@@ -117,19 +118,10 @@ class VMIDC {
         body: body,
       );
 
-      // if (response.statusCode == 200) {
-      //   num ++;
-      //   return jsonDecode(response.body);
-      // } else {
-      //   return {'error': '서버 오류'};
-      // }
-
       num ++;
       return jsonDecode(response.body);
-
     } catch (e) {
       print('HTTP 요청 중 오류 발생: $e');
-      // await stop();
       return {'err_msg': '요청 실패'};
     }
   }
@@ -139,27 +131,14 @@ class VMIDC {
   Future<void> start() async {
     num = 1; // 몇 번째 녹음 데이터 전송인지
 
+    if (_recorder.isRecording) {
+      print('start() 호출되었는데 녹음중');
+      // return;
+      await stop();
+    }
     controller.changeState(0); // 검색 중
 
-    if (_recorder.isRecording) {
-      print('start() 호출되었는데 녹음중이어서 Return');
-      // await _recorder.stopRecorder();
-      // await stop();
-      return;
-    }
-
-    print('vmidc.start()  @@@@ 녹음 시작 @@@@@@@@@@@@@@@@@@@@@@@');
-
     try {
-
-      // if (!isOpened) {
-      //   print('첫 실행이므로 오디오 세션 열기 @@');
-      //   // await _recorder.openRecorder();
-      //   isOpened = true;
-      // } else {
-      //   print('재실행이므로 오디오 세션 유지한것 그대로 사용');
-      // }
-
       await _recorder.startRecorder(
         toStream: recCtrl,
         codec: Codec.pcm16,
@@ -172,8 +151,6 @@ class VMIDC {
       _recordTimer = Timer(Duration(seconds: 15), () async {
         // 곡 인식하거나 서버 연결 실패했는데 녹음만 되고있을 때 방지
         if (_recorder.isRecording) {
-          controller.changeState(2);
-          // isNavigated = false;
           print('15초 경과 - 녹음 중이므로 자동 종료합니다.');
           await stop();
         }
@@ -181,21 +158,19 @@ class VMIDC {
 
     } catch (e) {
       print('녹음 중 예외 발생 $e');
-      controller.changeState(2);
-      stop();
     }
   }
 
-  Future<bool> stop() async {
+  Future<void> stop() async {
     print('vmid.stop()');
     num = 1;
 
-    if (!_recorder.isRecording) return false;
-
-    await _recorder.stopRecorder();
+    if (!_recorder.isRecording) return;
 
     _recordTimer?.cancel();
     _recordTimer = null;
+
+    await _recorder.stopRecorder();
 
     _wbuf.clear();
     _dna.clear();
@@ -203,11 +178,7 @@ class VMIDC {
     if (controller.stateVal == 0) {
         controller.changeState(2);
     }
-
-    return true;
   }
-
-
 
   Future<void> dispose() async {
     print('vmidc dispose');
