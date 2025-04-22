@@ -260,17 +260,20 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                             borderRadius: BorderRadius.circular(20)
                           ),
 
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: ExtendedImage.network(
-                              '${image}',
-                              fit: BoxFit.cover,
-                              loadStateChanged: (state) {
-                                if (state.extendedImageLoadState == LoadState.failed) {
-                                  return SizedBox(child: Image.asset('assets/no_image.png', fit: BoxFit.cover,),);
-                                }
-                                return null;
-                              },
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: ExtendedImage.network(
+                                '${image}',
+                                fit: BoxFit.cover,
+                                loadStateChanged: (state) {
+                                  if (state.extendedImageLoadState == LoadState.failed) {
+                                    return SizedBox(child: Image.asset('assets/no_image.png', fit: BoxFit.cover,),);
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -311,8 +314,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                       ],
                     ),
                   ),
-
-
 
               SizedBox(height: 20),
 
