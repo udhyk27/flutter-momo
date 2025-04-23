@@ -52,7 +52,7 @@ class _DetailScreenState extends State<DetailScreen> {
       String programs_json = programs_response.body;
       List<dynamic> programsList = jsonDecode(programs_json);
 
-      print(programsList);
+      // print(programsList);
 
       setState(() {
         detailProgram = programsList.map((item) => DetailProgram.fromJson(item as Map<String, dynamic>)).toList();
