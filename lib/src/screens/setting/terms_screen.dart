@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../main.dart';
 import '../../widgets/app_bar.dart';
 import '../../services/api_service.dart';
 import 'package:http/http.dart' as http;
@@ -54,7 +56,7 @@ class _TermsScreenState extends State<TermsScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: CustomAppBar(currentIndex: widget.gubun),
+      // appBar: CustomAppBar(currentIndex: widget.gubun),
 
       body: Container(
         width: double.infinity,
@@ -108,7 +110,8 @@ class _TermsScreenState extends State<TermsScreen> {
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () {
-          Navigator.pop(context);
+          // Navigator.pop(context);
+          context.read<MyAppState>().setPageIdx(3);
         },
         child: Container(
           height: 70,

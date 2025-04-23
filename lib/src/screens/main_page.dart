@@ -1,3 +1,5 @@
+import 'package:momo_final/src/screens/setting/terms_screen.dart';
+
 import '/src/widgets/app_bar.dart';
 import '/src/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +66,6 @@ class _MainPageState extends State<MainPage> {
         } else if (themeValue == 1) { // ocean blue
           pageTheme = ThemeData.light().copyWith(
             scaffoldBackgroundColor: Color.fromRGBO(33, 177, 243, 100),
-            // scaffoldBackgroundColor: Colors.blue,
           );
         } else { // dark mode
           pageTheme = ThemeData.dark().copyWith(
@@ -106,20 +107,20 @@ class _MainPageState extends State<MainPage> {
         }
       break;
 
-      // case 4: // 이용약관
-      //   page = TermsScreen();
-      //   pageTheme = ThemeData.light().copyWith(
-      //       scaffoldBackgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
-      //       appBarTheme: AppBarTheme(backgroundColor: Color.fromRGBO(245, 245, 245, 1.0))
-      //   );
-      //   break;
-      // case 5: // 개인정보 방침
-      //   page = PrivacyScreen();
-      //   pageTheme = ThemeData.light().copyWith(
-      //       scaffoldBackgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
-      //       appBarTheme: AppBarTheme(backgroundColor: Color.fromRGBO(245, 245, 245, 1.0))
-      //   );
-      // break;
+      case 4: // 이용약관
+        page = TermsScreen(gubun : 4);
+        pageTheme = ThemeData.light().copyWith(
+            scaffoldBackgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
+            appBarTheme: AppBarTheme(backgroundColor: Color.fromRGBO(245, 245, 245, 1.0))
+        );
+        break;
+      case 5: // 개인정보 방침
+        page = TermsScreen(gubun: 5);
+        pageTheme = ThemeData.light().copyWith(
+            scaffoldBackgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
+            appBarTheme: AppBarTheme(backgroundColor: Color.fromRGBO(245, 245, 245, 1.0))
+        );
+      break;
 
       case 6: // 화면 스타일
 

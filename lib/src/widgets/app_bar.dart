@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../main.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
+import '../screens/home_screen.dart';
 // 상단 바
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int currentIndex;
@@ -55,14 +57,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
           onPressed: () {
             if (currentIndex == 4 || currentIndex == 5) {
-              // context.read<MyAppState>().setPageIdx(3);
-              Navigator.pop(context);
+              context.read<MyAppState>().setPageIdx(3);
+              // Navigator.pop(context);
             } else {
               context.read<MyAppState>().setPageIdx(1);
+              // Navigator.pushAndRemoveUntil(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => HomeScreen()),
+              //     (route) => false,
+              // );
             }
           },
           icon: Icon(
-              (currentIndex == 4 || currentIndex == 5) ? Icons.close : Icons.arrow_back
+            (currentIndex == 4 || currentIndex == 5) ? Icons.close : Icons.arrow_back
           )
       ),
 

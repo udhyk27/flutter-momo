@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 // 홈 화면 상태관리
 class HomeController extends GetxController {
@@ -5,5 +6,8 @@ class HomeController extends GetxController {
 
   void changeState(int value) {
     stateVal.value = value;
+    if (value == 2) {
+      HapticFeedback.lightImpact();
+    }
   }
 }

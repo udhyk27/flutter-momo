@@ -86,22 +86,22 @@ class SettingScreen extends StatefulWidget {
                 title: Text('이용약관', style: TextStyle(fontSize: 15.0, color: textColor),),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
-                  // context.read<MyAppState>().setPageIdx(4);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TermsScreen(gubun: 4)),
-                  );
+                  context.read<MyAppState>().setPageIdx(4);
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => TermsScreen(gubun: 4)),
+                  // );
                 },
               ),
               ListTile(
                 title: Text('개인정보 처리방침', style: TextStyle(fontSize: 15.0, color: textColor),),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
-                  // context.read<MyAppState>().setPageIdx(5);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TermsScreen(gubun: 5)),
-                  );
+                  context.read<MyAppState>().setPageIdx(5);
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => TermsScreen(gubun: 5)),
+                  // );
                 },
               ),
             ],
