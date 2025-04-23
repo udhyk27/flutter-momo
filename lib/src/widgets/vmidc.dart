@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'dart:convert';
 import 'package:ffi/ffi.dart';
@@ -25,12 +26,16 @@ const fftN = 2048;
 const fftHop = 1000;
 const qLen = 32;
 
+// 네이티브 메서드 채널 정의
+// const MethodChannel _methodChannel = MethodChannel('com.yourapp/audio_session');
+
 class VMIDC {
   final FlutterSoundRecorder _recorder = FlutterSoundRecorder(logLevel: Level.error);
   var recCtrl = StreamController<Uint8List>();
 
   final HomeController controller = Get.find<HomeController>();
   late StreamSubscription _audioStream;
+
   final WaveBuf _wbuf = WaveBuf();
   final DnaBuf _dna = DnaBuf();
 
@@ -52,51 +57,102 @@ class VMIDC {
     _wbuf.clear();
     _dna.clear();
 
+    // iOS에서 오디오 세션 설정 초기화
+    // if (Platform.isIOS) {
+      // try {
+      //   await _configureIOSAudioSession();
+      // } catch (e) {
+      //   print('iOS 오디오 세션 초기화 실패: $e');
+      // }
+    // }
+
     // 마이크 데이터를 수신할 스트림을 설정
     _audioStream = recCtrl.stream.listen((buffer) async {
+      print('data received at: ${DateTime.now()} - buffer size: ${buffer.length}');
 
-      _wbuf.push(buffer);
+      // iOS는 큰 청크로 들어오므로 작은 청크로 나눔
+      if (Platform.isIOS && buffer.length > fftHop * 2) {
+        // 큰 버퍼를 작은 청크로 분할하여 처리
+        int offset = 0;
+        while (offset < buffer.length) {
+          int chunkSize = min(fftHop * 2, buffer.length - offset);
+          Uint8List chunk = buffer.sublist(offset, offset + chunkSize);
 
-      if (_wbuf.length >= fftN * 2) {
-        _wbuf.read(fftN * 2, _pcm);
-        _dna.push(_pcm);
-        _wbuf.pop(fftHop * 2);
+          _wbuf.push(chunk);
+          _processBuffer();
 
-        if (_dna.length == qLen) {
-
-          // 여기서 HTTP 요청 호출
-          Map m = await sendDnaToServer(_dna.pack());
-          print('돌아온 값 :: $m');
-
-          // 에러 메시지가 존재할 때
-          if (m['err_msg'] != '') {
-            print('error msg 1 / 음악 인식 STOP');
-            await stop();
-          }
-
-          if (m['data'] != '' && m.containsKey('data')) {
-            print('곡 인식 성공 !!');
-            print('print::${_recorder.isRecording}');
-            HapticFeedback.lightImpact();
-
-            _ctrl.sink.add(m);
-            _cur = m;
-
-            final song = ApiSearch.fromJson(m['data']);
-            await Get.to(() => SongInfoScreen(song: song));
-            controller.changeState(1);
-          }
-
-          _dna.pop(qLen);
+          offset += chunkSize;
         }
+      } else {
+        // 기존 방식 (Android)
+        _wbuf.push(buffer);
+        _processBuffer();
       }
     });
+
     return true;
   }
 
+  // 버퍼 처리 로직을 별도 메서드로 분리
+  void _processBuffer() {
+    if (_wbuf.length >= fftN * 2) {
+      _wbuf.read(fftN * 2, _pcm);
+      _dna.push(_pcm);
+      _wbuf.pop(fftHop * 2);
+
+      print('dna length :: ${_dna.length}');
+
+      if (_dna.length == qLen) {
+        _sendDnaToServerAndProcess();
+      }
+    }
+  }
+
+  // DNA 서버 전송 및 처리 로직
+  Future<void> _sendDnaToServerAndProcess() async {
+    print('DNA ${qLen}개 도달: ${DateTime.now()}');
+    // 여기서 HTTP 요청 호출
+    Map m = await sendDnaToServer(_dna.pack());
+    print('API 응답 시간: ${DateTime.now()}');
+    print('돌아온 값 :: $m');
+    print('dna.length: ${_dna.length}, elapsed: ${DateTime.now()}');
+
+    // 에러 메시지가 존재할 때
+    if (m['err_msg'] != '') {
+      print('error msg 1 / 음악 인식 STOP');
+      await stop();
+    }
+
+    if (m['data'] != '' && m.containsKey('data')) {
+      print('곡 인식 성공 !!');
+      print('print::${_recorder.isRecording}');
+      HapticFeedback.lightImpact();
+
+      _ctrl.sink.add(m);
+      _cur = m;
+
+      final song = ApiSearch.fromJson(m['data']);
+      await Get.to(() => SongInfoScreen(song: song));
+      controller.changeState(1);
+    }
+
+    _dna.pop(qLen);
+  }
+
+  // iOS 오디오 세션 설정을 위한 메서드
+  // Future<void> _configureIOSAudioSession() async {
+  //   if (Platform.isIOS) {
+  //     try {
+  //       await _methodChannel.invokeMethod('setIOSAudioSessionPreferredIOBufferDuration', {'duration': 0.02});
+  //       print('iOS 오디오 세션 버퍼 설정 완료 (20ms)');
+  //     } catch (e) {
+  //       print('iOS 오디오 세션 설정 중 오류: $e');
+  //     }
+  //   }
+  // }
+
   // HTTP 요청 함수
   Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
-
     final arr = { // 서버로 전송할 값
       'uid' : MyApp.uid,
       'req_times' : num,
@@ -118,7 +174,7 @@ class VMIDC {
         body: body,
       );
 
-      num ++;
+      num++;
       return jsonDecode(response.body);
     } catch (e) {
       print('HTTP 요청 중 오류 발생: $e');
@@ -126,19 +182,22 @@ class VMIDC {
     }
   }
 
-
   // 녹음 시작
   Future<void> start() async {
     num = 1; // 몇 번째 녹음 데이터 전송인지
 
     if (_recorder.isRecording) {
       print('start() 호출되었는데 녹음중');
-      // return;
       await stop();
     }
     controller.changeState(0); // 검색 중
 
     try {
+      // iOS에서 특별 설정 적용 (setAudioFocus 제거)
+      // if (Platform.isIOS) {
+      //   await _configureIOSAudioSession();
+      // }
+
       await _recorder.startRecorder(
         toStream: recCtrl,
         codec: Codec.pcm16,
@@ -176,7 +235,7 @@ class VMIDC {
     _dna.clear();
 
     if (controller.stateVal == 0) {
-        controller.changeState(2);
+      controller.changeState(2);
     }
   }
 

@@ -37,15 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final HomeController controller = Get.put(HomeController());
   final VMIDC _vmidc = VMIDC();
 
-  // final _ctrl = StreamController<List>();
-  // String _id = '';
-  //
-  // String _cur= 'null';
-  // List<List<dynamic>> _meta=[];
-  // List<List<dynamic>> _meta_all=[];
-  // List _curMeta=[];
-  // final _time= Stopwatch();
-
   Future<void>? _asyncTask; // 비동기 작업을 추적하기 위한 변수 (null 허용)
 
   @override
@@ -68,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     PermissionStatus status = await Permission.microphone.status;
     if (status == PermissionStatus.permanentlyDenied) { // 마이크 권한 영구적으로 거부된 경우
       PermissionToast();
-      Permission.microphone.request();
+      await Permission.microphone.request();
       return;
     } else if (status == PermissionStatus.denied) { // 사용자가 마이크 권한 거부한 경우
       requestMicPermission(context);
