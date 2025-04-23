@@ -26,9 +26,6 @@ const fftN = 2048;
 const fftHop = 1000;
 const qLen = 32;
 
-// 네이티브 메서드 채널 정의
-// const MethodChannel _methodChannel = MethodChannel('com.yourapp/audio_session');
-
 class VMIDC {
   final FlutterSoundRecorder _recorder = FlutterSoundRecorder(logLevel: Level.error);
   var recCtrl = StreamController<Uint8List>();
@@ -57,18 +54,10 @@ class VMIDC {
     _wbuf.clear();
     _dna.clear();
 
-    // iOS에서 오디오 세션 설정 초기화
-    // if (Platform.isIOS) {
-      // try {
-      //   await _configureIOSAudioSession();
-      // } catch (e) {
-      //   print('iOS 오디오 세션 초기화 실패: $e');
-      // }
-    // }
-
     // 마이크 데이터를 수신할 스트림을 설정
     _audioStream = recCtrl.stream.listen((buffer) async {
-      print('data received at: ${DateTime.now()} - buffer size: ${buffer.length}');
+      // print('data received at: ${DateTime.now()} - buffer size: ${buffer.length}');
+      //  iOS일때 180ms에 한번씩 들어오는 데이터 청크 3개로 나누어 dna에 각각 담아서 버퍼에 쌓음
 
       // iOS는 큰 청크로 들어오므로 작은 청크로 나눔
       if (Platform.isIOS && buffer.length > fftHop * 2) {
@@ -79,12 +68,12 @@ class VMIDC {
           Uint8List chunk = buffer.sublist(offset, offset + chunkSize);
 
           _wbuf.push(chunk);
-          _processBuffer();
+          _processBuffer(); // 버퍼 처리
 
           offset += chunkSize;
         }
       } else {
-        // 기존 방식 (Android)
+        // Android => 20ms에 한번씩 들어옴, dna에 각각 넣어 버퍼에 쌓음
         _wbuf.push(buffer);
         _processBuffer();
       }
@@ -138,18 +127,6 @@ class VMIDC {
 
     _dna.pop(qLen);
   }
-
-  // iOS 오디오 세션 설정을 위한 메서드
-  // Future<void> _configureIOSAudioSession() async {
-  //   if (Platform.isIOS) {
-  //     try {
-  //       await _methodChannel.invokeMethod('setIOSAudioSessionPreferredIOBufferDuration', {'duration': 0.02});
-  //       print('iOS 오디오 세션 버퍼 설정 완료 (20ms)');
-  //     } catch (e) {
-  //       print('iOS 오디오 세션 설정 중 오류: $e');
-  //     }
-  //   }
-  // }
 
   // HTTP 요청 함수
   Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
