@@ -89,7 +89,7 @@ class VMIDC {
       _dna.push(_pcm);
       _wbuf.pop(fftHop * 2);
 
-      print('dna length :: ${_dna.length}');
+      // print('dna length :: ${_dna.length}');
 
       if (_dna.length == qLen) {
         _sendDnaToServerAndProcess();
@@ -104,7 +104,7 @@ class VMIDC {
     Map m = await sendDnaToServer(_dna.pack());
     print('API 응답 시간: ${DateTime.now()}');
     print('돌아온 값 :: $m');
-    print('dna.length: ${_dna.length}, elapsed: ${DateTime.now()}');
+    // print('dna.length: ${_dna.length}, elapsed: ${DateTime.now()}');
 
     // 에러 메시지가 존재할 때
     if (m['err_msg'] != '') {
@@ -113,6 +113,7 @@ class VMIDC {
     }
 
     if (m['data'] != '' && m.containsKey('data')) {
+      print('찾기까지 걸린 종료시간 :: ${DateTime.now()}');
       print('곡 인식 성공 !!');
       print('print::${_recorder.isRecording}');
       HapticFeedback.lightImpact();
@@ -130,6 +131,7 @@ class VMIDC {
 
   // HTTP 요청 함수
   Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
+
     final arr = { // 서버로 전송할 값
       'uid' : MyApp.uid,
       'req_times' : num,
@@ -161,6 +163,7 @@ class VMIDC {
 
   // 녹음 시작
   Future<void> start() async {
+    print('찾기까지 걸린 시작시간 :: ${DateTime.now()}');
     num = 1; // 몇 번째 녹음 데이터 전송인지
 
     if (_recorder.isRecording) {
@@ -170,11 +173,6 @@ class VMIDC {
     controller.changeState(0); // 검색 중
 
     try {
-      // iOS에서 특별 설정 적용 (setAudioFocus 제거)
-      // if (Platform.isIOS) {
-      //   await _configureIOSAudioSession();
-      // }
-
       await _recorder.startRecorder(
         toStream: recCtrl,
         codec: Codec.pcm16,
