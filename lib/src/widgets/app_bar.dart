@@ -55,7 +55,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
           onPressed: () {
             if (currentIndex == 4 || currentIndex == 5) {
-              context.read<MyAppState>().setPageIdx(3);
+              // context.read<MyAppState>().setPageIdx(3);
+              Navigator.pop(context);
             } else {
               context.read<MyAppState>().setPageIdx(1);
             }

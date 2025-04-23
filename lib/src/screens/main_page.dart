@@ -7,8 +7,6 @@ import 'home_screen.dart';
 import 'history_screen.dart';
 import 'chart_screen.dart';
 import 'setting/setting_screen.dart';
-import 'setting/terms_screen.dart';
-import 'setting/privacy_screen.dart';
 import 'setting/theme_screen.dart';
 import 'common/error_screen.dart';
 import '/main.dart';  // MyAppState (상태 관리 클래스)
@@ -108,20 +106,20 @@ class _MainPageState extends State<MainPage> {
         }
       break;
 
-      case 4: // 이용약관
-        page = TermsScreen();
-        pageTheme = ThemeData.light().copyWith(
-            scaffoldBackgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
-            appBarTheme: AppBarTheme(backgroundColor: Color.fromRGBO(245, 245, 245, 1.0))
-        );
-        break;
-      case 5: // 개인정보 방침
-        page = PrivacyScreen();
-        pageTheme = ThemeData.light().copyWith(
-            scaffoldBackgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
-            appBarTheme: AppBarTheme(backgroundColor: Color.fromRGBO(245, 245, 245, 1.0))
-        );
-      break;
+      // case 4: // 이용약관
+      //   page = TermsScreen();
+      //   pageTheme = ThemeData.light().copyWith(
+      //       scaffoldBackgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
+      //       appBarTheme: AppBarTheme(backgroundColor: Color.fromRGBO(245, 245, 245, 1.0))
+      //   );
+      //   break;
+      // case 5: // 개인정보 방침
+      //   page = PrivacyScreen();
+      //   pageTheme = ThemeData.light().copyWith(
+      //       scaffoldBackgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
+      //       appBarTheme: AppBarTheme(backgroundColor: Color.fromRGBO(245, 245, 245, 1.0))
+      //   );
+      // break;
 
       case 6: // 화면 스타일
 

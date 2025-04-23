@@ -125,7 +125,6 @@ class VMIDC {
       await Get.to(() => SongInfoScreen(song: song));
       controller.changeState(1);
     }
-
     _dna.pop(qLen);
   }
 
@@ -151,8 +150,10 @@ class VMIDC {
         Uri.parse(ApiService.serverUrl),
         headers: headers,
         body: body,
-      );
-
+      ).timeout(const Duration(seconds: 5), // 서버로부터 5초간 응답이 없을 시
+        onTimeout: () {
+          return http.Response(jsonEncode({'err_msg': 'TIME OUT'}), 408); // String, statusCode
+        });
       num++;
       return jsonDecode(response.body);
     } catch (e) {

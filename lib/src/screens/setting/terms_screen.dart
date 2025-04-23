@@ -1,22 +1,20 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:provider/provider.dart';
-import '/main.dart';
-
-// import 'dart:convert';
-// import '../../servicesapi_service.dart';
-// import 'package:http/http.dart' as http;
+import '../../widgets/app_bar.dart';
+import '../../services/api_service.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_html/flutter_html.dart';
 
 class TermsScreen extends StatefulWidget {
-  const TermsScreen({super.key});
+  final int gubun;
+  const TermsScreen({super.key, required this.gubun});
 
   @override
   _TermsScreenState createState() => _TermsScreenState();
 }
 
 class _TermsScreenState extends State<TermsScreen> {
-  String termsContent = "로딩 중...";
+  String content = "로딩 중...";
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -27,32 +25,23 @@ class _TermsScreenState extends State<TermsScreen> {
 
   Future<void> _loadTerms() async {
 
-    // try {
-    //   http.Response response = await http.get(Uri.parse(ApiService.termsUrl));
-    //
-    //   print('test1 : ${response.body}');
-    //   String test = jsonDecode(response.body);
-    //
-    //   print('test2 : $test');
-    // } catch (e) {
-    //   print('통신 실패');
-    // }
-
-
-
-
     try {
-      // assets/terms.txt 파일 읽기
-      String loadedContent = await rootBundle.loadString('assets/terms.txt');
+      http.Response response = await http.get(Uri.parse(
+        widget.gubun == 4 ? ApiService.termsUrl : ApiService.privacyUrl
+      ));
+
       setState(() {
-        termsContent = loadedContent;
+        content = response.body;
       });
+
     } catch (e) {
-      print(e);
+      print('통신 실패');
       setState(() {
-        termsContent = "이용약관을 불러오는 데 실패했습니다.";
+        content = '데이터를 불러오지 못했습니다.';
       });
     }
+
+
   }
 
   @override
@@ -63,7 +52,10 @@ class _TermsScreenState extends State<TermsScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+      appBar: CustomAppBar(currentIndex: widget.gubun),
+
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -95,17 +87,28 @@ class _TermsScreenState extends State<TermsScreen> {
             radius: Radius.circular(10), // 스크롤바 모서리 둥글게
             child: SingleChildScrollView(
               controller: _scrollController,
-              child: Text(
-                termsContent,
-                style: TextStyle(fontSize: 12),
-              ),
+              child:
+              // Text(
+              //   termsContent,
+              //   style: TextStyle(fontSize: 12),
+                Html(data: content,
+                  style: {
+                    "body": Style(
+                      fontSize: FontSize(13.0),  // 기본 글자 크기 설정
+                    ),
+                    "h3": Style(
+                      fontSize: FontSize(14.0),  // h1 태그의 글자 크기
+                    ),
+                  },
+                )
+              // ),
             ),
           ),
         ),
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () {
-          context.read<MyAppState>().setPageIdx(3);
+          Navigator.pop(context);
         },
         child: Container(
           height: 70,

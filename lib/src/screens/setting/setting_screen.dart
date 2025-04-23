@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
+import 'package:momo_final/src/screens/setting/terms_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:pub_semver/pub_semver.dart';
@@ -85,14 +86,22 @@ class SettingScreen extends StatefulWidget {
                 title: Text('이용약관', style: TextStyle(fontSize: 15.0, color: textColor),),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
-                  context.read<MyAppState>().setPageIdx(4);
+                  // context.read<MyAppState>().setPageIdx(4);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TermsScreen(gubun: 4)),
+                  );
                 },
               ),
               ListTile(
                 title: Text('개인정보 처리방침', style: TextStyle(fontSize: 15.0, color: textColor),),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
-                  context.read<MyAppState>().setPageIdx(5);
+                  // context.read<MyAppState>().setPageIdx(5);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TermsScreen(gubun: 5)),
+                  );
                 },
               ),
             ],

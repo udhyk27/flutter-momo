@@ -314,10 +314,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              // 페이지 호출하면서 값 넘기기
-                               builder: (context) => SongInfoScreen(song: searchList[index]),
-                            ),
+                            MaterialPageRoute(builder: (context) => SongInfoScreen(song: searchList[index]),),
                           );
                         },
                         child: Container(
