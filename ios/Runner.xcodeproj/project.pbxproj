@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -730,11 +730,11 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = AH88P8729J;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_NAME = 1.1.0;
-				FLUTTER_BUILD_NUMBER = 15;
+				FLUTTER_BUILD_NUMBER = 16;
 				FLUTTER_ROOT = "/Users/bang-gyeongsig/Documents/development/flutterSdk/flutter";
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
@@ -931,11 +931,11 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = AH88P8729J;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_NAME = 1.1.0;
-				FLUTTER_BUILD_NUMBER = 15;
+				FLUTTER_BUILD_NUMBER = 16;
 				FLUTTER_ROOT = "/Users/bang-gyeongsig/Documents/development/flutterSdk/flutter";
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
@@ -967,11 +967,11 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = AH88P8729J;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_NAME = 1.1.0;
-				FLUTTER_BUILD_NUMBER = 15;
+				FLUTTER_BUILD_NUMBER = 16;
 				FLUTTER_ROOT = "/Users/bang-gyeongsig/Documents/development/flutterSdk/flutter";
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
