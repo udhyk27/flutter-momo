@@ -50,7 +50,6 @@ var date_;
 var count;
 
 List detailList = [];
-
 List song_recommends = [];
 
 List reversedDate = [];

@@ -102,7 +102,7 @@ class VMIDC {
     print('DNA ${qLen}개 도달: ${DateTime.now()}');
     // 여기서 HTTP 요청 호출
     Map m = await sendDnaToServer(_dna.pack());
-    print('API 응답 시간: ${DateTime.now()}');
+    // print('API 응답 시간: ${DateTime.now()}');
     print('돌아온 값 :: $m');
     // print('dna.length: ${_dna.length}, elapsed: ${DateTime.now()}');
 
