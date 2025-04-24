@@ -6,8 +6,5 @@ class HomeController extends GetxController {
 
   void changeState(int value) {
     stateVal.value = value;
-    if (value == 2) {
-      HapticFeedback.lightImpact();
-    }
   }
 }

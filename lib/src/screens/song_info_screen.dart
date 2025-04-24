@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +12,6 @@ import '../model/api_detail_programs.dart';
 import '../model/api_search.dart';
 import '../services/api_service.dart';
 import 'package:provider/provider.dart';
-import '../widgets/vmidc.dart';
 import '/main.dart';
 
 import 'package:share_plus/share_plus.dart';
@@ -32,9 +30,9 @@ var year;
 var cnt;
 
 var intY;
-List listY = [];
+List listY = []; // SCH_CNT
 var intX;
-List listX = [];
+List listX = []; // 월
 
 List<FlSpot> FlSpotDataAll = [];
 var sum;
@@ -70,7 +68,6 @@ class SongInfoScreen extends StatefulWidget {
 
 class _SongInfoScreenState extends State<SongInfoScreen> {
 
-  final VMIDC _vmidc = VMIDC();
   List<DetailProgram> infoProgram = [];
   bool isLoading = true;
   bool programLoading = true;
@@ -90,7 +87,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       count = detailList['count'] ?? 0;
       song_cnts = detailList['song_cnts'] ?? [];
 
-      // print('song_cnts :::: ${song_cnts}');
+      print('총 횟수 ::: ${count}');
+      print('song_cnts :::: ${song_cnts}');
 
       setState(() {
         isLoading = false;
@@ -177,7 +175,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
   @override
   void initState() {
-    // _vmidc.stop();
 
     fetchData();
 
@@ -629,6 +626,9 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
         minY: 0, // 최소 횟수 0
         maxX: 12, // 최대 12월
         maxY: double.parse((listY.isNotEmpty ? listY.last : 100).toString()) + 100, // 최대 횟수 마지막 요소 + 100
+        // maxY: listY.isNotEmpty
+        //     ? listY.cast<num>().reduce<num>(max).toDouble() + 20 // 여유 여백 20 정도
+        //     : 100,
         lineBarsData: [
           LineChartBarData(
             dotData: FlDotData(
