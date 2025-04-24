@@ -30,7 +30,7 @@ var year;
 var cnt;
 
 var intY;
-List listY = []; // SCH_CNT
+List<num> listY = []; // SCH_CNT
 var intX;
 List listX = []; // 월
 
@@ -87,8 +87,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       count = detailList['count'] ?? 0;
       song_cnts = detailList['song_cnts'] ?? [];
 
-      print('총 횟수 ::: ${count}');
-      print('song_cnts :::: ${song_cnts}');
+      // print('총 횟수 ::: ${count}');
+      // print('song_cnts :::: ${song_cnts}');
 
       setState(() {
         isLoading = false;
@@ -118,8 +118,12 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       List _contain = [];  // 실데이타 파싱
       sum = 0;
       for (int i = 0; i <= song_cnts.length - 1; i++) {
+        final item = song_cnts[i] as Map<String, dynamic>;
+
         intX = int.parse(song_cnts[i]['F_MONTH'].toString().substring(4, 6));
-        intY = int.parse(song_cnts[i]['CTN']);
+        // intY = int.parse(song_cnts[i]['CTN']); // ##
+        final ctnValue = item['CTN'];
+        final intY = int.tryParse(ctnValue.toString()) ?? 0;
 
         listX.add(intX);
         listY.add(intY);
@@ -625,10 +629,10 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
         minX: 1, // 최소 1월
         minY: 0, // 최소 횟수 0
         maxX: 12, // 최대 12월
-        maxY: double.parse((listY.isNotEmpty ? listY.last : 100).toString()) + 100, // 최대 횟수 마지막 요소 + 100
-        // maxY: listY.isNotEmpty
-        //     ? listY.cast<num>().reduce<num>(max).toDouble() + 20 // 여유 여백 20 정도
-        //     : 100,
+        // maxY: double.parse((listY.isNotEmpty ? listY.last : 100).toString()), // 최대 횟수 마지막 요소 + 100
+        maxY: listY.isNotEmpty
+            ? listY.reduce(max).toDouble() + 20
+            : 100,
         lineBarsData: [
           LineChartBarData(
             dotData: FlDotData(
