@@ -125,8 +125,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ];
     } else {
       gradientColors = [
-        // Color.fromRGBO(250, 225, 225, 0.8), // 위쪽 색
-        // Color.fromRGBO(243, 235, 235, 0.3), // 아래쪽 색
         Color.fromRGBO(255, 143, 187, 1.0),
         Color.fromRGBO(255, 232, 240, 1.0),
       ];

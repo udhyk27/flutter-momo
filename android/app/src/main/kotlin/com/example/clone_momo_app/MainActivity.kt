@@ -1,4 +1,4 @@
-package com.example.clone_momo_app
+package com.oneidlab.Momo
 
 import io.flutter.embedding.android.FlutterActivity
 

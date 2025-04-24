@@ -12,7 +12,6 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:momo_final/src/screens/song_info_screen.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../main.dart';
 import '../controller/home_controller.dart';
