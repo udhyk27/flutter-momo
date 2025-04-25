@@ -82,6 +82,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       Map<String, dynamic> detailList = jsonDecode(jsonData);
 
       song_recommends = detailList['song_recommend'] ?? [];
+      // print('추천 음악 :: ${song_recommends}');
 
       count = detailList['count'] ?? 0;
       song_cnts = detailList['song_cnts'] ?? [];

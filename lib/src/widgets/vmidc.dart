@@ -133,7 +133,6 @@ class VMIDC {
     final arr = { // 서버로 전송할 값
       'uid' : MyApp.uid,
       'req_times' : num,
-      'max_req_times' : 5,
       'dna_data' : base64Encode(Uint8List.fromList(dna))
     };
 
@@ -149,7 +148,7 @@ class VMIDC {
         Uri.parse(ApiService.serverUrl),
         headers: headers,
         body: body,
-      ).timeout(const Duration(seconds: 5), // 서버로부터 5초간 응답이 없을 시
+      ).timeout(Duration(seconds: ApiService.sv_timeOut), // 서버로부터 5초간 응답이 없을 시
         onTimeout: () {
           return http.Response(jsonEncode({'err_msg': 'TIME OUT'}), 408); // String, statusCode
         });
@@ -182,7 +181,7 @@ class VMIDC {
 
       print('녹음이 정상적으로 시작됨!');
 
-      _recordTimer = Timer(Duration(seconds: 15), () async {
+      _recordTimer = Timer(Duration(seconds: ApiService.rc_timeOut), () async {
         // 곡 인식하거나 서버 연결 실패했는데 녹음만 되고있을 때 방지
         if (_recorder.isRecording) {
           print('15초 경과 - 녹음 중이므로 자동 종료합니다.');

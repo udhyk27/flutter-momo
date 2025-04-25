@@ -42,5 +42,10 @@ class ApiSearch {
     );
   }
 
+  @override
+  String toString() {
+    return 'ApiSearch(image: $image, title: $title, artist: $artist, album: $album, songId: $songId, date: $date, genre: $genre)';
+  }
+
 }
 

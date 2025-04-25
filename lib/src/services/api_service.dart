@@ -7,7 +7,6 @@ class ApiService {
   // api data
   static String historyUrl = '';
   static String recommendUrl = '';
-  static String searchUrl = '';
   static String programsUrl = '';
   static String mmchartUrl = '';
   static String airchartUrl = '';
@@ -17,6 +16,8 @@ class ApiService {
   static String termsUrl = '';
   static String serverUrl = '';
   static String detailUrl = '';
+  static int sv_timeOut = 5;
+  static int rc_timeOut = 20;
 
   // remote config
   static String appVersion = '';
@@ -61,7 +62,6 @@ class ApiService {
 
       ApiService.historyUrl = 'https://${apiData['history']}';
       ApiService.recommendUrl = 'https://${apiData['recommend']}';
-      ApiService.searchUrl = 'https://${apiData['search']}';
       ApiService.programsUrl = 'https://${apiData['programs']}';
       ApiService.mmchartUrl = 'https://${apiData['mmchart']}';
       ApiService.airchartUrl = 'https://${apiData['airchart']}';
@@ -71,6 +71,8 @@ class ApiService {
       ApiService.termsUrl = 'https://${apiData['terms']}';
       ApiService.detailUrl = 'https://${apiData['detail']}';
       ApiService.serverUrl = 'https://${apiData['server']}';
+      ApiService.sv_timeOut = apiData['sv_timeout'];
+      ApiService.rc_timeOut = apiData['rc_timeout'];
 
     } catch (e) {
       print('API DATA RESPONSE ERROR : $e');

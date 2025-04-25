@@ -27,7 +27,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   // API 요청 추천 음악 리스트 받기
   Future<void> fetchApiData() async {
-
     // 검색 목록
     try {
       http.Response response = await http.get(Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}'));
@@ -44,6 +43,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             isLoading = false;
           });
         }
+        // print(fullSearchList.toString());
       }
     } catch (e) {
       print('검색 목록 리스트 API 오류');
