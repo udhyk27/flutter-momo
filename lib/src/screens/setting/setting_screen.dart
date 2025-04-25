@@ -209,7 +209,7 @@ class SettingScreen extends StatefulWidget {
                 ),
               ),
               ListTile(
-                title: Text('현재버전 v$currentVersion', style: TextStyle(fontSize: 15.0, color: textColor),),
+                title: Text('현재버전 $currentVersion', style: TextStyle(fontSize: 15.0, color: textColor),),
                 trailing: SizedBox(
                   width: 90,
                   height: 30,
