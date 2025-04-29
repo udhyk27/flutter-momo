@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wear_os/song_info.dart';
 import 'package:wear_os/widgets/vmidc.dart';
-
+import 'package:http/http.dart' as http;
 void main() {
   runApp(const MyApp());
 }
@@ -72,6 +74,37 @@ class _HomePageState extends State<HomePage> {
   }
 
 
+
+  // Future<void> sendData() async { // test
+  //   final arr = {
+  //     'uid': MyApp.uid,
+  //     'req_times': 1,
+  //     'dna_data': 'ZGOOwxe/1f9dpeFRP3jpy1/+0+EefLXJH2ax1D1c6csXxvVkPXKY3xfH8ewddK3JD8fxbDx26eVP53Fsfrra58bHYWR+dKlOZ0dxyT/y2M2nx3NsffKaSe7Fcew+fNFNs5VxHjV16Uv30HEePdShSbdhYR41dK3bJ4LyXDF2i1s3ZvQfUeTsw7dBs7ZVJq1Ht0Y0R8G0hFN3FLrt1Tb2WzMB8aZnNs/NPwUitnNoV0u3YHLtW6TlS7Nk8+xWunFjd0Fg6tjQ0Nm/SGnKVnnL27cJMu3XUcNu92Bw6aNgU2fWyvP41rGzyWbgkPufWrPbzsQo0IdM81mDzOTQ3tz601eB4ptsW1O9ORwPHn7AB3i2J8uZY9pjuPszUc0DdItZ0iabmTvH65yeK1mZB+WqdPNtM5ljm7OQfgGangdnODFyy2Yz50mWlL5JmpgT8xgW0qeZmWNO0rg3Q1vdob04EnIfOjNn2pKs/xgf+YN6PB9VH253ZrNSlP8YmdwBOzg22iabmWPL3Ji/2F+YCT88W25PmDtnXbucX9gamYmeJT1zHy57ZtJjnD/IllkFOyQd9iaynUvaW5h/7Bn5AB0se3cLszlnym24r2QblTPTnBB3LTA5I8pymD9sSvUgk4wQNyaamWPKwog/zUCdIZucFCfbOlrmStKYXwxKkwjdrBRnN7nRZMuSuDdPGzM024wUZDKeVmnGk5ifxRmZhUecMmYzuku6yJaYP2cZkTjXLRF2tixPJkvDmA9vIbNt1y0zNRqZjUlaM/gPLyOl2XesVssaVl0q02I4J48xAlVWjirLOj2MKVsylD/PVRUPXbMyzGpmy0o3m5Yv32AcjzYzdshzCOlF01OZrz8loFU3Jmwwsim1avjJmJ/vZBKnXOY4KqqZMU55dra/z1EUDda7ci/OSDkvyz2UL68UpoBfWzYekkBrBOvxmi9rpuiF3aA3komIMYbD55R/OCj2qNOqJJLJmDkH2ciw/3RI6UgMqyWYcbK7xFeDsx9mafkQtIg'
+  //   };
+  //
+  //   final body = jsonEncode(arr);
+  //   final headers = {'Content-Type': 'application/json'};
+  //
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse('http://www.mo-mo.co.kr/api/getdnasong'), // URL 업데이트
+  //       headers: headers,
+  //       body: body,
+  //     ).timeout(
+  //       Duration(seconds: 5),
+  //       onTimeout: () => http.Response(jsonEncode({'err_msg': 'TIME OUT'}), 408),
+  //     );
+  //
+  //     print('Response: ${jsonDecode(response.body)}');
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
+
+
+
+
+
   Future<void> asyncFunction() async {
 
     // 네트워크 연결 확인
@@ -95,7 +128,7 @@ class _HomePageState extends State<HomePage> {
     try {
       if (!mounted) return;
       print('vmidc start');
-      // await _vmidc.start(); // 녹음 시작
+      await _vmidc.start(); // 녹음 시작
     } catch (e) {
       print('녹음 실패! ################## $e');
     }
@@ -126,7 +159,8 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: GestureDetector(
           onTap: () {
-            // _asyncTask = asyncFunction();
+            // sendData(); // TEST 용
+            _asyncTask = asyncFunction();
 
             context.read<RecognitionState>().setRec(true);
 

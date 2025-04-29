@@ -120,6 +120,8 @@ class VMIDC {
       _ctrl.sink.add(m);
       _cur = m;
 
+      // final song = m['data']; => 모델 없이 이렇게 받아야 할 듯
+
       // final song = ApiSearch.fromJson(m['data']);
       // await Get.to(() => SongInfoScreen(song: song));
       // controller.changeState(1);
@@ -131,10 +133,9 @@ class VMIDC {
   Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
 
     final arr = { // 서버로 전송할 값
-      // 'uid' : MyApp.uid,
+      'uid' : MyApp.uid,
       'req_times': num,
-      // 'dna_data': base64Encode(Uint8List.fromList(dna))
-      'dna_data' : 'l/H/zgwPs0u36HW1Uo50X7fYe5IgjXNdn7/1LCudd1s+9+WlQJtJeT7/6x1Vq9NMP/37LFGtsma/Xb946dp4St6evaLEJ+c6p2+NqlI3d0M6tpsLIe32Qt/990cp0zZ7N+o7Jla6s3t/c/OKVKs+bfv+72V1LTZ7XvPtnkQ5Mmle8+WiEHsza531+askWTNrzfiePmwdu2MfSK+2cBk/fmVE9yn0uNlv77Y+ynSsuH638X3LSY2/TF/z7Z4QerJf5qRnshBtMxvO+PjlqIy4HT9jNs6DSflKX/PtvhB5u1K+87siliube/+S5S4VKDl/v7ueHMCPfC8/++6OQsmMfeiU2d2uy2YYvMfJJV1/dGoUU9pZJBvTGD7HSOQZn8gmkIzzZS5b8xk8xWi5ZV8nZUpMs0m218I829f3a1pLagwQGAbzSxqzH1sfX+cx3zxLG5vNZs9xsjF7R333pfokKVOy8szMSpoe6xVz7cV/awVCysS56FmmHnyP2Rr7xTITcPAaDl5Zxhe/4XZnemtmZxhblskYXU4dPM1fnXPSZGZTTNN9HG2SFOmSOEfuo8QC04zacZwv5463u/l6rauWMjQjyEcLR0sePB7e3MVOzUxksc1EtlpajnaaTi/H5q5IE52yLLZLrR7ve2p2r66UGjIZ0h+vS0sdbyGnlnhm7WMmUuYcp0PDHG4zrvdaLaUndgzKmaUXQz5zlVRq6bNmJNmaktHJZlsU4XjC/t1hrSMmteLS/gnSDeln4rmapIxjNL1MyuVZ0x43fjg5M8+gEjAvqabIZLML5e4079yN7njCOOOJrkP6CB7PybtVn6ZKJmJWHaZD+hhvMS63WiStIzTXthyuU/MJn/Y43TucpmPIzKrJVGf7CV1wlbdM2zg+DWDTGeJ81By7Zw4cFmc6ejZi5xrHY5YxbyMvtlIttSdc69yc7kNTG9fKLWtH5k4uM6bKjOlL2xr3yx3JMatyTVZc2mDVVlcPuaee5m5z6WBMseJhcMo4F70nrap6bdtk'
+      'dna_data': base64Encode(Uint8List.fromList(dna))
     };
 
     final body = jsonEncode(arr);
@@ -155,6 +156,7 @@ class VMIDC {
                 jsonEncode({'err_msg': 'TIME OUT'}), 408); // String, statusCode
           });
       num++;
+      print('response ::::: ${jsonDecode(response.body)}');
       return jsonDecode(response.body);
     } catch (e) {
       print('HTTP 요청 중 오류 발생: $e');

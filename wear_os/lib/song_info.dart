@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SongInfo extends StatefulWidget {
 
+  // final List song;
 
   const SongInfo({
     super.key,

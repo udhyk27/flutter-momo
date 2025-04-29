@@ -39,7 +39,13 @@ void main() async {
   watchService.onAudioDataReceived = (audioData) {
     print("오디오 데이터 수신 완료! 데이터 길이: ${audioData.length}");
 
-    // watchService.analyzeAudio(audioData);
+    // audioData의 바이트 출력 (base64로 인코딩해서 출력할 수도 있음)
+    String base64String = base64Encode(audioData);
+    print("오디오 데이터 (Base64 인코딩): $base64String");
+
+    // 추가적으로 raw 데이터 확인 (바이트 배열로 출력)
+    print("오디오 데이터 (Raw 바이트): ${audioData}");
+
   };
 
   runApp(MyApp());

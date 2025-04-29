@@ -58,7 +58,12 @@ struct SongInfoView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .scaledToFit()
                 } placeholder: {
-                    ProgressView()
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.gray.opacity(0.3)) // 빈 배경색
+                        ProgressView()
+                    }
+                    .frame(width: 150, height: 150)
                 }
                 
                 // 곡 정보
@@ -82,7 +87,7 @@ struct SongInfoView: View {
                     dismiss()
                 }
                 .padding()
-                .padding(.top, 10)
+                .padding(.top, 20)
                 .padding(.bottom, 30)
                 .foregroundColor(.black)
                 .clipShape(RoundedRectangle(cornerRadius: 5))
