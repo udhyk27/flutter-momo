@@ -9,7 +9,7 @@ class WatchService {
   final EventChannel _eventChannel = const EventChannel('watch_channel');
 
   void Function()? onWatchMessageReceived;
-  void Function(Uint8List audioData)? onAudioDataReceived; // 🎤 오디오 데이터 콜백 추가
+  void Function(Uint8List audioData)? onAudioDataReceived; // 오디오 데이터 콜백 추가
 
   void init() {
     _eventChannel.receiveBroadcastStream().listen((event) {
@@ -23,5 +23,9 @@ class WatchService {
     }, onError: (error) {
       print("워치 이벤트 오류: $error");
     });
+  }
+
+  void analyzeAudio() {
+
   }
 }

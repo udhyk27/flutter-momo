@@ -1,0 +1,51 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+
+# Git directories
+.svn/
+.atom/
+.history
+
+# SwiftPM (Swift Package Manager) 관련 (필요 없으면 제거 가능)
+.swiftpm/
+
+# Flutter/Dart/Pub related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Flutter platform-specific directories
+/android/
+/ios/
+/macos/
+/linux/
+/windows/
+/wear_os/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# IDE related
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+
+# Build artifacts from Android Studio
+/android/app/debug
+/android/app/profile
+/android/app/release
+.metadata
+

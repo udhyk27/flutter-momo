@@ -3,16 +3,13 @@ import SwiftUI
 // 기본 화면
 struct ContentView: View {
     @StateObject private var audioManager = WatchAudioManager()
-    @State private var isRecognizing = false // 녹음 중 표시
-    @State private var songFound = false // 곡 인식 성공여부
-    @State private var navigateToSongInfo = false // 네비게이션 상태
 
     var body: some View {
         NavigationStack {
             VStack {
                 Spacer()
                 
-                if isRecognizing {
+                if audioManager.isRecognizing {
                     VStack {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle())
@@ -23,7 +20,7 @@ struct ContentView: View {
                             .padding(.top, 10)
                     }
                 } else {
-                    Button(action: startRec) {
+                    Button(action: audioManager.startRecording) {
                         Image("momo_btn")
                             .resizable()
                             .frame(width: 120.0, height: 120.0)
@@ -37,37 +34,18 @@ struct ContentView: View {
             .navigationBarBackButtonHidden(true) // 뒤로가기 버튼 숨기기
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(UIColor(red: 255/255, green: 195/255, blue: 200/255, alpha: 1.0)))
-            .navigationDestination(isPresented: $navigateToSongInfo) {
+            .navigationDestination(isPresented: $audioManager.navigateToSongInfo) {
                 SongInfoView()
             }
         }
     }
-    
-    private func startRec() {
-        
-        // iOS 데이터 전송
-        audioManager.wakeUpiPhone()
-        audioManager.startRecording()
-        
-        isRecognizing = true // 녹음 중
-        songFound = true // 노래 찾았다고 가정
-
-        // 3초 인디케이터
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            isRecognizing = false
-            
-            if songFound {
-                navigateToSongInfo = true
-            }
-            
-            
-        }
-        
-        
-    }
 }
 
+
+// 음악인식 결과
 struct SongInfoView: View {
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         ScrollView {
             VStack {
@@ -83,9 +61,10 @@ struct SongInfoView: View {
                     ProgressView()
                 }
                 
+                // 곡 정보
                 VStack(alignment: .leading) {
                     Text("Home Sweet Home") // 곡 제목
-                        .font(.title3)
+                        .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(.black)
                     
@@ -99,12 +78,15 @@ struct SongInfoView: View {
                         .foregroundColor(.black)
                 }
 
+                Button("닫기") {
+                    dismiss()
+                }
+                .padding()
+                .padding(.top, 20)
+                .padding(.bottom, 20)
+                .foregroundColor(.black)
+                .clipShape(RoundedRectangle(cornerRadius: 5))
                 
-                
-                NavigationLink("닫기", destination: ContentView())
-                    .padding()
-                    .foregroundColor(.black)
-                    .clipShape(RoundedRectangle(cornerRadius: 5))
             }
             .navigationBarBackButtonHidden(true) // 뒤로가기 버튼 숨기기
             .frame(maxWidth: .infinity, maxHeight: .infinity)

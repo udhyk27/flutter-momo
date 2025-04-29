@@ -33,11 +33,13 @@ void main() async {
 
   Get.put(HomeController());
 
+  WatchService watchService = WatchService();
+
   // 워치
-  WatchService().onAudioDataReceived = (audioData) {
+  watchService.onAudioDataReceived = (audioData) {
     print("오디오 데이터 수신 완료! 데이터 길이: ${audioData.length}");
 
-    // 여기에 오디오 분석 로직 추가 가능
+    // watchService.analyzeAudio(audioData);
   };
 
   runApp(MyApp());
