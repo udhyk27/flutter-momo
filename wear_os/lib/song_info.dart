@@ -50,6 +50,7 @@ class _SongInfoState extends State<SongInfo> {
                     Text('카더가든'),
                     Text('APARTMENT'),
                     Text('2017.12.02'),
+                    SizedBox(height: 10,),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
@@ -58,8 +59,8 @@ class _SongInfoState extends State<SongInfo> {
                         '닫기',
                         style: TextStyle(color: Colors.grey),
                       ),
-                    )
-
+                    ),
+                    SizedBox(height: 10,)
                   ],
                 )
               ],

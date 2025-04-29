@@ -64,7 +64,7 @@ struct SongInfoView: View {
                 // 곡 정보
                 VStack(alignment: .leading) {
                     Text("Home Sweet Home") // 곡 제목
-                        .font(.title2)
+                        .font(.title3)
                         .fontWeight(.bold)
                         .foregroundColor(.black)
                     
@@ -82,11 +82,10 @@ struct SongInfoView: View {
                     dismiss()
                 }
                 .padding()
-                .padding(.top, 20)
-                .padding(.bottom, 20)
+                .padding(.top, 10)
+                .padding(.bottom, 30)
                 .foregroundColor(.black)
                 .clipShape(RoundedRectangle(cornerRadius: 5))
-                
             }
             .navigationBarBackButtonHidden(true) // 뒤로가기 버튼 숨기기
             .frame(maxWidth: .infinity, maxHeight: .infinity)

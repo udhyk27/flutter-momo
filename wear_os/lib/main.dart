@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,14 +12,15 @@ void main() {
   runApp(const MyApp());
 }
 
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  static String? uid = '';
 
 
   @override
   State<MyApp> createState() => _MyAppState();
-
 }
 
 class _MyAppState extends State<MyApp> {
@@ -55,8 +57,20 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // _vmidc.init();
+    getDeviceId();
     super.initState();
   }
+
+  Future<void> getDeviceId() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    MyApp.uid = androidInfo.id;
+
+    print('WATCH UID : ${MyApp.uid}');
+    print('WATCH MODEL : ${androidInfo.model}');
+  }
+
 
   Future<void> asyncFunction() async {
 
