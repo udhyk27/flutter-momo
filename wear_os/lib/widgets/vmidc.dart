@@ -23,24 +23,19 @@ const fftHop = 1000;
 const qLen = 32;
 
 class VMIDC {
-  final FlutterSoundRecorder _recorder = FlutterSoundRecorder(
-      logLevel: Level.error);
+  final FlutterSoundRecorder _recorder = FlutterSoundRecorder(logLevel: Level.error);
   var recCtrl = StreamController<Uint8List>();
 
   // final HomeController controller = Get.find<HomeController>();
   late StreamSubscription _audioStream;
-
   final WaveBuf _wbuf = WaveBuf();
   final DnaBuf _dna = DnaBuf();
-
   Timer? _recordTimer;
 
   final Pointer<Uint8> _pcm = malloc.allocate<Uint8>(fftN * 2);
 
   final _ctrl = StreamController<Map>();
-
   Stream<Map> get stream => _ctrl.stream;
-
   bool get isRunning => _recorder.isRecording;
   Map _cur = {};
 
@@ -176,12 +171,12 @@ class VMIDC {
     // controller.changeState(0); // 검색 중
 
     try {
-      await _recorder.startRecorder(
-        toStream: recCtrl,
-        codec: Codec.pcm16,
-        numChannels: 1,
-        sampleRate: srate,
-      );
+      // await _recorder.startRecorder(
+      //   toStream: recCtrl,
+      //   codec: Codec.pcm16,
+      //   numChannels: 1,
+      //   sampleRate: srate,
+      // );
 
       print('녹음이 정상적으로 시작됨!');
 
@@ -215,20 +210,20 @@ class VMIDC {
     //     controller.changeState(2);
     //   }
     // }
+  }
 
-    Future<void> dispose() async {
-      print('vmidc dispose');
+  Future<void> dispose() async {
+    print('vmidc dispose');
 
-      if (_recorder.isRecording) {
-        print('녹음중이면 stop');
-        await stop();
-      }
-
-      await _audioStream.cancel(); // 스트림 구독 리스닝 해제
-      await _recorder.closeRecorder(); // 오디오 세션 닫기
-      recCtrl.close(); // 스트림 컨트롤러 닫기
-      malloc.free(_pcm); // 메모리 해제
+    if (_recorder.isRecording) {
+      print('녹음중이면 stop');
+      await stop();
     }
+
+    await _audioStream.cancel(); // 스트림 구독 리스닝 해제
+    await _recorder.closeRecorder(); // 오디오 세션 닫기
+    recCtrl.close(); // 스트림 컨트롤러 닫기
+    malloc.free(_pcm); // 메모리 해제
   }
 }
 

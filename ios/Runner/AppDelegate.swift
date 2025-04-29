@@ -30,25 +30,26 @@ import WatchConnectivity
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    // 📌 워치에서 메시지 수신 (오디오 데이터 포함)
+    // 워치에서 메시지 수신 (오디오 데이터 포함)
     func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
         DispatchQueue.main.async {
             if let action = message["action"] as? String {
                 switch action {
                 case "wakeUp":
-                    print("🚀 iPhone 앱 자동 실행 요청 받음!")
+                    print("iPhone 앱 자동 실행 요청 받음!")
                     self.openAppFromWatch()
 
                 case "watchRec":
-                    print("📡 워치에서 'watchRec' 신호 받음")
+                    print("워치에서 'watchRec' 신호 받음")
                     self.eventSink?("watchRec")
 
                 default:
-                    print("⚠️ 알 수 없는 액션: \(action)")
+                    print("알 수 없는 액션: \(action)")
                 }
-            } else if let audioData = message["audioData"] as? Data {
-                print("🎤 워치에서 오디오 데이터 받음")
-                self.eventSink?(FlutterStandardTypedData(bytes: audioData))
+            } else if let base64String = message["audioData"] as? String,
+                      let audioData = Data(base64Encoded: base64String) {
+                print("워치에서 오디오 데이터 받음")
+                self.eventSink?(base64String)
             }
         }
     }
@@ -59,7 +60,7 @@ import WatchConnectivity
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             } else {
-                print("🚫 URL Scheme 실행 실패: 'momowatch://'을 Info.plist에 추가했는지 확인하세요!")
+                print("URL Scheme 실행 실패: 'momowatch://'을 Info.plist에 추가했는지 확인하세요!")
             }
         }
     }
@@ -73,7 +74,7 @@ import WatchConnectivity
     func sessionDidDeactivate(_ session: WCSession) {}
 }
 
-// 📌 Flutter와 EventChannel 연결
+// Flutter와 EventChannel 연결
 extension AppDelegate: FlutterStreamHandler {
     func onListen(withArguments arguments: Any?, eventSink: @escaping FlutterEventSink) -> FlutterError? {
         self.eventSink = eventSink

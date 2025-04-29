@@ -127,7 +127,6 @@ class _HomePageState extends State<HomePage> {
 
     try {
       if (!mounted) return;
-      print('vmidc start');
       await _vmidc.start(); // 녹음 시작
     } catch (e) {
       print('녹음 실패! ################## $e');
@@ -136,7 +135,7 @@ class _HomePageState extends State<HomePage> {
 
   void cancelAsyncTask() async {
     if (_asyncTask != null) {
-      // await _vmidc.stop(); // 녹음 중지
+      await _vmidc.stop(); // 녹음 중지
     }
 
     // X 또는 아이콘 누르면 실패 화면
@@ -144,7 +143,7 @@ class _HomePageState extends State<HomePage> {
 
   @override // 페이지가 종료될 때에만 리소스 해제
   void dispose()  {
-    // _vmidc.dispose();
+    _vmidc.dispose();
     super.dispose();
   }
 
