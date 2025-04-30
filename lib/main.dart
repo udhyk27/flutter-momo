@@ -34,7 +34,7 @@ void main() async {
   Get.put(HomeController());
 
   WatchService watchService = WatchService();
-
+  watchService.init(); // 이벤트 수신 초기화
   // 워치
   watchService.onAudioDataReceived = (audioData) {
     print("오디오 데이터 수신 완료! 데이터 길이: ${audioData.length}");

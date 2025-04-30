@@ -1,5 +1,7 @@
 import AVFoundation
 import Foundation
+import WavBuf
+import DnaBuf
 
 let srate = 16000
 let fftN = 2048
@@ -13,7 +15,7 @@ class VMIDC {
     private var audioBuffer: AVAudioPCMBuffer!
     private var pcm: UnsafeMutablePointer<UInt8>
     
-    private var wbuf = WaveBuf()
+    private var wbuf = WavBuf()
     private var dna = DnaBuf()
     
     private var num = 1
