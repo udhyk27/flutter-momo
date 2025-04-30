@@ -181,3 +181,6 @@ firebase/firebase-tools-instant-win.exe
 build/last_build_run.json
 firebase_options.dart
 GoogleService-Info.plist
+
+
+ios/watchkitapp Watch App/Classes

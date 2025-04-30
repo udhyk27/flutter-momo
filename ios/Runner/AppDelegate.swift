@@ -46,21 +46,9 @@ import WatchConnectivity
                 default:
                     print("알 수 없는 액션: \(action)")
                 }
-            } else if let base64String = message["audioData"] as? String,
-                      let audioData = Data(base64Encoded: base64String) {
+            } else if let base64String = message["audioData"] as? String {
                 print("워치에서 오디오 데이터 받음")
                 self.eventSink?(base64String)
-            }
-        }
-    }
-
-    // iPhone 앱 실행 (URL Scheme 이용)
-    private func openAppFromWatch() {
-        if let url = URL(string: "momowatch://") {
-            if UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            } else {
-                print("URL Scheme 실행 실패: 'momowatch://'을 Info.plist에 추가했는지 확인하세요!")
             }
         }
     }

@@ -2,6 +2,8 @@ import Foundation
 import WatchConnectivity
 import AVFoundation
 
+// 테스트용
+
 class WatchAudioManager: NSObject, WCSessionDelegate, ObservableObject {
     private var contentView = ContentView()
     
@@ -20,20 +22,13 @@ class WatchAudioManager: NSObject, WCSessionDelegate, ObservableObject {
             WCSession.default.activate()
         }
     }
-    
-//    func wakeUpiPhone() {
-//        if sessionActivated && WCSession.default.isReachable {
-//            WCSession.default.sendMessage(["action": "wakeUp"], replyHandler: nil)
-//            print("iPhone 실행 요청 전송")
-//        } else {
-//            print("iPhone 연결 안 됨 (세션 활성화 여부: \(sessionActivated))")
-//        }
-//    }
-    
+
     // 테스트용 바이너리 데이터 보내기
     func sendTestAudioData() {
         // 임의의 768 바이트 데이터 생성 (예: 'a'로 채운 데이터)
-        let testData = Data(repeating: 97, count: 768)  // 97은 'a'의 ASCII 값
+//        let test1 = "ZGOOwxe/1f9dpeFRP3jpy1/+0+EefLXJH2ax1D1c6csXxvVkPXKY3xfH8ewddK3JD8fxbDx26eVP53Fsfrra58bHYWR+dKlOZ0dxyT/y2M2nx3NsffKaSe7Fcew+fNFNs5VxHjV16Uv30HEePdShSbdhYR41dK3bJ4LyXDF2i1s3ZvQfUeTsw7dBs7ZVJq1Ht0Y0R8G0hFN3FLrt1Tb2WzMB8aZnNs/NPwUitnNoV0u3YHLtW6TlS7Nk8+xWunFjd0Fg6tjQ0Nm/SGnKVnnL27cJMu3XUcNu92Bw6aNgU2fWyvP41rGzyWbgkPufWrPbzsQo0IdM81mDzOTQ3tz601eB4ptsW1O9ORwPHn7AB3i2J8uZY9pjuPszUc0DdItZ0iabmTvH65yeK1mZB+WqdPNtM5ljm7OQfgGangdnODFyy2Yz50mWlL5JmpgT8xgW0qeZmWNO0rg3Q1vdob04EnIfOjNn2pKs/xgf+YN6PB9VH253ZrNSlP8YmdwBOzg22iabmWPL3Ji/2F+YCT88W25PmDtnXbucX9gamYmeJT1zHy57ZtJjnD/IllkFOyQd9iaynUvaW5h/7Bn5AB0se3cLszlnym24r2QblTPTnBB3LTA5I8pymD9sSvUgk4wQNyaamWPKwog/zUCdIZucFCfbOlrmStKYXwxKkwjdrBRnN7nRZMuSuDdPGzM024wUZDKeVmnGk5ifxRmZhUecMmYzuku6yJaYP2cZkTjXLRF2tixPJkvDmA9vIbNt1y0zNRqZjUlaM/gPLyOl2XesVssaVl0q02I4J48xAlVWjirLOj2MKVsylD/PVRUPXbMyzGpmy0o3m5Yv32AcjzYzdshzCOlF01OZrz8loFU3Jmwwsim1avjJmJ/vZBKnXOY4KqqZMU55dra/z1EUDda7ci/OSDkvyz2UL68UpoBfWzYekkBrBOvxmi9rpuiF3aA3komIMYbD55R/OCj2qNOqJJLJmDkH2ciw/3RI6UgMqyWYcbK7xFeDsx9mafkQtIg"
+//        
+        let testData = Data(repeating: 97, count: 768)
         
         // 데이터를 base64로 인코딩
         let base64String = testData.base64EncodedString()
@@ -44,7 +39,6 @@ class WatchAudioManager: NSObject, WCSessionDelegate, ObservableObject {
     }
     
     
-
     // 녹음 시작
     func startRecording() {
         isRecognizing = true
