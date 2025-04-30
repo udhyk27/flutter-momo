@@ -33,4 +33,4 @@ Runner/GeneratedPluginRegistrant.*
 !default.pbxuser
 !default.perspectivev3
 Classes/
-watchkitapp Watch App/Classes/
+watchkitapp Watch App/cpp/
