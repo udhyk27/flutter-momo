@@ -16,6 +16,9 @@ class SongInfo extends StatefulWidget {
 }
 
 class _SongInfoState extends State<SongInfo> {
+
+  String font = 'NotoSansKR-Regular';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,24 +45,38 @@ class _SongInfoState extends State<SongInfo> {
             ),
             Column(
               children: [
+                SizedBox(height: 10,),
                 Text(
                   'Home Sweet Home',
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15.sp),
                 ),
-                Text('카더가든'),
-                Text('APARTMENT'),
-                Text('2017.12.02'),
-                SizedBox(height: 10,),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    '닫기',
-                    style: TextStyle(color: Colors.grey),
+                SizedBox(height: 5,),
+                Text('카더가든', style: TextStyle(fontFamily: font, fontSize: 12.sp),),
+                Text('APARTMENT', style: TextStyle(fontFamily: font, fontSize: 12.sp),),
+                Text('2017.12.02', style: TextStyle(fontFamily: font, fontSize: 12.sp),),
+                SizedBox(height: 20,),
+                SizedBox(
+                  width: 80,
+                  height: 20,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.grey,
+                      backgroundColor: Colors.white,
+                      // overlayColor: null
+                      // elevation: 0,
+                    ),
+                    child: Text(
+                      '닫기',
+                      style: TextStyle(
+                        fontSize: 9.sp
+                      ),
+                    ),
                   ),
                 ),
-                SizedBox(height: 10,)
+                SizedBox(height: 15,)
               ],
             )
           ],

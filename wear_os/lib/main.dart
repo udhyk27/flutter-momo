@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:wear_os/song_info.dart';
 import 'package:wear_os/widgets/vmidc.dart';
 import 'package:http/http.dart' as http;
+
+import 'history.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -35,7 +37,13 @@ class _MyAppState extends State<MyApp> {
       child: ChangeNotifierProvider(
         create: (_) => RecognitionState(),
         child: MaterialApp(
-          home: const HomePage(),
+          home: PageView(
+            controller: PageController(initialPage: 0),
+            children: [
+              HomePage(),
+              History()
+            ],
+          ),
         ),
       ),
     );
@@ -58,7 +66,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // _vmidc.init();
+    _vmidc.init();
     getDeviceId();
     super.initState();
   }
@@ -186,7 +194,10 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 20),
                   Text(
                     '음원 인식중입니다...',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'NotoSansKR-Regular'
+                    ),
                   ),
                 ],
               )

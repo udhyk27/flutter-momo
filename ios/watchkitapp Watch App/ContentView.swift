@@ -7,6 +7,11 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
+                
+                Button("Test") {
+                    testNativeFunction()
+                }
+                
                 Spacer()
                 
                 if audioManager.isRecognizing {
@@ -100,6 +105,22 @@ struct SongInfoView: View {
         .ignoresSafeArea()
     }
 }
+
+func testNativeFunction() {
+    // 예시로 데이터를 임의로 생성
+    let pcm: [Int16] = [1, 2, 3, 4, 5]  // 실제 pcm 데이터
+    let dna = UnsafeMutablePointer<UInt8>.allocate(capacity: 24)
+
+    // NativeBridge에 선언된 함수 호출
+    __pcm_to_dna(pcm, dna)
+    
+    // 디버그 로그로 확인
+    print("함수 호출 후 dna: \(Array(UnsafeBufferPointer(start: dna, count: 24)))")
+    
+    // 메모리 해제
+    dna.deallocate()
+}
+
 
 #Preview {
     ContentView()

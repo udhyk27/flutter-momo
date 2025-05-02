@@ -35,10 +35,7 @@ import WatchConnectivity
         DispatchQueue.main.async {
             if let action = message["action"] as? String {
                 switch action {
-                case "wakeUp":
-                    print("iPhone 앱 자동 실행 요청 받음!")
-                    self.openAppFromWatch()
-
+                    
                 case "watchRec":
                     print("워치에서 'watchRec' 신호 받음")
                     self.eventSink?("watchRec")
