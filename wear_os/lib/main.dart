@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  Future<void> getDeviceId() async {
+  Future<void> getDeviceId() async { // emulator TWR7.230913.001.E7
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
