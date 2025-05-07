@@ -13,7 +13,6 @@ import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
 
 import '../main.dart';
-// import '../services/api_service.dart';
 import 'dnabuf.dart';
 import 'wavbuf.dart';
 
@@ -86,6 +85,7 @@ class VMIDC {
       // print('dna length :: ${_dna.length}');
 
       if (_dna.length == qLen) {
+        print('32개의 DNA 쌓임, 서버로 전송 !!');
         _sendDnaToServerAndProcess();
       }
     }
@@ -109,7 +109,10 @@ class VMIDC {
     if (m['data'] != '' && m.containsKey('data')) {
       print('찾기까지 걸린 종료시간 :: ${DateTime.now()}');
       print('곡 인식 성공 !!');
-      print('print::${_recorder.isRecording}');
+
+      print('결과값 ::: ${m['data']}');
+
+      print('녹음중 여부::${_recorder.isRecording}');
       HapticFeedback.lightImpact();
 
       _ctrl.sink.add(m);

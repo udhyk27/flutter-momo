@@ -64,7 +64,7 @@ class _HistoryState extends State<History> {
           backgroundColor: const Color.fromRGBO(255, 195, 200, 1.0),
           title: Center(
               child: Text(
-                '검색목록',
+                '히스토리',
                 style: TextStyle(fontSize: 15.sp),
               )),
         ),

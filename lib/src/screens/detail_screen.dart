@@ -224,30 +224,32 @@ class _DetailScreenState extends State<DetailScreen> {
                             ),
                           ),
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                detailProgram[index].type == 'TV' ? 'assets/momo_assets/icon_tv.png' : 'assets/momo_assets/icon_radio.png',
-                                width: 50,
-                                height: 20,
-                              ),
-                              Text(
-                                detailProgram[index].channelName,
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor, overflow: TextOverflow.ellipsis),
-                              ),
-                              Text(
-                                detailProgram[index].name,
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor, overflow: TextOverflow.ellipsis),
-                              ),
-                              Text(
-                                detailProgram[index].date,
-                                style: TextStyle(fontSize: 10, color: Colors.grey[500]),
-                              ),
-                            ],
+                        Expanded(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset(
+                                  detailProgram[index].type == 'TV' ? 'assets/momo_assets/icon_tv.png' : 'assets/momo_assets/icon_radio.png',
+                                  width: 50,
+                                  height: 20,
+                                ),
+                                Text(
+                                  detailProgram[index].channelName,
+                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor, overflow: TextOverflow.ellipsis),
+                                ),
+                                Text(
+                                  detailProgram[index].name,
+                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor, overflow: TextOverflow.ellipsis),
+                                ),
+                                Text(
+                                  detailProgram[index].date,
+                                  style: TextStyle(fontSize: 10, color: Colors.grey[500]),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
