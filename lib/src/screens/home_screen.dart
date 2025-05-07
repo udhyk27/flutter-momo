@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         '지금 이 곡을 찾으려면 모모를 눌러주세요',
                         style: TextStyle(
                             fontSize: 15,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w700,
                             color: themeValue == 0 ? Colors.black : Colors.white
                         ), // 텍스트 스타일
                       )
