@@ -53,6 +53,7 @@ class _HistoryState extends State<History> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -79,7 +80,14 @@ class _HistoryState extends State<History> {
               strokeWidth: 2.0,
             ),
           )
-              : ListView.builder(
+              :
+          historyList.isEmpty
+              ?
+          Center(
+            child: Text('히스토리가 존재하지 않습니다.'),
+          )
+              :
+          ListView.builder(
             padding: EdgeInsets.only(bottom: 10.0),
             itemCount: historyList.length,
             itemBuilder: (context, index) {

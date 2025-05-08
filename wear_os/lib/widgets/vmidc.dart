@@ -6,11 +6,13 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:convert';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
+import 'package:wear_os/song_info.dart';
 
 import '../main.dart';
 import 'dnabuf.dart';
@@ -118,11 +120,8 @@ class VMIDC {
       _ctrl.sink.add(m);
       _cur = m;
 
-      // final song = m['data']; => 모델 없이 이렇게 받아야 할 듯
-
-      // final song = ApiSearch.fromJson(m['data']);
-      // await Get.to(() => SongInfoScreen(song: song));
-      // controller.changeState(1);
+      final song = m['data'];
+      await Get.to(() => SongInfo(song: song));
     }
     _dna.pop(qLen);
   }
@@ -144,8 +143,11 @@ class VMIDC {
     };
 
     try {
+
+      
+
       final response = await http.post(
-        Uri.parse('210.97.52.157'),
+        Uri.parse('https://www.mo-mo.co.kr/api/getdnasong'),
         headers: headers,
         body: body,
       ).timeout(Duration(seconds: 5), // 서버로부터 5초간 응답이 없을 시
@@ -174,12 +176,12 @@ class VMIDC {
     // controller.changeState(0); // 검색 중
 
     try {
-      // await _recorder.startRecorder(
-      //   toStream: recCtrl,
-      //   codec: Codec.pcm16,
-      //   numChannels: 1,
-      //   sampleRate: srate,
-      // );
+      await _recorder.startRecorder(
+        toStream: recCtrl,
+        codec: Codec.pcm16,
+        numChannels: 1,
+        sampleRate: srate,
+      );
 
       print('녹음이 정상적으로 시작됨!');
 
@@ -221,12 +223,14 @@ class VMIDC {
     if (_recorder.isRecording) {
       print('녹음중이면 stop');
       await stop();
+
     }
 
     await _audioStream.cancel(); // 스트림 구독 리스닝 해제
     await _recorder.closeRecorder(); // 오디오 세션 닫기
     recCtrl.close(); // 스트림 컨트롤러 닫기
     malloc.free(_pcm); // 메모리 해제
+
   }
 }
 

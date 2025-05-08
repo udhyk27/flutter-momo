@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SongInfo extends StatefulWidget {
 
-  // final List song;
+  final Map<String, dynamic> song;
 
   const SongInfo({
     super.key,
-    // required this.song
+    required this.song
   });
 
   @override
@@ -30,7 +30,7 @@ class _SongInfoState extends State<SongInfo> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: ExtendedImage.network(
-                  'https://adm.airmonitor.co.kr/resource_music/2019/064/KA0094064/KA0094064.jpg',
+                  widget.song['IMAGE'] ?? '',
                   fit: BoxFit.cover,
                   loadStateChanged: (state) {
                     if (state.extendedImageLoadState == LoadState.failed) {
@@ -47,13 +47,14 @@ class _SongInfoState extends State<SongInfo> {
               children: [
                 SizedBox(height: 10,),
                 Text(
-                  'Home Sweet Home',
+                  widget.song['TITLE'] ?? '',
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15.sp),
+                  textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 5,),
-                Text('카더가든', style: TextStyle(fontFamily: font, fontSize: 12.sp),),
-                Text('APARTMENT', style: TextStyle(fontFamily: font, fontSize: 12.sp),),
-                Text('2017.12.02', style: TextStyle(fontFamily: font, fontSize: 12.sp),),
+                Text(widget.song['ARTIST'] ?? '', style: TextStyle(fontFamily: font, fontSize: 12.sp),),
+                Text(widget.song['ALBUM'] ?? '', style: TextStyle(fontFamily: font, fontSize: 12.sp),),
+                Text(widget.song['date'] ?? '', style: TextStyle(fontFamily: font, fontSize: 12.sp),),
                 SizedBox(height: 20,),
                 SizedBox(
                   width: 80,
