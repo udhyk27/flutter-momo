@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:momo_final/src/services/bluetooth_receiver.dart';
 import 'package:momo_final/src/services/watch_service.dart';
 
 import 'src/controller/home_controller.dart';
@@ -45,6 +46,8 @@ void main() async {
 
     // 추가적으로 raw 데이터 확인 (바이트 배열로 출력)
     print("오디오 데이터 (Raw 바이트): ${audioData}");
+
+    BluetoothReceiver.init();
 
   };
 

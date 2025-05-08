@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -13,8 +14,11 @@ import 'package:provider/provider.dart';
 import 'package:wear_os/widgets/vmidc.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:flutter/services.dart';
+
 import 'controller/RecController.dart';
 import 'history.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -82,48 +86,32 @@ class _HomePageState extends State<HomePage> {
     print('WATCH MODEL : ${androidInfo.model}');
   }
 
+  static const platform = MethodChannel('com.example.watch/connection');
+
+  // 자바 파일 실행 함수
+  Future<bool> checkConnection() async {
+    try {
+      final bool isConnected = await platform.invokeMethod('checkConnection');
+      return isConnected;
+    } on PlatformException catch (e) {
+      print("Failed to get connection status: '${e.message}'.");
+      return false;
+    }
+  }
+
 
 
   Future<void> asyncFunction() async {
 
-    // 네트워크 연결 확인
-    var connect = await Connectivity().checkConnectivity();
-
-    switch (connect) {
-      case ConnectivityResult.wifi:
-        print('NETWORK :: wifi');
-        break;
-
-      case ConnectivityResult.bluetooth:
-        print('NETWORK :: bluetooth');
-        break;
-
-      case ConnectivityResult.mobile:
-        print('NETWORK :: 셀룰러 데이터 연결됨');
-        break;
-
-      case ConnectivityResult.none:
-        print('NETWORK :: 연결 없음');
-        break;
-
-      default:
-        print('알 수 없는 네트워크');
+    final connected = await checkConnection();
+    if (!connected) {
+      print("Flutter main.dart :: 연결 안 됨. 작업 중단.");
+      return;
     }
-
-    // var connectivityResult = await (Connectivity().checkConnectivity());
-    // if (connectivityResult == ConnectivityResult.none) {
-    //   return;
-    // } else if (connectivityResult == ConnectivityResult.wifi) {
-    //   print('wifi에 연결됨');
-    // } else if (connectivityResult == ConnectivityResult.bluetooth) {
-    //   print('bluetooth에 연결됨');
-    // } else if (connectivityResult == ConnectivityResult.mobile) {
-    //   print('셀룰러 데이터에 연결됨');
-    // } else {
-    //   print('또다른 네트워크 사용중');
-    // }
+    print('Flutter main.dart :: 폰과 연결되어있음 !');
 
 
+    print("연결 성공! 녹음 및 데이터 처리 시작");
 
 
     // 마이크 권한 요청

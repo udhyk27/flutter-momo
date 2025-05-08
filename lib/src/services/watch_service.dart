@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
-
+// 애플워치
 class WatchService {
   static final WatchService _instance = WatchService._internal();
   factory WatchService() => _instance;

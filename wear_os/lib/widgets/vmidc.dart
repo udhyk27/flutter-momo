@@ -96,8 +96,20 @@ class VMIDC {
   // DNA 서버 전송 및 처리 로직
   Future<void> _sendDnaToServerAndProcess() async {
     print('DNA ${qLen}개 도달: ${DateTime.now()}');
+
     // 여기서 HTTP 요청 호출
-    Map m = await sendDnaToServer(_dna.pack());
+    // Map m = await sendDnaToServer(_dna.pack());
+
+    // String dnaData = base64Encode(Uint8List.fromList(_dna.pack()));  // DNA 데이터를 base64로 인코딩
+    final m = await _sendDataToKotlin(_dna.pack());  // 데이터를 폰으로 전송
+
+
+    if (m.isNotEmpty) {
+      print('데이터가 폰으로 전송되었습니다!');
+    } else {
+      print('데이터 전송 실패!');
+    }
+
     // print('API 응답 시간: ${DateTime.now()}');
     print('돌아온 값 :: $m');
     // print('dna.length: ${_dna.length}, elapsed: ${DateTime.now()}');
@@ -105,7 +117,13 @@ class VMIDC {
     // 에러 메시지가 존재할 때
     if (m['err_msg'] != '') {
       print('error msg 1 / 음악 인식 STOP');
-      await stop();
+      // await stop(); // test
+
+      // test
+      if (num > 5) {
+        await stop();
+      }
+
     }
 
     if (m['data'] != '' && m.containsKey('data')) {
@@ -126,43 +144,85 @@ class VMIDC {
     _dna.pop(qLen);
   }
 
-  // HTTP 요청 함수
-  Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
+  static const platform = MethodChannel('com.example.watch/connection');
 
-    final arr = { // 서버로 전송할 값
-      'uid' : MyApp.uid,
-      'req_times': num,
-      'dna_data': base64Encode(Uint8List.fromList(dna))
-    };
-
-    final body = jsonEncode(arr);
-
-    // 헤더
-    final Map<String, String> headers = {
-      'Content-Type': 'application/octet-stream',
-    };
-
+  // Kotlin 으로 DNA 전송
+  Future<Map<String, dynamic>> _sendDataToKotlin(List<int> dna) async {
+    print('Watch => Kotlin으로 DNA 전송!');
     try {
+      // uri
+      // final uri = 'https://www.mo-mo.co.kr/api/getdnasong';
 
-      
+      // header
+      // final Map<String, String> header = {
+      //   'Content-Type': 'application/octet-stream',
+      // };
 
-      final response = await http.post(
-        Uri.parse('https://www.mo-mo.co.kr/api/getdnasong'),
-        headers: headers,
-        body: body,
-      ).timeout(Duration(seconds: 5), // 서버로부터 5초간 응답이 없을 시
-          onTimeout: () {
-            return http.Response(
-                jsonEncode({'err_msg': 'TIME OUT'}), 408); // String, statusCode
-          });
-      num++;
-      print('response ::::: ${jsonDecode(response.body)}');
-      return jsonDecode(response.body);
+      // body
+      final arr = {
+        'uid' : MyApp.uid,
+        'req_times' : num,
+        'dna_data' : base64Encode(Uint8List.fromList(dna))
+      };
+
+      final data = jsonEncode(arr);
+
+      print('코틀린으로 보낼 데이터 :: ${data}');
+
+      final result = await platform.invokeMethod('sendDataToPhone', {'data': data});
+
+      final Map<String, dynamic> m = Map<String, dynamic>.from(result);
+
+      num ++;
+
+      print('Watch => DNA 전송 성공');
+      print(m);
+
+      return m;
+
     } catch (e) {
-      print('HTTP 요청 중 오류 발생: $e');
-      return {'err_msg': '요청 실패'};
+      print('오류 발생: $e');
+      return {};
     }
   }
+
+  // HTTP 요청 함수
+  // Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
+  //
+  //   final arr = { // 서버로 전송할 값
+  //     'uid' : MyApp.uid,
+  //     'req_times': num,
+  //     'dna_data': base64Encode(Uint8List.fromList(dna))
+  //   };
+  //
+  //   final body = jsonEncode(arr);
+  //
+  //   // 헤더
+  //   final Map<String, String> headers = {
+  //     'Content-Type': 'application/octet-stream',
+  //   };
+  //
+  //   try {
+  //
+  //
+  //
+  //     final response = await http.post(
+  //       Uri.parse('https://www.mo-mo.co.kr/api/getdnasong'),
+  //       headers: headers,
+  //       body: body,
+  //     ).timeout(Duration(seconds: 5), // 서버로부터 5초간 응답이 없을 시
+  //         onTimeout: () {
+  //           return http.Response(
+  //               jsonEncode({'err_msg': 'TIME OUT'}), 408); // String, statusCode
+  //         });
+  //     num++;
+  //     print('response ::::: ${jsonDecode(response.body)}');
+  //     return jsonDecode(response.body);
+  //   } catch (e) {
+  //     print('HTTP 요청 중 오류 발생: $e');
+  //     return {'err_msg': '요청 실패'};
+  //   }
+  // }
 
   // 녹음 시작
   Future<void> start() async {
