@@ -43,6 +43,32 @@ class VMIDC {
   var num = 1;
 
   Future<bool> init() async {
+
+    // final result = await platform.invokeMethod('checkAndRequestBluetoothPermissions');
+    //
+    // if (result) {
+    //   await platform.invokeMethod('startSession');
+    //   print('result true');
+    // } else {
+    //   print('result false');
+    // }
+
+    // if (await platform.invokeMethod('checkAndRequestBluetoothPermissions')) {
+    //   await platform.invokeMethod('startSession');
+    // }
+
+
+
+    // await platform.invokeMethod('checkAndRequestBluetoothPermissions');
+    // await platform.invokeMethod('startSession');
+
+    // 권한 요청
+    final granted = await platform.invokeMethod('checkAndRequestBluetoothPermissions');
+    if (granted == true) {
+      // 세션 시작
+      final success = await platform.invokeMethod('startSession');
+    }
+
     print('vmidc init');
     await _recorder.openRecorder(); // 오디오 세션 오픈
 
@@ -139,7 +165,7 @@ class VMIDC {
       _cur = m;
 
       final song = m['data'];
-      await Get.to(() => SongInfo(song: song));
+      // await Get.to(() => SongInfo(song: song));
     }
     _dna.pop(qLen);
   }
@@ -150,13 +176,6 @@ class VMIDC {
   Future<Map<String, dynamic>> _sendDataToKotlin(List<int> dna) async {
     print('Watch => Kotlin으로 DNA 전송!');
     try {
-      // uri
-      // final uri = 'https://www.mo-mo.co.kr/api/getdnasong';
-
-      // header
-      // final Map<String, String> header = {
-      //   'Content-Type': 'application/octet-stream',
-      // };
 
       // body
       final arr = {
@@ -291,6 +310,7 @@ class VMIDC {
     recCtrl.close(); // 스트림 컨트롤러 닫기
     malloc.free(_pcm); // 메모리 해제
 
+    await platform.invokeMethod('endSession'); // 블루투스 연결 및 소켓 닫기
   }
 }
 

@@ -103,17 +103,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> asyncFunction() async {
 
-    final connected = await checkConnection();
-    if (!connected) {
-      print("Flutter main.dart :: 연결 안 됨. 작업 중단.");
-      return;
-    }
-    print('Flutter main.dart :: 폰과 연결되어있음 !');
-
-
-    print("연결 성공! 녹음 및 데이터 처리 시작");
-
-
     // 마이크 권한 요청
     PermissionStatus status = await Permission.microphone.status;
     if (status == PermissionStatus.permanentlyDenied) { // 마이크 권한 영구적으로 거부된 경우
