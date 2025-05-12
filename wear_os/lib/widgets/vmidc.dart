@@ -9,11 +9,13 @@ import 'package:ffi/ffi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:wear_os/song_info.dart';
 
+import '../controller/RecController.dart';
 import '../main.dart';
 import 'dnabuf.dart';
 import 'wavbuf.dart';
@@ -22,6 +24,8 @@ const srate = 16000;
 const fftN = 2048;
 const fftHop = 1000;
 const qLen = 32;
+
+final RecController recController = Get.find();
 
 class VMIDC {
   final FlutterSoundRecorder _recorder = FlutterSoundRecorder(logLevel: Level.error);
@@ -43,25 +47,6 @@ class VMIDC {
   var num = 1;
 
   Future<bool> init() async {
-
-    // final result = await platform.invokeMethod('checkAndRequestBluetoothPermissions');
-    //
-    // if (result) {
-    //   await platform.invokeMethod('startSession');
-    //   print('result true');
-    // } else {
-    //   print('result false');
-    // }
-
-    // if (await platform.invokeMethod('checkAndRequestBluetoothPermissions')) {
-    //   await platform.invokeMethod('startSession');
-    // }
-
-
-
-    // await platform.invokeMethod('checkAndRequestBluetoothPermissions');
-    // await platform.invokeMethod('startSession');
-
     // 권한 요청
     final granted = await platform.invokeMethod('checkAndRequestBluetoothPermissions');
     if (granted == true) {
@@ -265,8 +250,6 @@ class VMIDC {
       print('start() 호출되었는데 녹음중');
       await stop();
     }
-    // controller.changeState(0); // 검색 중
-
     try {
       await _recorder.startRecorder(
         toStream: recCtrl,
@@ -277,10 +260,14 @@ class VMIDC {
 
       print('녹음이 정상적으로 시작됨!');
 
-      _recordTimer = Timer(Duration(seconds: 20), () async {
+      _recordTimer = Timer(Duration(seconds: 10), () async {
         // 곡 인식하거나 서버 연결 실패했는데 녹음만 되고있을 때 방지
         if (_recorder.isRecording) {
-          print('15초 경과 - 녹음 중이므로 자동 종료합니다.');
+
+          if (recController.isRecognizing.value) {
+            Fluttertoast.showToast(msg: "요청시간이 초과되었습니다.");
+          }
+          print('10초 경과 - 녹음 중이므로 자동 종료합니다.');
           await stop();
         }
       });
@@ -303,10 +290,7 @@ class VMIDC {
     _wbuf.clear();
     _dna.clear();
 
-    // if (controller.stateVal == 0) {
-    //     controller.changeState(2);
-    //   }
-    // }
+    recController.setRec(false);
   }
 
   Future<void> dispose() async {
@@ -315,7 +299,6 @@ class VMIDC {
     if (_recorder.isRecording) {
       print('녹음중이면 stop');
       await stop();
-
     }
 
     await _audioStream.cancel(); // 스트림 구독 리스닝 해제
@@ -323,7 +306,7 @@ class VMIDC {
     recCtrl.close(); // 스트림 컨트롤러 닫기
     malloc.free(_pcm); // 메모리 해제
 
-    await platform.invokeMethod('endSession'); // 블루투스 연결 및 소켓 닫기
+    // await platform.invokeMethod('endSession'); // 블루투스 연결 및 소켓 닫기
   }
 }
 

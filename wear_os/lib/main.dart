@@ -19,10 +19,9 @@ import 'package:flutter/services.dart';
 import 'controller/RecController.dart';
 import 'history.dart';
 
-
-final RecController recController = Get.put(RecController());
-
 void main() {
+
+  Get.put(RecController());
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -35,7 +34,7 @@ void main() {
     var song = jsonDecode(receivedData);
 
     await Get.to(() => SongInfo(song: song));
-    recController.setRec(false);
+    Get.find<RecController>().setRec(false);
   });
 
 
@@ -159,7 +158,6 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  // final RecController recController = Get.put(RecController());
 
   @override
   Widget build(BuildContext context) {
@@ -169,11 +167,11 @@ class _HomePageState extends State<HomePage> {
         child: GestureDetector(
           onTap: () {
             _asyncTask = asyncFunction();
-            recController.setRec(true);
+            Get.find<RecController>().setRec(true);
           },
           child: Obx(
                 () {
-              return recController.isRecognizing.value
+              return Get.find<RecController>().isRecognizing.value
                   ? // 녹음 켜지면
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
