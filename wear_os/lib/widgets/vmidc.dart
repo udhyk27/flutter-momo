@@ -195,6 +195,9 @@ class VMIDC {
     // MethodChannel로 데이터 수신 처리
     platform.setMethodCallHandler((call) async {
       if (call.method == "receiveBluetoothData") {
+
+        await stop();
+
         String receivedData = call.arguments; // 워치에서 받은 데이터
         print("Flutter로 받은 데이터: $receivedData");
 
@@ -264,9 +267,8 @@ class VMIDC {
         // 곡 인식하거나 서버 연결 실패했는데 녹음만 되고있을 때 방지
         if (_recorder.isRecording) {
 
-          if (recController.isRecognizing.value) {
-            Fluttertoast.showToast(msg: "요청시간이 초과되었습니다.");
-          }
+          Fluttertoast.showToast(msg: "요청시간이 초과되었습니다.");
+
           print('10초 경과 - 녹음 중이므로 자동 종료합니다.');
           await stop();
         }
