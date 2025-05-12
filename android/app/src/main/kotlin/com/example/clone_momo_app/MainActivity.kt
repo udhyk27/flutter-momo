@@ -18,6 +18,8 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.InputStream
 import java.util.*
 
+import org.json.JSONObject
+
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "com.example.clone_momo_app/bluetooth"
     private val SERVER_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
@@ -28,8 +30,40 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+
+        methodChannel?.setMethodCallHandler { call, result ->
+            when (call.method) {
+                "songResultResponse" -> {
+                    val jsonString = call.arguments as String
+                    sendToWatchKotlin(jsonString)
+                    result.success(null)
+                }
+                else -> {
+                    result.notImplemented()
+                }
+            }
+        }
         startBluetoothServer()
     }
+
+    // --------------------------------------------------------------------------------------
+    // 서버와 통신 후 결과값 워치로 돌려주는 메서드
+    private fun sendToWatchKotlin(result: String) {
+        try {
+            if (bluetoothSocket != null && bluetoothSocket!!.isConnected) {
+                val outputStream = bluetoothSocket!!.outputStream
+                outputStream.write(result.toByteArray())
+                outputStream.flush()  // 버퍼 비우기 (명시적 전송)
+                Log.d("PhoneDebug", "(폰 코틀린)워치로 전송 완료: $result")
+            } else {
+                Log.e("PhoneDebug", "(폰 코틀린)워치와 블루투스 연결이 없습니다.")
+            }
+        } catch (e: Exception) {
+            Log.e("PhoneDebug", "(폰 코틀린)워치로 데이터 전송 중 오류: ${e.message}")
+        }
+    }
+    // --------------------------------------------------------------------------------------
+    // 워치에서 데이터 수신받아 서버로 보내는 코드
 
     private fun checkAndRequestBluetoothPermissions(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -53,10 +87,10 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun startBluetoothServer() {
-        Log.d("phoneKotlin", "휴대폰 코틀린 블루투스 연결 시작")
+        Log.d("PhoneDebug", "휴대폰 코틀린 블루투스 연결 시작")
 
         if (!checkAndRequestBluetoothPermissions()) {
-            Log.d("phoneKotlin", "휴대폰 코틀린 블루투스 권한 없음")
+            Log.d("PhoneDebug", "휴대폰 코틀린 블루투스 권한 없음")
             return
         }
 
@@ -65,7 +99,7 @@ class MainActivity : FlutterActivity() {
                 val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
                 val serverSocket: BluetoothServerSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord(SERVICE_NAME, SERVER_UUID)
 
-                Log.d("phoneKotlin", "블루투스 연결 대기 중...")
+                Log.d("PhoneDebug", "블루투스 연결 대기 중...")
 
                 // 연결 대기
                 val socket: BluetoothSocket = serverSocket.accept()
@@ -73,26 +107,37 @@ class MainActivity : FlutterActivity() {
                 // 워치로부터 요청을 받으면 소켓을 열고
                 bluetoothSocket = socket  // 새로운 연결을 bluetoothSocket에 저장
 
-                Log.d("phoneKotlin", "워치와 블루투스 연결됨!")
+                Log.d("PhoneDebug", "워치와 블루투스 연결됨!")
 
                 // 연결된 후 데이터 받기
                 val inputStream: InputStream = socket.inputStream
                 val buffer = ByteArray(1024)
+                val stringBuffer = StringBuilder() // 누적 버퍼
 
                 while (true) {
                     val bytesRead = inputStream.read(buffer)
                     if (bytesRead > 0) {
                         val receivedData = String(buffer, 0, bytesRead)
-                        Log.d("phoneKotlin", "받은 데이터: $receivedData")
+                        Log.d("PhoneDebug", "(폰 코틀린) 받은 데이터: $receivedData")
 
-                        Handler(Looper.getMainLooper()).post {
-                            methodChannel?.invokeMethod("onBluetoothData", receivedData)
+                        stringBuffer.append(receivedData)
+
+                        // JSON 문자열이 완성되었는지 확인 (여기선 }로 끝나는 걸로 판별)
+                        if (receivedData.trim().endsWith("}")) {
+                            val completeJson = stringBuffer.toString()
+                            stringBuffer.clear() // 버퍼 초기화
+
+                            Log.d("PhoneDebug", "완성된 JSON: $completeJson")
+
+                            Handler(Looper.getMainLooper()).post {
+                                methodChannel?.invokeMethod("onBluetoothData", completeJson)
+                            }
                         }
                     }
                 }
 
             } catch (e: Exception) {
-                Log.e("phoneKotlin", "블루투스 서버 오류: ${e.message}", e)
+                Log.e("PhoneDebug", "블루투스 서버 오류: ${e.message}", e)
             }
         }.start()
     }
@@ -106,10 +151,10 @@ class MainActivity : FlutterActivity() {
 
         if (requestCode == 1001) {
             if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                Log.d("phoneKotlin", "블루투스 권한 허용됨")
+                Log.d("PhoneDebug", "블루투스 권한 허용됨")
                 startBluetoothServer()
             } else {
-                Log.d("phoneKotlin", "블루투스 권한 거부됨")
+                Log.d("PhoneDebug", "블루투스 권한 거부됨")
             }
         }
     }

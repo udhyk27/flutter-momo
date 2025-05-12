@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
+import 'package:wear_os/song_info.dart';
 import 'package:wear_os/widgets/vmidc.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,8 +19,30 @@ import 'package:flutter/services.dart';
 import 'controller/RecController.dart';
 import 'history.dart';
 
+
+final RecController recController = Get.put(RecController());
+
 void main() {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  VMIDC vmidc = VMIDC();
+
+  vmidc.bluetoothReceiver((receivedData) async {
+    // 받은 데이터 처리
+    print("수신된 곡 정보: $receivedData");
+
+    var song = jsonDecode(receivedData);
+
+    await Get.to(() => SongInfo(song: song));
+    recController.setRec(false);
+  });
+
+
   runApp(const MyApp());
+
+
+
 }
 
 
@@ -137,7 +159,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  final RecController recController = Get.put(RecController());
+  // final RecController recController = Get.put(RecController());
 
   @override
   Widget build(BuildContext context) {

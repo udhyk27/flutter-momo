@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:momo_final/src/services/bluetooth_receiver.dart';
 import 'package:momo_final/src/services/watch_service.dart';
 
@@ -47,9 +48,22 @@ void main() async {
     // 추가적으로 raw 데이터 확인 (바이트 배열로 출력)
     print("오디오 데이터 (Raw 바이트): ${audioData}");
 
-    BluetoothReceiver.init();
-
   };
+
+  BluetoothReceiver.init((result) {
+    if (result['data'] != '' && result.containsKey('data')) {
+
+      print("곡 정보: ${result['data']}");
+
+      const MethodChannel _channel = MethodChannel('com.example.clone_momo_app/bluetooth');
+      _channel.invokeMethod('songResultResponse', jsonEncode(result['data']));
+
+      print("(폰 플러터) 서버에서 받은 결과값 플러터 => 코틀린으로 전송 !!");
+
+    } else {
+      print("곡 정보 없음: ${result['err_msg'] ?? result['error']}");
+    }
+  });
 
   runApp(MyApp());
 }

@@ -205,6 +205,19 @@ class VMIDC {
     }
   }
 
+  // 코틀린으로 받은 음악인식 결과값 리시버
+  void bluetoothReceiver(Function(String) onDataReceived) {
+    // MethodChannel로 데이터 수신 처리
+    platform.setMethodCallHandler((call) async {
+      if (call.method == "receiveBluetoothData") {
+        String receivedData = call.arguments; // 워치에서 받은 데이터
+        print("Flutter로 받은 데이터: $receivedData");
+
+        onDataReceived(receivedData);
+      }
+    });
+  }
+
   // HTTP 요청 함수
   // Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
   //
