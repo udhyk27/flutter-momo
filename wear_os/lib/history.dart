@@ -8,8 +8,12 @@ import 'package:http/http.dart' as http;
 
 import 'main.dart';
 
+String text = '히스토리가 존재하지 않습니다.';
+
 class History extends StatefulWidget {
-  History({super.key});
+  final PageController pageController;
+  const History({super.key, required this.pageController});
+
 
   @override
   State<History> createState() => _HistoryState();
@@ -29,8 +33,8 @@ class _HistoryState extends State<History> {
   Future<void> fetchData() async {
     try {
       http.Response response = await http.get(Uri.parse(
-          'https://www.mo-mo.co.kr/api/get_song_history/json?uid=${MyApp.uid}'));
-
+        'https://www.mo-mo.co.kr/api/get_song_history/json?uid=${MyApp.uid}')
+      );
       if (response.statusCode == 200) {
         String jsonData = response.body;
         List<dynamic> apiData = jsonDecode(jsonData);
@@ -50,6 +54,7 @@ class _HistoryState extends State<History> {
       }
     } catch (e) {
       print('Watch History Api Error');
+      text = '네트워크 연결을 확인해주세요.';
     }
   }
 
@@ -84,13 +89,100 @@ class _HistoryState extends State<History> {
           historyList.isEmpty
               ?
           Center(
-            child: Text('히스토리가 존재하지 않습니다.'),
+            child: Text(text),
           )
               :
           ListView.builder(
             padding: EdgeInsets.only(bottom: 10.0),
-            itemCount: historyList.length,
+            itemCount: historyList.length + 1,
             itemBuilder: (context, index) {
+
+
+              if (index == historyList.length) {
+                // 마지막 아이템: 버튼
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 2.h,),
+                    // SizedBox(
+                    // width: deviceWidth * 0.4,
+                    // height: 8.h,
+                    //   child: ElevatedButton(
+                    //     onPressed: () {
+                    //
+                    //       showDialog(
+                    //         context: context,
+                    //         builder: (BuildContext context) {ㅋ
+                    //           return AlertDialog(
+                    //             content: SizedBox(
+                    //               width: 200,
+                    //               height: 100,
+                    //               child: Center(child: Text("리스트가 삭제됩니다."))
+                    //             ),
+                    //             actions: [
+                    //               TextButton(
+                    //                 onPressed: () {
+                    //                   Navigator.of(context).pop(); // 알림창 닫기
+                    //                   // 여기에 삭제 로직 추가
+                    //
+                    //
+                    //                 },
+                    //                 child: Text("확인"),
+                    //               ),
+                    //               TextButton(
+                    //                 onPressed: () {
+                    //                   Navigator.of(context).pop(); // 취소 시 그냥 닫기
+                    //                 },
+                    //                 child: Text("취소"),
+                    //               ),
+                    //             ],
+                    //           );
+                    //         },
+                    //       );
+                    //
+                    //
+                    //     },
+                    //     style: ElevatedButton.styleFrom(
+                    //       foregroundColor: Colors.grey,
+                    //       backgroundColor: const Color.fromRGBO(
+                    //           255, 224, 226, 1.0),
+                    //     ),
+                    //     child: Text(
+                    //       '삭제',
+                    //       style: TextStyle(fontSize: 12.sp),
+                    //     ),
+                    //   ),
+                    // ),
+                    //
+                    // SizedBox(height: 2.h,),
+
+                    SizedBox(
+                      width: deviceWidth * 0.4,
+                      height: 8.h,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          widget.pageController.animateToPage(
+                            0,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.grey,
+                          backgroundColor: const Color.fromRGBO(
+                              255, 224, 226, 1.0),
+                        ),
+                        child: Text(
+                          '닫기',
+                          style: TextStyle(fontSize: 12.sp),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 2.h,),
+                  ],
+                );
+              }
+
               final item = historyList[index];
 
               return GestureDetector(

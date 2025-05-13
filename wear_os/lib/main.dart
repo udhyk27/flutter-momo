@@ -19,13 +19,13 @@ import 'package:flutter/services.dart';
 import 'controller/RecController.dart';
 import 'history.dart';
 
+VMIDC vmidc = VMIDC();
+
 void main() {
 
   Get.put(RecController());
 
   WidgetsFlutterBinding.ensureInitialized();
-
-  VMIDC vmidc = VMIDC();
 
   vmidc.bluetoothReceiver((receivedData) async {
     // 받은 데이터 처리
@@ -54,7 +54,40 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+
+  static const platform = MethodChannel('com.example.watch/connection');
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this); // 앱 생명주기 변경을 감지
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // Observer 제거
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.detached) {
+      // 앱이 종료될 때 호출되는 부분
+      await vmidc.stop();
+      print("앱 종료됨");
+      try {
+        await platform.invokeMethod('endSession'); // 블루투스 연결 및 소켓 닫기 // # 수정 예정
+      } catch (e) {
+        print("블루투스 세션 닫기 에러 :: $e");
+      }
+    }
+  }
+
+  final PageController _pageController = PageController(initialPage: 0);
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -64,10 +97,10 @@ class _MyAppState extends State<MyApp> {
       child: GetMaterialApp(
         home: PageView(
           scrollDirection: Axis.vertical,
-          controller: PageController(initialPage: 0),
+          controller: _pageController,
           children: [
             HomePage(),
-            History()
+            History(pageController: _pageController)
           ],
         ),
       ),
@@ -124,6 +157,9 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> asyncFunction() async {
 
+    final connectivityResult = await Connectivity().checkConnectivity();
+    print('connectivityResult: $connectivityResult');
+
     // 마이크 권한 요청
     PermissionStatus status = await Permission.microphone.status;
     if (status == PermissionStatus.permanentlyDenied) { // 마이크 권한 영구적으로 거부된 경우
@@ -144,13 +180,13 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void cancelAsyncTask() async {
-    if (_asyncTask != null) {
-      await _vmidc.stop(); // 녹음 중지
-    }
+  // void cancelAsyncTask() async {
+  //   if (_asyncTask != null) {
+  //     await _vmidc.stop(); // 녹음 중지
+  //   }
 
     // X 또는 아이콘 누르면 실패 화면
-  }
+  // }
 
   @override // 페이지가 종료될 때에만 리소스 해제
   void dispose()  {
@@ -166,6 +202,12 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: GestureDetector(
           onTap: () {
+
+            if (!Get.find<RecController>().canStart.value) {
+              Fluttertoast.showToast(msg: "네트워크 연결을 확인해주세요.");
+              return;
+            }
+
             _asyncTask = asyncFunction();
             Get.find<RecController>().setRec(true);
           },

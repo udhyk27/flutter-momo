@@ -5,9 +5,11 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -47,12 +49,49 @@ class VMIDC {
   var num = 1;
 
   Future<bool> init() async {
-    // 권한 요청
-    final granted = await platform.invokeMethod('checkAndRequestBluetoothPermissions');
-    if (granted == true) {
-      // 세션 시작
-      final success = await platform.invokeMethod('startSession');
+
+    // 현재 연결된 디바이스 목록 확인
+    List<BluetoothDevice> connectedDevices = await FlutterBluePlus.connectedDevices;
+
+    if (connectedDevices.isNotEmpty) {
+      print("블루투스 연결됨");
+    } else {
+      print("블루투스 연결 없음");
     }
+
+    // final connectivityResult = await Connectivity().checkConnectivity();
+    //
+    // if (connectivityResult == ConnectivityResult.wifi) {
+    //   print('network Wi-Fi 연결됨');
+    // } else if (connectivityResult == ConnectivityResult.mobile) {
+    //   print('network 셀룰러 데이터 연결됨');
+    // } else if (connectivityResult == ConnectivityResult.bluetooth) {
+    //   print('network 블루투스 연결됨');
+    // } else if (connectivityResult == ConnectivityResult.none) {
+    //   recController.setStart(false);
+    //   print('network 인터넷 연결 없음');
+    // } else {
+    //   print("network 네트워크 감지 못함");
+    // }
+
+
+
+    // if (connectivityResult == ConnectivityResult.bluetooth) {
+      // 권한 요청
+      final granted = await platform.invokeMethod('checkAndRequestBluetoothPermissions');
+      if (granted == true) {
+        // 세션 시작
+        final success = await platform.invokeMethod('startSession');
+
+        if (!success) {
+          // print('세션 연결 실패함!!');
+          recController.setStart(false);
+        }
+      }
+    // }
+
+
+
 
     print('vmidc init');
     await _recorder.openRecorder(); // 오디오 세션 오픈
@@ -128,7 +167,6 @@ class VMIDC {
     // 에러 메시지가 존재할 때
     if (m['err_msg'] != '') {
       print('error msg 1 / 음악 인식 STOP');
-      // await stop(); // test
 
       // test
       if (num > 5) {
@@ -246,7 +284,6 @@ class VMIDC {
 
   // 녹음 시작
   Future<void> start() async {
-    print('찾기까지 걸린 시작시간 :: ${DateTime.now()}');
     num = 1; // 몇 번째 녹음 데이터 전송인지
 
     if (_recorder.isRecording) {
@@ -266,9 +303,7 @@ class VMIDC {
       _recordTimer = Timer(Duration(seconds: 10), () async {
         // 곡 인식하거나 서버 연결 실패했는데 녹음만 되고있을 때 방지
         if (_recorder.isRecording) {
-
-          Fluttertoast.showToast(msg: "요청시간이 초과되었습니다.");
-
+          Fluttertoast.showToast(msg: "녹음이 종료됩니다.");
           print('10초 경과 - 녹음 중이므로 자동 종료합니다.');
           await stop();
         }
