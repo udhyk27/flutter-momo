@@ -30,10 +30,6 @@
         android:networkSecurityConfig="@xml/network_security_config"
         >
 
-        <service android:name=".BluetoothReceiverService"
-            android:enabled="true"
-            android:exported="false" />
-
 
         <activity
             android:name="com.example.clone_momo_app.MainActivity"
