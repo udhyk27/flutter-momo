@@ -33,8 +33,10 @@ void main() {
 
     var song = jsonDecode(receivedData);
 
-    await Get.to(() => SongInfo(song: song));
-    Get.find<RecController>().setRec(false);
+    if (song['data'] != '' && song.containsKey('data')) {
+      await Get.to(() => SongInfo(song: song['data']));
+      Get.find<RecController>().setRec(false);
+    }
   });
 
 
