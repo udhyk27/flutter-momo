@@ -9,7 +9,7 @@ struct ContentView: View {
             VStack {
                 
                 Button("Test") {
-                    testNativeFunction()
+//                    testNativeFunction()
                 }
                 
                 Spacer()
@@ -112,7 +112,7 @@ func testNativeFunction() {
     let dna = UnsafeMutablePointer<UInt8>.allocate(capacity: 24)
 
     // NativeBridge에 선언된 함수 호출
-    __pcm_to_dna(pcm, dna)
+//    __pcm_to_dna(pcm, dna)
     
     // 디버그 로그로 확인
     print("함수 호출 후 dna: \(Array(UnsafeBufferPointer(start: dna, count: 24)))")

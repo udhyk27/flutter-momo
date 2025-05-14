@@ -51,14 +51,8 @@ class VMIDC {
   Future<bool> init() async {
 
     // 현재 연결된 디바이스 목록 확인
-    List<BluetoothDevice> connectedDevices = await FlutterBluePlus.connectedDevices;
-
-    if (connectedDevices.isNotEmpty) {
-      print("블루투스 연결됨");
-    } else {
-      print("블루투스 연결 없음");
-    }
-
+    // List<BluetoothDevice> connectedDevices = await FlutterBluePlus.connectedDevices;
+    //
     // final connectivityResult = await Connectivity().checkConnectivity();
     //
     // if (connectivityResult == ConnectivityResult.wifi) {
@@ -74,18 +68,30 @@ class VMIDC {
     //   print("network 네트워크 감지 못함");
     // }
 
+    try {
+      final result = await platform.invokeMethod('getNetworkType');
+      print('연결된 네트워크: $result');
+
+      if (result != "none") {
+        recController.setStart(true);
+        print(recController.canStart);
+      }
+    } catch (e) {
+      print('네트워크 확인 실패: $e');
+    }
+
 
 
     // if (connectivityResult == ConnectivityResult.bluetooth) {
       // 권한 요청
       final granted = await platform.invokeMethod('checkAndRequestBluetoothPermissions');
       if (granted == true) {
+        recController.setStart(true);
         // 세션 시작
         final success = await platform.invokeMethod('startSession');
 
         if (!success) {
           // print('세션 연결 실패함!!');
-          recController.setStart(false);
         }
       }
     // }
@@ -161,7 +167,7 @@ class VMIDC {
     }
 
     // print('API 응답 시간: ${DateTime.now()}');
-    print('돌아온 값 :: $m');
+    // print('돌아온 값 :: $m');
     // print('dna.length: ${_dna.length}, elapsed: ${DateTime.now()}');
 
     // 에러 메시지가 존재할 때

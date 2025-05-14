@@ -737,6 +737,55 @@
 				FLUTTER_BUILD_NAME = 1.1.2;
 				FLUTTER_BUILD_NUMBER = 1;
 				FLUTTER_ROOT = "/Users/bang-gyeongsig/Documents/development/flutterSdk/flutter";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/BoringSSL-GRPC\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseABTesting\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAppCheckInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAuth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAuthInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreExtension\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreInternal\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseFirestore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseFirestoreInternal\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfig\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfigInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseSharedSwift\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RecaptchaInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/abseil\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/cloud_firestore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/connectivity_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/device_info_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_analytics\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_auth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_remote_config\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_native_splash\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_sound\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_sound_core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/fluttertoast\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-C++\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-Core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/leveldb-library\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/package_info_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/path_provider_foundation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/permission_handler_apple\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/share_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/shared_preferences_foundation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/url_launcher_ios\"",
+					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleAppMeasurement/Frameworks\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/FirebaseAnalytics/AdIdSupport\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/GoogleAppMeasurement/AdIdSupport\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/GoogleAppMeasurement/WithoutAdIdSupport\"",
+					"$(PROJECT_DIR)/Flutter/**",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
@@ -938,6 +987,104 @@
 				FLUTTER_BUILD_NAME = 1.1.2;
 				FLUTTER_BUILD_NUMBER = 1;
 				FLUTTER_ROOT = "/Users/bang-gyeongsig/Documents/development/flutterSdk/flutter";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/BoringSSL-GRPC\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseABTesting\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAppCheckInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAuth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAuthInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreExtension\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreInternal\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseFirestore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseFirestoreInternal\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfig\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfigInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseSharedSwift\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RecaptchaInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/abseil\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/cloud_firestore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/connectivity_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/device_info_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_analytics\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_auth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_remote_config\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_native_splash\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_sound\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_sound_core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/fluttertoast\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-C++\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-Core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/leveldb-library\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/package_info_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/path_provider_foundation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/permission_handler_apple\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/share_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/shared_preferences_foundation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/url_launcher_ios\"",
+					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleAppMeasurement/Frameworks\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/FirebaseAnalytics/AdIdSupport\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/GoogleAppMeasurement/AdIdSupport\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/GoogleAppMeasurement/WithoutAdIdSupport\"",
+					"$(FLUTTER_ROOT)/bin/cache/artifacts/engine/ios",
+					"$(PROJECT_DIR)/Flutter/**",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/BoringSSL-GRPC/openssl_grpc.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseABTesting/FirebaseABTesting.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAppCheckInterop/FirebaseAppCheckInterop.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAuth/FirebaseAuth.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAuthInterop/FirebaseAuthInterop.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore/FirebaseCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseFirestore/FirebaseFirestore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseFirestoreInternal/FirebaseFirestoreInternal.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations/FirebaseInstallations.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfig/FirebaseRemoteConfig.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfigInterop/FirebaseRemoteConfigInterop.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseSharedSwift/FirebaseSharedSwift.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RecaptchaInterop/RecaptchaInterop.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/abseil/absl.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/cloud_firestore/cloud_firestore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/connectivity_plus/connectivity_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/device_info_plus/device_info_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_analytics/firebase_analytics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_auth/firebase_auth.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_core/firebase_core.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_remote_config/firebase_remote_config.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_native_splash/flutter_native_splash.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_sound/flutter_sound.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_sound_core/flutter_sound_core.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/fluttertoast/fluttertoast.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-C++/grpcpp.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-Core/grpc.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/leveldb-library/leveldb.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb/nanopb.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/package_info_plus/package_info_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/path_provider_foundation/path_provider_foundation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/permission_handler_apple/permission_handler_apple.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/share_plus/share_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/shared_preferences_foundation/shared_preferences_foundation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/url_launcher_ios/url_launcher_ios.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
+					"$(FLUTTER_ROOT)/bin/cache/artifacts/engine/ios",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
@@ -974,6 +1121,55 @@
 				FLUTTER_BUILD_NAME = 1.1.2;
 				FLUTTER_BUILD_NUMBER = 1;
 				FLUTTER_ROOT = "/Users/bang-gyeongsig/Documents/development/flutterSdk/flutter";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/BoringSSL-GRPC\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseABTesting\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAppCheckInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAuth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseAuthInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreExtension\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreInternal\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseFirestore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseFirestoreInternal\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfig\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfigInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseSharedSwift\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RecaptchaInterop\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/abseil\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/cloud_firestore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/connectivity_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/device_info_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_analytics\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_auth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_remote_config\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_native_splash\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_sound\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_sound_core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/fluttertoast\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-C++\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-Core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/leveldb-library\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/package_info_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/path_provider_foundation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/permission_handler_apple\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/share_plus\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/shared_preferences_foundation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/url_launcher_ios\"",
+					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleAppMeasurement/Frameworks\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/FirebaseAnalytics/AdIdSupport\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/GoogleAppMeasurement/AdIdSupport\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/GoogleAppMeasurement/WithoutAdIdSupport\"",
+					"$(PROJECT_DIR)/Flutter/**",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
@@ -1024,8 +1220,10 @@
 					"\"$(PROJECT_DIR)/watchkitapp\\\\ Watch\\\\ App/bridge\"/**",
 				);
 				INFOPLIST_KEY_CFBundleDisplayName = watchkitapp;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음악을 인식하기 위해 마이크 권한을 허용해주세요.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1078,8 +1276,10 @@
 					"\"$(PROJECT_DIR)/watchkitapp\\\\ Watch\\\\ App/bridge\"/**",
 				);
 				INFOPLIST_KEY_CFBundleDisplayName = watchkitapp;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음악을 인식하기 위해 마이크 권한을 허용해주세요.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1129,8 +1329,10 @@
 					"\"$(PROJECT_DIR)/watchkitapp\\\\ Watch\\\\ App/bridge\"/**",
 				);
 				INFOPLIST_KEY_CFBundleDisplayName = watchkitapp;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음악을 인식하기 위해 마이크 권한을 허용해주세요.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
