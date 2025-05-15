@@ -3,8 +3,12 @@ import 'dart:convert';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:wear_os/song_info.dart';
 import 'package:wear_os/widgets/vmidc.dart';
 
 import 'main.dart';
@@ -21,19 +25,21 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
+  List<Map<String, String>> historyList = [];
+
   @override
   void initState() {
     super.initState();
     fetchData(); // Api Data
   }
 
-  List<Map<String, String>> historyList = [];
   var isLoading = true;
-  String? _pressedTitle; // <-- 추가
+  var networkType = recController.networkType.value;
 
   Future<void> fetchData() async {
-    if (recController.networkType.value == 'bluetooth') {
-      print('히스토리 bluetooth');
+
+
+    if (networkType == 'bluetooth') {
       // 블루투스 연결이면 폰에 데이터 요청
       final jsonData = await platform.invokeMethod(
         'requestHistory',
@@ -47,15 +53,16 @@ class _HistoryState extends State<History> {
               'image': item['IMAGE']?.toString() ?? '',
               'title': item['TITLE']?.toString() ?? '',
               'artist': item['ARTIST']?.toString() ?? '',
+              'album': item['ALBUM']?.toString() ?? '',
+              'date': item['date']?.toString() ?? ''
             };
           }).toList();
           isLoading = false;
         });
       }
-    } else {
+    } else if (networkType == 'wifi' || networkType == 'celular') {
       // 와이파이나 셀룰러로 직접 요청
       try {
-        print('히스토리 와이파이/셀룰러');
         http.Response response = await http.get(Uri.parse(
             'https://www.mo-mo.co.kr/api/get_song_history/json?uid=${MyApp.uid}'));
 
@@ -67,6 +74,8 @@ class _HistoryState extends State<History> {
                 'image': item['IMAGE']?.toString() ?? '',
                 'title': item['TITLE']?.toString() ?? '',
                 'artist': item['ARTIST']?.toString() ?? '',
+                'album': item['ALBUM']?.toString() ?? '',
+                'date': item['date']?.toString() ?? ''
               };
             }).toList();
             isLoading = false;
@@ -74,9 +83,47 @@ class _HistoryState extends State<History> {
         }
       } catch (e) {
         print('Watch History Api Error');
-        text = '네트워크 연결을 확인해주세요.';
       }
+    } else { // 네트워크 연결 감지 안되면
+      text = '네트워크 연결상태를 확인해주세요.';
     }
+  }
+
+  Future<void> delHistory() async {
+
+    if (networkType == 'bluetooth') {
+
+      // 블루투스 연결이면 폰에 데이터 요청
+      final result = await platform.invokeMethod('delHistory', {'uid':MyApp.uid});
+
+      if (result) {
+        Fluttertoast.showToast(msg: "삭제되었습니다.");
+
+        setState(() {
+          historyList.clear();
+        });
+      } else {
+        Fluttertoast.showToast(msg: "다시 시도해주세요.");
+      }
+
+    } else if (networkType == 'wifi' || networkType == 'celular') {
+      try {
+        http.Response response = await http.get(Uri.parse('https://www.mo-mo.co.kr/api/get_song_history/json?uid=${MyApp.uid}&proc=del'));
+        if (response.statusCode == 200) {
+          Fluttertoast.showToast(msg: "삭제되었습니다.");
+          setState(() {
+            historyList.clear();
+          });
+        }
+      } catch (e) {
+        print('searched song delete all error');
+      }
+    } else {
+      Fluttertoast.showToast(msg: "네트워크 연결상태를 확인해주세요.");
+    }
+
+
+
   }
 
   @override
@@ -89,10 +136,11 @@ class _HistoryState extends State<History> {
         child: AppBar(
           backgroundColor: const Color.fromRGBO(255, 195, 200, 1.0),
           title: Center(
-              child: Text(
-                '히스토리',
-                style: TextStyle(fontSize: 15.sp),
-              )),
+            child: Text(
+              '히스토리',
+              style: TextStyle(fontSize: 15.sp),
+            )
+          ),
         ),
       ),
       backgroundColor: const Color.fromRGBO(255, 195, 200, 1.0),
@@ -124,57 +172,64 @@ class _HistoryState extends State<History> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: 2.h,),
-                    // SizedBox(
-                    // width: deviceWidth * 0.4,
-                    // height: 8.h,
-                    //   child: ElevatedButton(
-                    //     onPressed: () {
-                    //
-                    //       showDialog(
-                    //         context: context,
-                    //         builder: (BuildContext context) {ㅋ
-                    //           return AlertDialog(
-                    //             content: SizedBox(
-                    //               width: 200,
-                    //               height: 100,
-                    //               child: Center(child: Text("리스트가 삭제됩니다."))
-                    //             ),
-                    //             actions: [
-                    //               TextButton(
-                    //                 onPressed: () {
-                    //                   Navigator.of(context).pop(); // 알림창 닫기
-                    //                   // 여기에 삭제 로직 추가
-                    //
-                    //
-                    //                 },
-                    //                 child: Text("확인"),
-                    //               ),
-                    //               TextButton(
-                    //                 onPressed: () {
-                    //                   Navigator.of(context).pop(); // 취소 시 그냥 닫기
-                    //                 },
-                    //                 child: Text("취소"),
-                    //               ),
-                    //             ],
-                    //           );
-                    //         },
-                    //       );
-                    //
-                    //
-                    //     },
-                    //     style: ElevatedButton.styleFrom(
-                    //       foregroundColor: Colors.grey,
-                    //       backgroundColor: const Color.fromRGBO(
-                    //           255, 224, 226, 1.0),
-                    //     ),
-                    //     child: Text(
-                    //       '삭제',
-                    //       style: TextStyle(fontSize: 12.sp),
-                    //     ),
-                    //   ),
-                    // ),
-                    //
-                    // SizedBox(height: 2.h,),
+                    SizedBox(
+                    width: deviceWidth * 0.4,
+                    height: 8.h,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                insetPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                                content: SizedBox(
+                                  // width: 100,
+                                  // width: deviceWidth * 0.5,
+                                  // height: 80,
+                                  child: Center(
+                                    child: Text(
+                                      "삭제하시겠습니까?",
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  )
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      Navigator.of(context).pop(); // 알림창 닫기
+                                      await delHistory();
+                                    },
+                                    child: Text("확인", style: TextStyle(color: Colors.black26,fontSize: 10.sp,),),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); // 취소 시 그냥 닫기
+                                    },
+                                    child: Text("취소", style: TextStyle(color: Colors.black26,fontSize: 10.sp,), ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.grey,
+                          backgroundColor: const Color.fromRGBO(
+                              255, 224, 226, 1.0),
+                        ),
+                        child: Text(
+                          '삭제',
+                          style: TextStyle(fontSize: 12.sp),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 2.h,),
 
                     SizedBox(
                       width: deviceWidth * 0.4,
@@ -206,24 +261,16 @@ class _HistoryState extends State<History> {
               final item = historyList[index];
 
               return GestureDetector(
-                onTapDown: (_) {
-                  setState(() {
-                    _pressedTitle = item['title'];
-                  });
-                },
-                onTapUp: (_) {
-                  Future.delayed(Duration(milliseconds: 300), () {
-                    if (mounted) {
-                      setState(() {
-                        _pressedTitle = null;
-                      });
-                    }
-                  });
-                },
-                onTapCancel: () {
-                  setState(() {
-                    _pressedTitle = null;
-                  });
+                onTap: () {
+                  Get.to(() => SongInfo(
+                    song: {
+                      'TITLE': item['title'],
+                      'ALBUM': item['album'],
+                      'IMAGE': item['image'],
+                      'ARTIST': item['artist'],
+                      'date': item['date']
+                    },
+                  ));
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 3.0),
@@ -273,31 +320,6 @@ class _HistoryState extends State<History> {
               );
             },
           ),
-
-          // 누르고 있는 제목 표시
-          if (_pressedTitle != null)
-            Positioned(
-              top: 20,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: 20.w, vertical: 7.h),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.7),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    _pressedTitle!,
-                    style: TextStyle(color: Colors.white, fontSize: 14.sp),
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true, // 자동 줄바꿈 허용
-                  ),
-                ),
-              ),
-            ),
         ],
       ),
     );

@@ -155,12 +155,7 @@ class VMIDC {
     }
 
     if (m['data'] != '' && m.containsKey('data')) {
-      print('찾기까지 걸린 종료시간 :: ${DateTime.now()}');
-      print('곡 인식 성공 !!');
-
-      print('결과값 ::: ${m['data']}');
-
-      print('녹음중 여부::${_recorder.isRecording}');
+      // print('찾기까지 걸린 종료시간 :: ${DateTime.now()}');
       HapticFeedback.lightImpact();
 
       _ctrl.sink.add(m);
@@ -170,6 +165,7 @@ class VMIDC {
 
       if (recController.networkType.value != 'bluetooth') { // 블루투스 아닐 때는 여기서 화면 이동
         await Get.to(() => SongInfo(song: song));
+        await stop();
       }
 
     }

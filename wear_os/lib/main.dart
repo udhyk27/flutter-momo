@@ -25,8 +25,8 @@ void main() async {
 
 
   try {
-    // final networkType = await platform.invokeMethod('getNetworkType');
-    final networkType = 'bluetooth'; // test
+    final networkType = await platform.invokeMethod('getNetworkType');
+    // final networkType = 'bluetooth'; // test
     // print('연결된 네트워크: $networkType');
 
     if (networkType != "none") {
@@ -94,7 +94,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
-  final PageController _pageController = PageController(initialPage: 0);
+  final PageController pageController = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {
@@ -105,10 +105,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       child: GetMaterialApp(
         home: PageView(
           scrollDirection: Axis.vertical,
-          controller: _pageController,
+          controller: pageController,
           children: [
-            HomePage(),
-            History(pageController: _pageController)
+            HomePage(pageController: pageController),
+            History(pageController: pageController)
           ],
         ),
       ),
@@ -119,7 +119,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final PageController pageController;
+  const HomePage({super.key, required this.pageController});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -198,6 +199,23 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: const Color.fromRGBO(255, 195, 200, 1.0),
       body: Stack(
         children: [
+
+          // Obx(() {
+          //   return Get.find<RecController>().isRecognizing.value
+          //       ? SizedBox.shrink() // 아무것도 안 보여줌
+          //       : Align(
+          //     alignment: Alignment.topCenter,
+          //     child: Padding(
+          //       padding: const EdgeInsets.only(top: 30),
+          //       child: Text(
+          //         "모모를 눌러주세요",
+          //         style: TextStyle(
+          //           color: Colors.white
+          //         ),
+          //       ),
+          //     ),
+          //   );
+          // }),
           // 화면 중앙: 기존 콘텐츠
           Center(
             child: GestureDetector(
@@ -248,11 +266,20 @@ class _HomePageState extends State<HomePage> {
                 : Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 32),
-                child: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.white,
-                  size: 36,
+                padding: const EdgeInsets.only(bottom: 5),
+                child: IconButton(
+                  onPressed: () {
+                    widget.pageController.animateToPage(
+                      1,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                  icon:  Icon(
+                    Icons.keyboard_double_arrow_down,
+                    color: Colors.white,
+                    size: 36,
+                  )
                 ),
               ),
             );

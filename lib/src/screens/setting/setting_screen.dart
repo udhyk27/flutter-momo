@@ -173,7 +173,6 @@ class SettingScreen extends StatefulWidget {
                         print('searched song delete all error');
                       }
                     },
-                    child: Text('삭제', style: TextStyle(fontSize: 10)),
                     style: TextButton.styleFrom(
                       backgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
                       foregroundColor: Colors.black,
@@ -183,6 +182,7 @@ class SettingScreen extends StatefulWidget {
                         )
                       )
                     ),
+                    child: Text('삭제', style: TextStyle(fontSize: 10)),
                   ),
                 ),
               ),
@@ -195,7 +195,6 @@ class SettingScreen extends StatefulWidget {
                     onPressed: () {
                       showConfirm(context, "임시파일");
                     },
-                    child: Text('삭제', style: TextStyle(fontSize: 10),),
                     style: TextButton.styleFrom(
                       backgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
                       foregroundColor: Colors.black,
@@ -205,6 +204,7 @@ class SettingScreen extends StatefulWidget {
                         )
                       )
                     ),
+                    child: Text('삭제', style: TextStyle(fontSize: 10),),
                   ),
                 ),
               ),
