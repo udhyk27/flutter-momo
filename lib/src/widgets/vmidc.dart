@@ -36,7 +36,6 @@ class VMIDC {
   final DnaBuf _dna = DnaBuf();
 
   Timer? _recordTimer;
-
   final Pointer<Uint8> _pcm = malloc.allocate<Uint8>(fftN * 2);
 
   final _ctrl = StreamController<Map>();

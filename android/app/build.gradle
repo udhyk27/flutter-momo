@@ -115,7 +115,7 @@ dependencies {
     // 기타 의존성
     implementation 'androidx.multidex:multidex:2.0.1'
 
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0' // 최신 버전 권장
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 }
 
 flutter {

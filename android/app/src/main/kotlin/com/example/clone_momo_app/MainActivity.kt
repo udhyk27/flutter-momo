@@ -37,7 +37,6 @@ class MainActivity : FlutterActivity() {
     }
 
     // 블루투스 권한 확인 및 요청
-    // 블루투스 권한 확인 및 요청
     private fun checkAndRequestBluetoothPermissions(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val connectPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)

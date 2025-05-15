@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,15 +10,12 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wear_os/song_info.dart';
 import 'package:wear_os/widgets/vmidc.dart';
-import 'package:http/http.dart' as http;
-
-import 'package:flutter/services.dart';
 
 import 'controller/RecController.dart';
 import 'history.dart';
 
 VMIDC vmidc = VMIDC();
-
+final platform = MethodChannel('com.example.watch/connection'); // Kotlin
 
 void main() async {
 
@@ -30,11 +25,8 @@ void main() async {
 
 
   try {
-    final platform = MethodChannel('com.example.watch/connection');
-    final networkType = await platform.invokeMethod('getNetworkType');
-
-
-    // final networkType = 'bluetooth'; // test
+    // final networkType = await platform.invokeMethod('getNetworkType');
+    final networkType = 'bluetooth'; // test
     // print('연결된 네트워크: $networkType');
 
     if (networkType != "none") {
@@ -45,7 +37,6 @@ void main() async {
       vmidc.bluetoothReceiver((receivedData) async { // 폰에서 블루투스로 보내는 데이터 리시버
         // 받은 데이터 처리
         print("수신된 곡 정보: $receivedData");
-
         var song = jsonDecode(receivedData);
 
         if (song['data'] != '' && song.containsKey('data')) {
@@ -54,7 +45,7 @@ void main() async {
         }
       });
     }
-    
+
   } catch (e) {
     print('네트워크 확인 실패: $e');
   }
@@ -74,8 +65,6 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-
-  static const platform = MethodChannel('com.example.watch/connection');
 
   @override
   void initState() {
@@ -159,8 +148,6 @@ class _HomePageState extends State<HomePage> {
     print('WATCH MODEL : ${androidInfo.model}');
   }
 
-  static const platform = MethodChannel('com.example.watch/connection');
-
   // 자바 파일 실행 함수
   Future<bool> checkConnection() async {
     try {
@@ -199,69 +186,78 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // void cancelAsyncTask() async {
-  //   if (_asyncTask != null) {
-  //     await _vmidc.stop(); // 녹음 중지
-  //   }
-
-    // X 또는 아이콘 누르면 실패 화면
-  // }
-
   @override // 페이지가 종료될 때에만 리소스 해제
   void dispose()  {
     _vmidc.dispose();
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 195, 200, 1.0),
-      body: Center(
-        child: GestureDetector(
-          onTap: () {
+      body: Stack(
+        children: [
+          // 화면 중앙: 기존 콘텐츠
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                if (Get.find<RecController>().networkType.value == 'none') {
+                  Fluttertoast.showToast(msg: "네트워크 연결을 확인해주세요.");
+                  return;
+                }
 
-            if (Get.find<RecController>().networkType.value == 'none') {
-              Fluttertoast.showToast(msg: "네트워크 연결을 확인해주세요.");
-              return;
-            }
-
-            _asyncTask = asyncFunction();
-            Get.find<RecController>().setRec(true);
-          },
-          child: Obx(
-                () {
-              return Get.find<RecController>().isRecognizing.value
-                  ? // 녹음 켜지면
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  CircularProgressIndicator(
-                    valueColor:
-                    AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    '음원 인식중입니다...',
-                    style: TextStyle(
+                _asyncTask = asyncFunction();
+                Get.find<RecController>().setRec(true);
+              },
+              child: Obx(() {
+                return Get.find<RecController>().isRecognizing.value
+                    ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(
+                      valueColor:
+                      AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      '음원 인식중입니다...',
+                      style: TextStyle(
                         color: Colors.white,
-                        fontFamily: 'NotoSansKR-Regular'),
+                        fontFamily: 'NotoSansKR-Regular',
+                      ),
+                    ),
+                  ],
+                )
+                    : Container(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  child: Image.asset(
+                    'assets/berry_logo.png',
+                    fit: BoxFit.contain,
                   ),
-                ],
-              )
-                  : // 녹음 종료 임시용
-              Container(
-                width: MediaQuery.of(context).size.width * 0.6,
-                child: Image.asset(
-                  'assets/berry_logo.png',
-                  fit: BoxFit.contain,
-                ),
-              );
-            },
+                );
+              }),
+            ),
           ),
-        ),
+
+          // 화면 하단: 아래 화살표 아이콘
+          Obx(() {
+            return Get.find<RecController>().isRecognizing.value
+                ? SizedBox.shrink() // 아무것도 안 보여줌
+                : Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 32),
+                child: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white,
+                  size: 36,
+                ),
+              ),
+            );
+          }),
+        ],
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:wear_os/widgets/vmidc.dart';
 
 import 'main.dart';
 
@@ -31,15 +32,35 @@ class _HistoryState extends State<History> {
   String? _pressedTitle; // <-- 추가
 
   Future<void> fetchData() async {
-    try {
-      http.Response response = await http.get(Uri.parse(
-        'https://www.mo-mo.co.kr/api/get_song_history/json?uid=${MyApp.uid}')
+    if (recController.networkType.value == 'bluetooth') {
+      print('히스토리 bluetooth');
+      // 블루투스 연결이면 폰에 데이터 요청
+      final jsonData = await platform.invokeMethod(
+        'requestHistory',
+        {'uid':MyApp.uid},
       );
-      if (response.statusCode == 200) {
-        String jsonData = response.body;
+      if (jsonData != null && mounted) {
         List<dynamic> apiData = jsonDecode(jsonData);
+        setState(() {
+          historyList = apiData.map<Map<String, String>>((item) {
+            return {
+              'image': item['IMAGE']?.toString() ?? '',
+              'title': item['TITLE']?.toString() ?? '',
+              'artist': item['ARTIST']?.toString() ?? '',
+            };
+          }).toList();
+          isLoading = false;
+        });
+      }
+    } else {
+      // 와이파이나 셀룰러로 직접 요청
+      try {
+        print('히스토리 와이파이/셀룰러');
+        http.Response response = await http.get(Uri.parse(
+            'https://www.mo-mo.co.kr/api/get_song_history/json?uid=${MyApp.uid}'));
 
-        if (mounted) {
+        if (response.statusCode == 200 && mounted) {
+          List<dynamic> apiData = jsonDecode(response.body);
           setState(() {
             historyList = apiData.map<Map<String, String>>((item) {
               return {
@@ -51,13 +72,12 @@ class _HistoryState extends State<History> {
             isLoading = false;
           });
         }
+      } catch (e) {
+        print('Watch History Api Error');
+        text = '네트워크 연결을 확인해주세요.';
       }
-    } catch (e) {
-      print('Watch History Api Error');
-      text = '네트워크 연결을 확인해주세요.';
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

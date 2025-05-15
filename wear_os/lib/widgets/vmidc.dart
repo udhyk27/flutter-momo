@@ -5,11 +5,8 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:convert';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:ffi/ffi.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -28,6 +25,7 @@ const fftHop = 1000;
 const qLen = 32;
 
 final RecController recController = Get.find();
+
 
 class VMIDC {
   final FlutterSoundRecorder _recorder = FlutterSoundRecorder(logLevel: Level.error);
@@ -129,13 +127,13 @@ class VMIDC {
 
     var m = <String, dynamic>{};
 
-
     if (recController.networkType.value == 'bluetooth') {
       await _sendDataToKotlin(_dna.pack());  // 데이터를 폰으로 전송
 
       if (m.isNotEmpty) {
         print('데이터가 폰으로 전송되었습니다!');
       } else {
+        Fluttertoast.showToast(msg: "휴대폰 앱을 재실행해주세요.");
         print('데이터 전송 실패!');
       }
     } else { // 셀룰러 또는 와이파이 일때
@@ -177,8 +175,6 @@ class VMIDC {
     }
     _dna.pop(qLen);
   }
-
-  static const platform = MethodChannel('com.example.watch/connection');
 
   // Kotlin 으로 DNA 전송
   Future<Map<String, dynamic>> _sendDataToKotlin(List<int> dna) async {
