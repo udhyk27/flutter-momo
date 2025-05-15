@@ -50,43 +50,17 @@ class VMIDC {
 
   Future<bool> init() async {
 
-    // 현재 연결된 디바이스 목록 확인
-    // List<BluetoothDevice> connectedDevices = await FlutterBluePlus.connectedDevices;
-    //
-    // final connectivityResult = await Connectivity().checkConnectivity();
-    //
-    // if (connectivityResult == ConnectivityResult.wifi) {
-    //   print('network Wi-Fi 연결됨');
-    // } else if (connectivityResult == ConnectivityResult.mobile) {
-    //   print('network 셀룰러 데이터 연결됨');
-    // } else if (connectivityResult == ConnectivityResult.bluetooth) {
-    //   print('network 블루투스 연결됨');
-    // } else if (connectivityResult == ConnectivityResult.none) {
-    //   recController.setStart(false);
-    //   print('network 인터넷 연결 없음');
-    // } else {
-    //   print("network 네트워크 감지 못함");
-    // }
+    // 네트워크 타입 확인
 
-    try {
-      final result = await platform.invokeMethod('getNetworkType');
-      print('연결된 네트워크: $result');
-
-      if (result != "none") {
-        recController.setStart(true);
-        print(recController.canStart);
-      }
-    } catch (e) {
-      print('네트워크 확인 실패: $e');
-    }
+    print('네트워크 타입 :: ${recController.networkType.value}');
 
 
-
-    // if (connectivityResult == ConnectivityResult.bluetooth) {
+    // 블루투스일때만 블루투스 권한 및 세션 시작
+    if (recController.networkType.value == 'bluetooth') {
       // 권한 요청
       final granted = await platform.invokeMethod('checkAndRequestBluetoothPermissions');
       if (granted == true) {
-        recController.setStart(true);
+        // recController.setStart(true);
         // 세션 시작
         final success = await platform.invokeMethod('startSession');
 
@@ -94,7 +68,7 @@ class VMIDC {
           // print('세션 연결 실패함!!');
         }
       }
-    // }
+    }
 
 
 
@@ -153,31 +127,32 @@ class VMIDC {
   Future<void> _sendDnaToServerAndProcess() async {
     print('DNA ${qLen}개 도달: ${DateTime.now()}');
 
-    // 여기서 HTTP 요청 호출
-    // Map m = await sendDnaToServer(_dna.pack());
-
-    // String dnaData = base64Encode(Uint8List.fromList(_dna.pack()));  // DNA 데이터를 base64로 인코딩
-    final m = await _sendDataToKotlin(_dna.pack());  // 데이터를 폰으로 전송
+    var m = <String, dynamic>{};
 
 
-    if (m.isNotEmpty) {
-      print('데이터가 폰으로 전송되었습니다!');
-    } else {
-      print('데이터 전송 실패!');
+    if (recController.networkType.value == 'bluetooth') {
+      await _sendDataToKotlin(_dna.pack());  // 데이터를 폰으로 전송
+
+      if (m.isNotEmpty) {
+        print('데이터가 폰으로 전송되었습니다!');
+      } else {
+        print('데이터 전송 실패!');
+      }
+    } else { // 셀룰러 또는 와이파이 일때
+      // HTTP 요청 호출
+      m = await sendDnaToServer(_dna.pack());
     }
 
-    // print('API 응답 시간: ${DateTime.now()}');
-    // print('돌아온 값 :: $m');
-    // print('dna.length: ${_dna.length}, elapsed: ${DateTime.now()}');
 
     // 에러 메시지가 존재할 때
     if (m['err_msg'] != '') {
       print('error msg 1 / 음악 인식 STOP');
 
-      // test
-      if (num > 5) {
-        await stop();
-      }
+      await stop();
+
+      // if (num > 5) {
+      //   await stop();
+      // }
 
     }
 
@@ -194,7 +169,11 @@ class VMIDC {
       _cur = m;
 
       final song = m['data'];
-      // await Get.to(() => SongInfo(song: song));
+
+      if (recController.networkType.value != 'bluetooth') { // 블루투스 아닐 때는 여기서 화면 이동
+        await Get.to(() => SongInfo(song: song));
+      }
+
     }
     _dna.pop(qLen);
   }
@@ -251,42 +230,42 @@ class VMIDC {
   }
 
   // HTTP 요청 함수
-  // Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
-  //
-  //   final arr = { // 서버로 전송할 값
-  //     'uid' : MyApp.uid,
-  //     'req_times': num,
-  //     'dna_data': base64Encode(Uint8List.fromList(dna))
-  //   };
-  //
-  //   final body = jsonEncode(arr);
-  //
-  //   // 헤더
-  //   final Map<String, String> headers = {
-  //     'Content-Type': 'application/octet-stream',
-  //   };
-  //
-  //   try {
-  //
-  //
-  //
-  //     final response = await http.post(
-  //       Uri.parse('https://www.mo-mo.co.kr/api/getdnasong'),
-  //       headers: headers,
-  //       body: body,
-  //     ).timeout(Duration(seconds: 5), // 서버로부터 5초간 응답이 없을 시
-  //         onTimeout: () {
-  //           return http.Response(
-  //               jsonEncode({'err_msg': 'TIME OUT'}), 408); // String, statusCode
-  //         });
-  //     num++;
-  //     print('response ::::: ${jsonDecode(response.body)}');
-  //     return jsonDecode(response.body);
-  //   } catch (e) {
-  //     print('HTTP 요청 중 오류 발생: $e');
-  //     return {'err_msg': '요청 실패'};
-  //   }
-  // }
+  Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
+
+    final arr = { // 서버로 전송할 값
+      'uid' : MyApp.uid,
+      'req_times': num,
+      'dna_data': base64Encode(Uint8List.fromList(dna))
+    };
+
+    final body = jsonEncode(arr);
+
+    // 헤더
+    final Map<String, String> headers = {
+      'Content-Type': 'application/octet-stream',
+    };
+
+    try {
+
+
+
+      final response = await http.post(
+        Uri.parse('https://www.mo-mo.co.kr/api/getdnasong'),
+        headers: headers,
+        body: body,
+      ).timeout(Duration(seconds: 5), // 서버로부터 5초간 응답이 없을 시
+          onTimeout: () {
+            return http.Response(
+                jsonEncode({'err_msg': 'TIME OUT'}), 408); // String, statusCode
+          });
+      num++;
+      print('response ::::: ${jsonDecode(response.body)}');
+      return jsonDecode(response.body);
+    } catch (e) {
+      print('HTTP 요청 중 오류 발생: $e');
+      return {'err_msg': '요청 실패'};
+    }
+  }
 
   // 녹음 시작
   Future<void> start() async {
@@ -307,11 +286,16 @@ class VMIDC {
       print('녹음이 정상적으로 시작됨!');
 
       _recordTimer = Timer(Duration(seconds: 10), () async {
+
         // 곡 인식하거나 서버 연결 실패했는데 녹음만 되고있을 때 방지
         if (_recorder.isRecording) {
-          Fluttertoast.showToast(msg: "녹음이 종료됩니다.");
+          // Fluttertoast.showToast(msg: "녹음이 종료됩니다.");
           print('10초 경과 - 녹음 중이므로 자동 종료합니다.');
           await stop();
+        }
+
+        if (_recorder.isRecording) {
+          Fluttertoast.showToast(msg: "녹음이 종료됩니다.");
         }
       });
     } catch (e) {

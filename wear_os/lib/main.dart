@@ -21,28 +21,45 @@ import 'history.dart';
 
 VMIDC vmidc = VMIDC();
 
-void main() {
+
+void main() async {
 
   Get.put(RecController());
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  vmidc.bluetoothReceiver((receivedData) async {
-    // 받은 데이터 처리
-    print("수신된 곡 정보: $receivedData");
 
-    var song = jsonDecode(receivedData);
+  try {
+    final platform = MethodChannel('com.example.watch/connection');
+    final networkType = await platform.invokeMethod('getNetworkType');
 
-    if (song['data'] != '' && song.containsKey('data')) {
-      await Get.to(() => SongInfo(song: song['data']));
-      Get.find<RecController>().setRec(false);
+
+    // final networkType = 'bluetooth'; // test
+    // print('연결된 네트워크: $networkType');
+
+    if (networkType != "none") {
+      Get.find<RecController>().setNetworkType(networkType);
     }
-  });
 
+    if (networkType == 'bluetooth') {
+      vmidc.bluetoothReceiver((receivedData) async { // 폰에서 블루투스로 보내는 데이터 리시버
+        // 받은 데이터 처리
+        print("수신된 곡 정보: $receivedData");
+
+        var song = jsonDecode(receivedData);
+
+        if (song['data'] != '' && song.containsKey('data')) {
+          await Get.to(() => SongInfo(song: song['data']));
+          Get.find<RecController>().setRec(false);
+        }
+      });
+    }
+    
+  } catch (e) {
+    print('네트워크 확인 실패: $e');
+  }
 
   runApp(const MyApp());
-
-
 
 }
 
@@ -159,8 +176,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> asyncFunction() async {
 
-    final connectivityResult = await Connectivity().checkConnectivity();
-    print('connectivityResult: $connectivityResult');
+    // final connectivityResult = await Connectivity().checkConnectivity();
+    // print('connectivityResult: $connectivityResult');
 
     // 마이크 권한 요청
     PermissionStatus status = await Permission.microphone.status;
@@ -205,7 +222,7 @@ class _HomePageState extends State<HomePage> {
         child: GestureDetector(
           onTap: () {
 
-            if (!Get.find<RecController>().canStart.value) {
+            if (Get.find<RecController>().networkType.value == 'none') {
               Fluttertoast.showToast(msg: "네트워크 연결을 확인해주세요.");
               return;
             }

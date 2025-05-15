@@ -35,6 +35,7 @@ void main() async {
 
   Get.put(HomeController());
 
+  // 애플워치
   WatchService watchService = WatchService();
   watchService.init(); // 이벤트 수신 초기화
   // 워치
@@ -50,20 +51,21 @@ void main() async {
 
   };
 
-  BluetoothReceiver.init((result) {
-    if (result['data'] != '' && result.containsKey('data')) {
-
-      print("곡 정보: ${result['data']}");
-
-      const MethodChannel _channel = MethodChannel('com.example.clone_momo_app/bluetooth');
-      _channel.invokeMethod('songResultResponse', jsonEncode(result['data']));
-
-      print("(폰 플러터) 서버에서 받은 결과값 플러터 => 코틀린으로 전송 !!");
-
-    } else {
-      print("곡 정보 없음: ${result['err_msg'] ?? result['error']}");
-    }
-  });
+  // BluetoothReceiver.init((result) {
+  //   if (result['data'] != '' && result.containsKey('data')) {
+  //
+  //     print("곡 정보: ${result['data']}");
+  //     print('호출됨 @@@@@@#####');
+  //
+  //     // const MethodChannel _channel = MethodChannel('com.example.clone_momo_app/bluetooth');
+  //     // _channel.invokeMethod('songResultResponse', jsonEncode(result['data']));
+  //
+  //     print("(폰 플러터) 서버에서 받은 결과값 플러터 => 코틀린으로 전송 !!");
+  //
+  //   } else {
+  //     print("곡 정보 없음: ${result['err_msg'] ?? result['error']}");
+  //   }
+  // });
 
   runApp(MyApp());
 }
