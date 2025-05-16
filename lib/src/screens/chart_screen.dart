@@ -322,10 +322,12 @@ class _ChartScreenState extends State<ChartScreen> {
 
                 // 모모 검색 차트 //
                 isChartLoading
-                ? Center(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,))
                 : momo_sch_list.isEmpty
                     ? Center(child: Text('데이터가 존재하지 않습니다.'),)
                     : RefreshIndicator(
+                      color: Colors.black,
+                      backgroundColor: Colors.white,
                       onRefresh: fetchChart,
                       child: ListView.builder(
                           controller: _scrollController, // 컨트롤러 연결
@@ -416,10 +418,12 @@ class _ChartScreenState extends State<ChartScreen> {
 
                 /////////////////////////////// 에어차트 ///////////////////////////////
                 isAirChartLoading
-                ? Center(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,))
                 : air_chart.isEmpty
                 ? Center(child: Text('데이터가 존재하지 않습니다.'),)
                 : RefreshIndicator(
+                  color: Colors.black,
+                  backgroundColor: Colors.white,
                   onRefresh: fetchAirChart,
                   child: ListView.builder(
                     controller: _scrollController2, // 컨트롤러 연결
@@ -428,7 +432,7 @@ class _ChartScreenState extends State<ChartScreen> {
 
                       if (index == air_chart.length) { // 맨 마지막 item
                         return isAirChartLoading
-                            ? Center(child: CircularProgressIndicator())
+                            ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,))
                             : SizedBox.shrink(); // 로딩 끝나면 빈 아이템 반환
                       }
 

@@ -44,6 +44,8 @@ class BluetoothService : Service() {
 
         handlerThread.start() // Bluetooth 서버 스레드 시작
         startBluetoothServer()
+
+        Wearable.getMessageClient(this).addListener(this)
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -52,6 +54,8 @@ class BluetoothService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+
+        Wearable.getMessageClient(this).removeListener(this) // 히스토리 받는 통신 종료
         bluetoothSocket?.close() // Bluetooth 연결 종료
         handlerThread.quitSafely() // 스레드 안전하게 종료
         Log.d("PhoneDebug", "[Service] Bluetooth 연결 종료")
@@ -124,6 +128,18 @@ class BluetoothService : Service() {
 
             } catch (e: Exception) {
                 Log.e("PhoneDebug", "[Service] 블루투스 오류: ${e.message}", e)
+
+                try { // 블루투스 서버 다시 시작
+                    serverSocket?.close()
+                    bluetoothSocket?.close()
+                    bluetoothSocket = null
+                } catch (closeEx: IOException) {
+                    Log.e("PhoneDebug", "[Service] 소켓 재시작 오류: ${closeEx.message}", closeEx)
+                }
+
+                // 잠깐 쉬고 재시작
+                Thread.sleep(1000)
+                Log.d("PhoneDebug", "[Service] 블루투스 서버 재시작")
             }
         }.start()
     }
@@ -163,19 +179,20 @@ class BluetoothService : Service() {
 
     // 서버 응답을 워치로 전송
     private fun sendDataToWatch(responseString: String) {
-        try {
-            // BluetoothSocket의 outputStream을 사용하여 데이터를 워치로 전송
-            bluetoothSocket?.let { socket ->
-                val outputStream = socket.outputStream
-                val dataToSend = responseString.toByteArray()
+        Thread {
+            try {
+                bluetoothSocket?.let { socket ->
+                    val outputStream = socket.outputStream
+                    val dataToSend = responseString.toByteArray()
 
-                outputStream.write(dataToSend)
-                outputStream.flush()
+                    outputStream.write(dataToSend)
+                    outputStream.flush()
 
-                Log.d("PhoneDebug", "[Service] 워치로 데이터 전송 완료")
+                    Log.d("PhoneDebug", "[Service] 워치로 데이터 전송 완료")
+                }
+            } catch (e: Exception) {
+                Log.e("PhoneDebug", "[Service] 워치로 데이터 전송 실패: ${e.message}", e)
             }
-        } catch (e: Exception) {
-            Log.e("PhoneDebug", "[Service] 워치로 데이터 전송 실패: ${e.message}", e)
-        }
+        }.start()
     }
 }

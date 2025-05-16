@@ -293,7 +293,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 children: [
                   SizedBox(height: 20),
                   isLoading
-                    ? Center(child: CircularProgressIndicator()) // 로딩 중
+                    ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,)) // 로딩 중
                     : searchList.isEmpty
                     ? Center(
                       child: Text(
@@ -408,7 +408,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   Container()
                     :
                     isLoading
-                      ? Center(child: CircularProgressIndicator()) // 로딩 중
+                      ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,)) // 로딩 중
                       : ListView.builder(
                     shrinkWrap: true, // 내부 크기 조정 가능
                     physics: NeverScrollableScrollPhysics(), // 자체 스크롤 방지

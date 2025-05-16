@@ -65,7 +65,6 @@ class _HistoryState extends State<History> {
       try {
         http.Response response = await http.get(Uri.parse(
             'https://www.mo-mo.co.kr/api/get_song_history/json?uid=${MyApp.uid}'));
-
         if (response.statusCode == 200 && mounted) {
           List<dynamic> apiData = jsonDecode(response.body);
           setState(() {
@@ -286,13 +285,27 @@ class _HistoryState extends State<History> {
                           item['image']!,
                           fit: BoxFit.cover,
                           loadStateChanged: (state) {
-                            if (state.extendedImageLoadState ==
-                                LoadState.failed) {
-                              return Image.asset('assets/no_image.png',
-                                  fit: BoxFit.cover);
-                            }
-                            return null;
-                          },
+
+                            switch (state.extendedImageLoadState) {
+                              case LoadState.loading:
+                              return Image.asset('assets/no_image.png', fit: BoxFit.cover,);
+
+                              case LoadState.completed:
+                                return null; // 기본 이미지 렌더링
+
+                              case LoadState.failed:
+                                return Image.asset('assets/no_image.png', fit: BoxFit.cover);
+                              }
+                            },
+
+
+
+                          //   if (state.extendedImageLoadState == LoadState.failed) {
+                          //     return Image.asset('assets/no_image.png',
+                          //         fit: BoxFit.cover);
+                          //   }
+                          //   return null;
+                          // },
                         ),
                       ),
                       SizedBox(width: 10.0),

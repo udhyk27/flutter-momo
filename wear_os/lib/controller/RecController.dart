@@ -1,24 +1,33 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
+
+import '../main.dart';
+import '../song_info.dart';
 
 class RecController extends GetxController {
   var isRecognizing = false.obs; // 녹음 중 여부
   var networkType = 'none'.obs;
-  var showImage = false.obs;
 
   void setRec(bool value) {
     isRecognizing.value = value;
-    if (value) {
-      // 2초 후 이미지 보여주기
-      Future.delayed(const Duration(seconds: 2), () {
-        showImage.value = true;
-      });
-    } else {
-      showImage.value = false;
-    }
   }
-
 
   void setNetworkType(String type) {
     networkType.value = type;
+  }
+
+  void initBluetoothReceiver() {
+    vmidc.bluetoothReceiver((receivedData) async {
+      print("수신된 곡 정보: $receivedData");
+      var song = jsonDecode(receivedData);
+
+      if (song['data'] != '' && song.containsKey('data')) {
+        var result = await Get.to(() => SongInfo(song: song['data']));
+        if (result) {
+          await vmidc.stop();
+        }
+      }
+    });
   }
 }

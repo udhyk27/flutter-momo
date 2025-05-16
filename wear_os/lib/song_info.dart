@@ -29,19 +29,36 @@ class _SongInfoState extends State<SongInfo> {
             aspectRatio: 1,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child:
-              ExtendedImage.network(
+              child: ExtendedImage.network(
                 widget.song['IMAGE'] ?? '',
                 fit: BoxFit.cover,
+
                 loadStateChanged: (state) {
-                  if (state.extendedImageLoadState == LoadState.failed) {
-                    return SizedBox(
-                      child: Image.asset('assets/no_image.png', fit: BoxFit.cover),
-                    );
+
+                  switch (state.extendedImageLoadState) {
+                    case LoadState.loading:
+                    // 로딩 중일 때 보여줄 커스텀 위젯
+                      return Container(
+                        color: const Color.fromRGBO(255, 195, 200, 1.0),
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(width: MediaQuery.of(context).size.width * 0.6, child: Image.asset('assets/loading2_pink.gif', fit: BoxFit.contain,)),
+                            Text("곡 발견!", style: TextStyle(color: Colors.white, fontFamily: 'NotoSansKR-Regular',)),
+                          ],
+                        ),
+                      );
+
+                    case LoadState.completed:
+                      return null; // 기본 이미지 렌더링
+
+                    case LoadState.failed:
+                      return Image.asset('assets/no_image.png', fit: BoxFit.cover);
                   }
-                  return null;
                 },
-              ),
+
+              )
             ),
           ),
           Column(

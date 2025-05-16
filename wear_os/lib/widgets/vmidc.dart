@@ -49,9 +49,7 @@ class VMIDC {
   Future<bool> init() async {
 
     // 네트워크 타입 확인
-
     print('네트워크 타입 :: ${recController.networkType.value}');
-
 
     // 블루투스일때만 블루투스 권한 및 세션 시작
     if (recController.networkType.value == 'bluetooth') {
@@ -144,8 +142,9 @@ class VMIDC {
 
 
     // 에러 메시지가 존재할 때
-    if (m['err_msg'] != '') {
+    if (m['err_msg'] != '' &&  m.containsKey('err_msg')) {
       print('error msg 1 / 음악 인식 STOP');
+      print(m['err_msg']);
 
       await stop();
 
@@ -177,7 +176,6 @@ class VMIDC {
   Future<Map<String, dynamic>> _sendDataToKotlin(List<int> dna) async {
     print('Watch => Kotlin으로 DNA 전송!');
     try {
-
       // body
       final arr = {
         'uid' : MyApp.uid,
@@ -237,9 +235,6 @@ class VMIDC {
     };
 
     try {
-
-
-
       final response = await http.post(
         Uri.parse('https://www.mo-mo.co.kr/api/getdnasong'),
         headers: headers,

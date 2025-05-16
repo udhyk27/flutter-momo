@@ -194,7 +194,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
   @override
   Widget build(BuildContext context) {
 
-    if (isLoading) return Center(child: CircularProgressIndicator());
+    if (isLoading) return Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,));
 
     int themeValue = context.watch<MyAppState>().selectedValue;
     Color textColor = themeValue == 2 ? Colors.white : Colors.black;
@@ -344,7 +344,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         isLoading
                           ?
                         Container(
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,),
                         )
                           :
 
@@ -472,7 +472,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         programLoading
                           ?
                         Center(
-                          child: CircularProgressIndicator(), // 로딩 인디케이터
+                          child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,), // 로딩 인디케이터
                         )
                             :
                           isExist
@@ -542,7 +542,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                           isLoading
                             ?
                           Center(
-                            child: CircularProgressIndicator(), // 로딩 인디케이터
+                            child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,), // 로딩 인디케이터
                           )
                             :
                         isExist2

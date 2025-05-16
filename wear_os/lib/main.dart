@@ -25,30 +25,36 @@ void main() async {
 
 
   try {
-    final networkType = await platform.invokeMethod('getNetworkType');
-    // final networkType = 'bluetooth'; // test
+    // final networkType = await platform.invokeMethod('getNetworkType');
+    final networkType = 'bluetooth'; // test
     // print('연결된 네트워크: $networkType');
 
     if (networkType != "none") {
       Get.find<RecController>().setNetworkType(networkType);
     }
 
+    // if (networkType == 'bluetooth') {
+    //   vmidc.bluetoothReceiver((receivedData) async { // 폰에서 블루투스로 보내는 데이터 리시버
+    //     // 받은 데이터 처리
+    //     print("수신된 곡 정보: $receivedData");
+    //     var song = jsonDecode(receivedData);
+    //
+    //     if (song['data'] != '' && song.containsKey('data')) {
+    //       var result = await Get.to(() => SongInfo(song: song['data']));
+    //
+    //       if (result) {
+    //         await vmidc.stop();
+    //       }
+    //
+    //     }
+    //   });
+    // }
+
     if (networkType == 'bluetooth') {
-      vmidc.bluetoothReceiver((receivedData) async { // 폰에서 블루투스로 보내는 데이터 리시버
-        // 받은 데이터 처리
-        print("수신된 곡 정보: $receivedData");
-        var song = jsonDecode(receivedData);
-
-        if (song['data'] != '' && song.containsKey('data')) {
-          var result = await Get.to(() => SongInfo(song: song['data']));
-
-          if (result) {
-            await vmidc.stop();
-          }
-
-        }
-      });
+      Get.find<RecController>().setNetworkType(networkType);
+      Get.find<RecController>().initBluetoothReceiver(); // 리시버 등록
     }
+
 
   } catch (e) {
     print('네트워크 확인 실패: $e');
@@ -74,6 +80,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this); // 앱 생명주기 변경을 감지
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      precacheImage(const AssetImage('assets/loading2_pink.gif'), context,);
+      precacheImage(const AssetImage('assets/berry_logo.png'), context);
+    });
   }
 
   @override

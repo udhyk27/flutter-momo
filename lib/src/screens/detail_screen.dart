@@ -99,7 +99,7 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
       ),
       body: isLoading
-        ? Center(child: CircularProgressIndicator())
+        ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,))
         : Container(
         width: double.infinity,
         margin: EdgeInsets.symmetric(horizontal: 10),
