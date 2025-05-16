@@ -40,8 +40,12 @@ void main() async {
         var song = jsonDecode(receivedData);
 
         if (song['data'] != '' && song.containsKey('data')) {
-          await Get.to(() => SongInfo(song: song['data']));
-          Get.find<RecController>().setRec(false);
+          var result = await Get.to(() => SongInfo(song: song['data']));
+
+          if (result) {
+            await vmidc.stop();
+          }
+
         }
       });
     }
@@ -230,15 +234,14 @@ class _HomePageState extends State<HomePage> {
               },
               child: Obx(() {
                 return Get.find<RecController>().isRecognizing.value
-                    ? Column(
+                    ?
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    CircularProgressIndicator(
-                      valueColor:
-                      AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                    SizedBox(height: 20),
+                  children: [
+
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.6, child: Image.asset('assets/loading2_pink.gif', fit: BoxFit.contain,)),
+
                     Text(
                       '음원 인식중입니다...',
                       style: TextStyle(
@@ -248,7 +251,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 )
-                    : Container(
+                    :
+                SizedBox(
                   width: MediaQuery.of(context).size.width * 0.6,
                   child: Image.asset(
                     'assets/berry_logo.png',

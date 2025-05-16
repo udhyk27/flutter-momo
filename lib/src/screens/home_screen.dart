@@ -202,9 +202,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           : Text(
                         '노래를 인식할 수 없습니다.',
                         style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color:  themeValue == 0 ? Colors.black : Colors.white
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color:  themeValue == 0 ? Colors.black : Colors.white
                         ), // 텍스트 스타일
                       ),
 

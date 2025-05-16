@@ -130,12 +130,13 @@ class VMIDC {
     if (recController.networkType.value == 'bluetooth') {
       await _sendDataToKotlin(_dna.pack());  // 데이터를 폰으로 전송
 
-      if (m.isNotEmpty) {
-        print('데이터가 폰으로 전송되었습니다!');
-      } else {
-        Fluttertoast.showToast(msg: "휴대폰 앱을 재실행해주세요.");
-        print('데이터 전송 실패!');
-      }
+      // if (m.isNotEmpty) {
+      //   print('데이터가 폰으로 전송되었습니다!');
+      //   print(m); // success true
+      // } else {
+      //   Fluttertoast.showToast(msg: "휴대폰 앱을 재실행해주세요.");
+      //   print('데이터 전송 실패!');
+      // }
     } else { // 셀룰러 또는 와이파이 일때
       // HTTP 요청 호출
       m = await sendDnaToServer(_dna.pack());
@@ -186,7 +187,7 @@ class VMIDC {
 
       final data = jsonEncode(arr);
 
-      print('코틀린으로 보낼 데이터 :: ${data}');
+      // print('코틀린으로 보낼 데이터 :: ${data}');
 
       final result = await platform.invokeMethod('sendDataToPhone', {'data': data});
 
@@ -210,8 +211,6 @@ class VMIDC {
     // MethodChannel로 데이터 수신 처리
     platform.setMethodCallHandler((call) async {
       if (call.method == "receiveBluetoothData") {
-
-        await stop();
 
         String receivedData = call.arguments; // 워치에서 받은 데이터
         print("Flutter로 받은 데이터: $receivedData");

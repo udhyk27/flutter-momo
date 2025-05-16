@@ -181,20 +181,24 @@ class _HistoryState extends State<History> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                insetPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                                insetPadding: EdgeInsets.symmetric(vertical: 5),
+                                // contentPadding: EdgeInsets.all(5), // 안쪽 여백
                                 content: SizedBox(
-                                  // width: 100,
-                                  // width: deviceWidth * 0.5,
-                                  // height: 80,
-                                  child: Center(
-                                    child: Text(
-                                      "삭제하시겠습니까?",
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
+                                  // width: 50,
+                                  // height: 20,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "삭제하시겠습니까?",
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                        ),
+                                        textAlign: TextAlign.center,
                                       ),
-                                      textAlign: TextAlign.center,
-                                    )
-                                  )
+                                    ],
+                                  ),
                                 ),
                                 actions: [
                                   TextButton(
@@ -214,8 +218,6 @@ class _HistoryState extends State<History> {
                               );
                             },
                           );
-
-
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.grey,
