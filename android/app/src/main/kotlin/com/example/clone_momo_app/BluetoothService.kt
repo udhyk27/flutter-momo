@@ -122,14 +122,23 @@ class BluetoothService : Service() {
                             Log.d("PhoneDebug", "[Service] 완성된 JSON: $completeJson")
 
                             sendDataToServer(completeJson) // 서버에 전송
-                        } else if (receivedData.trim().endsWith(".uuid")) {
+                        } else if (receivedData.trim().endsWith(".getHistoryList")) {
                             Log.d("PhoneDebug", "[Service] 히스토리 요청일때만 이곳에 들어와야 함 !!!!!!")
 
-                            val completeUid = receivedData.trim().removeSuffix(".uuid")
+                            val completeUid = receivedData.trim().removeSuffix(".getHistoryList")
                             Log.d("PhoneDebug", "정제된 UID: $completeUid")
 
                             stringBuffer.clear()
                             historyListServer(completeUid)
+
+                        } else if (receivedData.trim().endsWith(".delHistoryList")) {
+                            Log.d("PhoneDebug", "[Service] 히스토리 삭제일때만 이곳에 들어와야 함 @@@")
+
+                            val completeUid = receivedData.trim().removeSuffix(".delHistoryList")
+                            Log.d("PhoneDebug", "DELETE 정제된 UID: $completeUid")
+
+                            stringBuffer.clear()
+                            delHistoryList(completeUid)
 
                         }
 
@@ -180,6 +189,33 @@ class BluetoothService : Service() {
             } catch (e: IOException) {
                 Log.e("PhoneDebug", "(Service History) 서버 통신 오류", e)
                 sendDataToWatch("Error: IOException")
+            }
+        }.start()
+    }
+
+    // hisotryList DELETE
+    private fun delHistoryList(uid: String) {
+        Thread {
+            val client = OkHttpClient()
+            val url = "https://www.mo-mo.co.kr/api/get_song_history/json?uid=$uid&proc=del"
+
+            val request = Request.Builder()
+                .url(url)
+                .get()
+                .build()
+
+            try {
+                val response = client.newCall(request).execute()
+
+                // HTTP 200이면 성공
+                val message = if (response.isSuccessful) "del_success" else "del_fail"
+                Log.d("PhoneDebug", "히스토리 삭제 응답 코드: ${response.code}")
+                response.close()
+
+                sendDataToWatch(message)
+            } catch(e: IOException) {
+                Log.e("PhoneDebug", "(폰 코틀린) 히스토리 삭제 서버 통신 오류", e)
+                sendDataToWatch("del_fail")
             }
         }.start()
     }

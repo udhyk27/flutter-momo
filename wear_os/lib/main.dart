@@ -81,8 +81,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this); // 앱 생명주기 변경을 감지
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      precacheImage(const AssetImage('assets/loading2_pink.gif'), context,);
-      precacheImage(const AssetImage('assets/berry_logo.png'), context);
+      precacheImage(const AssetImage('assets/loading2_blue.gif'), context,);
+      precacheImage(const AssetImage('assets/blue_logo.png'), context);
     });
   }
 
@@ -177,10 +177,6 @@ class _HomePageState extends State<HomePage> {
 
 
   Future<void> asyncFunction() async {
-
-    // final connectivityResult = await Connectivity().checkConnectivity();
-    // print('connectivityResult: $connectivityResult');
-
     // 마이크 권한 요청
     PermissionStatus status = await Permission.microphone.status;
     if (status == PermissionStatus.permanentlyDenied) { // 마이크 권한 영구적으로 거부된 경우
@@ -209,96 +205,92 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    List<Color> gradientColors = [
+      Color.fromRGBO(62, 195, 255, 1.0), // 위쪽 색
+      Color.fromRGBO(194, 40, 222, 1.0), // 아래쪽 색
+    ];
+
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(255, 195, 200, 1.0),
-      body: Stack(
-        children: [
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: gradientColors
+          )
+        ),
+        child: Stack(
+          children: [
+            // 화면 중앙: 기존 콘텐츠
+            Center(
+              child: GestureDetector(
+                onTap: () {
+                  if (Get.find<RecController>().networkType.value == 'none') {
+                    Fluttertoast.showToast(msg: "네트워크 연결을 확인해주세요.");
+                    return;
+                  }
+                  _asyncTask = asyncFunction();
+                  Get.find<RecController>().setRec(true);
+                },
+                child: Obx(() {
+                  return Get.find<RecController>().isRecognizing.value
+                      ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
 
-          // Obx(() {
-          //   return Get.find<RecController>().isRecognizing.value
-          //       ? SizedBox.shrink() // 아무것도 안 보여줌
-          //       : Align(
-          //     alignment: Alignment.topCenter,
-          //     child: Padding(
-          //       padding: const EdgeInsets.only(top: 30),
-          //       child: Text(
-          //         "모모를 눌러주세요",
-          //         style: TextStyle(
-          //           color: Colors.white
-          //         ),
-          //       ),
-          //     ),
-          //   );
-          // }),
-          // 화면 중앙: 기존 콘텐츠
-          Center(
-            child: GestureDetector(
-              onTap: () {
-                if (Get.find<RecController>().networkType.value == 'none') {
-                  Fluttertoast.showToast(msg: "네트워크 연결을 확인해주세요.");
-                  return;
-                }
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.6, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
 
-                _asyncTask = asyncFunction();
-                Get.find<RecController>().setRec(true);
-              },
-              child: Obx(() {
-                return Get.find<RecController>().isRecognizing.value
-                    ?
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.6, child: Image.asset('assets/loading2_pink.gif', fit: BoxFit.contain,)),
-
-                    Text(
-                      '음원 인식중입니다...',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'NotoSansKR-Regular',
+                      Text(
+                        '음원 인식중입니다...',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'NotoSansKR-Regular',
+                        ),
                       ),
-                    ),
-                  ],
-                )
-                    :
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  child: Image.asset(
-                    'assets/berry_logo.png',
-                    fit: BoxFit.contain,
-                  ),
-                );
-              }),
-            ),
-          ),
-
-          // 화면 하단: 아래 화살표 아이콘
-          Obx(() {
-            return Get.find<RecController>().isRecognizing.value
-                ? SizedBox.shrink() // 아무것도 안 보여줌
-                : Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: IconButton(
-                  onPressed: () {
-                    widget.pageController.animateToPage(
-                      1,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  },
-                  icon:  Icon(
-                    Icons.keyboard_double_arrow_down,
-                    color: Colors.white,
-                    size: 36,
+                    ],
                   )
-                ),
+                      :
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Image.asset(
+                      'assets/blue_logo.png',
+                      fit: BoxFit.contain,
+                    ),
+                  );
+                }),
               ),
-            );
-          }),
-        ],
+            ),
+
+            // 화면 하단: 아래 화살표 아이콘
+            Obx(() {
+              return Get.find<RecController>().isRecognizing.value
+                  ? SizedBox.shrink() // 아무것도 안 보여줌
+                  : Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: IconButton(
+                    onPressed: () {
+                      widget.pageController.animateToPage(
+                        1,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    icon:  Icon(
+                      Icons.keyboard_double_arrow_down,
+                      color: Colors.white70,
+                      size: 36,
+                    )
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
       ),
     );
   }

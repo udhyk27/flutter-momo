@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 
+import '../history.dart';
 import '../main.dart';
 import '../song_info.dart';
 
@@ -27,9 +28,9 @@ class RecController extends GetxController {
 
         print('bluetooth 수신 데이터는 맵');
 
-        if (song['data'] != '' && song.containsKey('data')) { // 곡 찾기 성공
+        if (song.containsKey('data') && song['data'] != '') { // 곡 찾기 성공
           await Get.to(() => SongInfo(song: song['data']));
-        } else if (song['err_msg'] != '' && song.containsKey('err_msg')) { // 곡 찾기 실패
+        } else if (song.containsKey('err_msg') && song['err_msg'] != '') { // 곡 찾기 실패
           print('(RecController) 곡 정보 찾기 실패 !!');
         } else {
           print('DNA 작업 실패');
