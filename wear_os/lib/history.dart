@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:wear_os/song_info.dart';
 import 'package:wear_os/widgets/vmidc.dart';
 
+import 'controller/RecController.dart';
 import 'main.dart';
 
 String text = '히스토리가 존재하지 않습니다.';
@@ -26,6 +27,7 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
   List<Map<String, String>> historyList = [];
+  // List<Map<String, String>> historyList = Get.find<RecController>().historyList;
 
   @override
   void initState() {
@@ -41,24 +43,28 @@ class _HistoryState extends State<History> {
 
     if (networkType == 'bluetooth') {
       // 블루투스 연결이면 폰에 데이터 요청
-      final jsonData = await platform.invokeMethod(
+      final result = await platform.invokeMethod(
         'requestHistory',
         {'uid':MyApp.uid},
       );
-      if (jsonData != null && mounted) {
-        List<dynamic> apiData = jsonDecode(jsonData);
+      if (result != null && mounted) {
         setState(() {
-          historyList = apiData.map<Map<String, String>>((item) {
-            return {
-              'image': item['IMAGE']?.toString() ?? '',
-              'title': item['TITLE']?.toString() ?? '',
-              'artist': item['ARTIST']?.toString() ?? '',
-              'album': item['ALBUM']?.toString() ?? '',
-              'date': item['date']?.toString() ?? ''
-            };
-          }).toList();
+          historyList = Get.find<RecController>().historyList;
           isLoading = false;
         });
+        // List<dynamic> apiData = jsonDecode(jsonData);
+        // setState(() {
+        //   historyList = apiData.map<Map<String, String>>((item) {
+        //     return {
+        //       'image': item['IMAGE']?.toString() ?? '',
+        //       'title': item['TITLE']?.toString() ?? '',
+        //       'artist': item['ARTIST']?.toString() ?? '',
+        //       'album': item['ALBUM']?.toString() ?? '',
+        //       'date': item['date']?.toString() ?? ''
+        //     };
+        //   }).toList();
+        //   isLoading = false;
+        // });
       }
     } else if (networkType == 'wifi' || networkType == 'celular') {
       // 와이파이나 셀룰러로 직접 요청

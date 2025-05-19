@@ -44,8 +44,6 @@ class BluetoothService : Service() {
 
         handlerThread.start() // Bluetooth 서버 스레드 시작
         startBluetoothServer()
-
-        Wearable.getMessageClient(this).addListener(this)
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -54,8 +52,6 @@ class BluetoothService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-
-        Wearable.getMessageClient(this).removeListener(this) // 히스토리 받는 통신 종료
         bluetoothSocket?.close() // Bluetooth 연결 종료
         handlerThread.quitSafely() // 스레드 안전하게 종료
         Log.d("PhoneDebug", "[Service] Bluetooth 연결 종료")
@@ -110,19 +106,33 @@ class BluetoothService : Service() {
                 while (true) {
                     val bytesRead = inputStream.read(buffer)
                     if (bytesRead > 0) {
+
+
                         val receivedData = String(buffer, 0, bytesRead)
                         Log.d("PhoneDebug", "[Service] 받은 데이터: $receivedData")
 
                         stringBuffer.append(receivedData)
+                        Log.d("PhoneDebug", "[Service] 여기까진 오류 XXXX ## 11")
 
                         if (receivedData.trim().endsWith("}")) {
+                            // JSON 완성
                             val completeJson = stringBuffer.toString()
                             stringBuffer.clear()
 
                             Log.d("PhoneDebug", "[Service] 완성된 JSON: $completeJson")
 
-                            sendDataToServer(completeJson) // 서버에 데이터 전송
+                            sendDataToServer(completeJson) // 서버에 전송
+                        } else if (receivedData.trim().endsWith(".uuid")) {
+                            Log.d("PhoneDebug", "[Service] 히스토리 요청일때만 이곳에 들어와야 함 !!!!!!")
+
+                            val completeUid = receivedData.trim().removeSuffix(".uuid")
+                            Log.d("PhoneDebug", "정제된 UID: $completeUid")
+
+                            stringBuffer.clear()
+                            historyListServer(completeUid)
+
                         }
+
                     }
                 }
 
@@ -140,6 +150,36 @@ class BluetoothService : Service() {
                 // 잠깐 쉬고 재시작
                 Thread.sleep(1000)
                 Log.d("PhoneDebug", "[Service] 블루투스 서버 재시작")
+                startBluetoothServer()
+            }
+        }.start()
+    }
+
+    // history List 받아오는 서버통신
+    private fun historyListServer(uid: String) {
+        Log.d("PhoneDebug", "(Service History) 히스토리 리스트 받는 서버 메소드 호출됨")
+        Thread {
+            try {
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                    .url("https://www.mo-mo.co.kr/api/get_song_history/json?uid=$uid")
+                    .get()
+                    .build()
+
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    val responseBody = response.body?.string()
+                    Log.d("PhoneDebug", "(Service History) 서버 응답 성공: $responseBody")
+
+                    // 서버 응답을 워치로 전송
+                    sendDataToWatch(responseBody ?: "No Data")
+                } else {
+                    Log.e("PhoneDebug", "(Service History) 서버 응답 실패: ${response.code}")
+                    sendDataToWatch("Error: ${response.code}")
+                }
+            } catch (e: IOException) {
+                Log.e("PhoneDebug", "(Service History) 서버 통신 오류", e)
+                sendDataToWatch("Error: IOException")
             }
         }.start()
     }
@@ -179,6 +219,7 @@ class BluetoothService : Service() {
 
     // 서버 응답을 워치로 전송
     private fun sendDataToWatch(responseString: String) {
+        Log.d("PhoneDebug", "[Service] 워치로 데이터 전송 하는 sendDataToWatch 호출됨 !!")
         Thread {
             try {
                 bluetoothSocket?.let { socket ->
