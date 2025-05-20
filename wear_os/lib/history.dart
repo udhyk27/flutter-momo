@@ -26,10 +26,6 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  List<Map<String, String>> historyList = [];
-  // List<Map<String, String>> historyList = Get.find<RecController>().historyList;
-  final ScrollController _scrollController = ScrollController();
-  bool isAtTop = true;
 
   @override
   void initState() {
@@ -38,9 +34,8 @@ class _HistoryState extends State<History> {
     ever(recController.networkType, (_) => fetchData());
   }
 
-  var networkType = recController.networkType.value;
-
   Future<void> fetchData() async {
+    var networkType = recController.networkType.value;
     if (networkType == 'bluetooth') {
       // 블루투스 연결이면 폰에 데이터 요청
       final result = await platform.invokeMethod(
@@ -78,15 +73,13 @@ class _HistoryState extends State<History> {
   }
 
   Future<void> delHistory() async {
+    var networkType = recController.networkType.value;
     if (networkType == 'bluetooth') {
       // 블루투스 연결이면 폰에 데이터 요청
       final result = await platform.invokeMethod('delHistory', {'uid':MyApp.uid});
 
       if (result == 'success') {
         Fluttertoast.showToast(msg: "삭제되었습니다.");
-        setState(() {
-          historyList.clear();
-        });
       } else {
         Fluttertoast.showToast(msg: "다시 시도해주세요.");
       }
@@ -96,9 +89,6 @@ class _HistoryState extends State<History> {
         http.Response response = await http.get(Uri.parse('https://www.mo-mo.co.kr/api/get_song_history/json?uid=${MyApp.uid}&proc=del'));
         if (response.statusCode == 200) {
           Fluttertoast.showToast(msg: "삭제되었습니다.");
-          setState(() {
-            historyList.clear();
-          });
         }
       } catch (e) {
         print('searched song delete all error');
@@ -111,8 +101,6 @@ class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
-    final deviceHeight = MediaQuery.of(context).size.height;
-
     final RecController recController = Get.find<RecController>();
 
     List<Color> gradientColors = [
