@@ -162,16 +162,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                       :
                   IconButton(
-                      onPressed: () {
-                        controller.stateVal.value == 0
-                            ? cancelAsyncTask()
-                            : controller.changeState(1);
-                      }, // X 버튼 클릭 시 비동기 작업 X , 함수참조
-                      icon: Icon(
-                        Icons.close,
-                        size: 25,
-                        color: themeValue == 2 ? Colors.white : Colors.black,
-                      )
+                    onPressed: () {
+                      controller.stateVal.value == 0
+                        ? cancelAsyncTask()
+                        : controller.changeState(1);
+                    }, // X 버튼 클릭 시 비동기 작업 X , 함수참조
+                    icon: Icon(
+                      Icons.close,
+                      size: 25,
+                      color: themeValue == 2 ? Colors.white : Colors.black,
+                    )
                   ),
                 ),
               ),

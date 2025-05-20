@@ -24,6 +24,7 @@ class _SongInfoState extends State<SongInfo> {
   ];
 
   bool showIcon = false;
+  bool imageLoaded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +77,15 @@ class _SongInfoState extends State<SongInfo> {
                             );
 
                           case LoadState.completed:
+                            if (!imageLoaded) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                if (mounted) {
+                                  setState(() {
+                                    imageLoaded = true;
+                                  });
+                                }
+                              });
+                            }
                             return null; // 기본 이미지 렌더링
 
                           case LoadState.failed:
@@ -83,63 +93,63 @@ class _SongInfoState extends State<SongInfo> {
                         }
                       },
                     ),
-
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      height: mediaHeight * 0.5, // 원하는 높이만큼
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withValues(alpha: 1.0),
-                            ],
+                    if (imageLoaded)
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: mediaHeight * 0.5, // 원하는 높이만큼
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withValues(alpha: 1.0),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
 
-                    Positioned( // 글씨
-                      left: 0,
-                      right: 0,
-                      bottom: 30,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            widget.song['TITLE'] ?? '',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.sp,
-                              // shadows: [Shadow(blurRadius: 3, color: Colors.black54)],
+                    if (imageLoaded)
+                      Positioned( // 글씨
+                        left: 0,
+                        right: 0,
+                        bottom: 30,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.song['TITLE'] ?? '',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16.sp,
+                              ),
                             ),
-                          ),
-                          Text(
-                            widget.song['ARTIST'] ?? '',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white60,
-                              fontSize: 12.sp,
-                              // shadows: [Shadow(blurRadius: 2, color: Colors.black38)],
+                            Text(
+                              widget.song['ARTIST'] ?? '',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white60,
+                                fontSize: 12.sp,
+                                // shadows: [Shadow(blurRadius: 2, color: Colors.black38)],
+                              ),
                             ),
-                          ),
-                          // Text(
-                          //   widget.song['ALBUM'] ?? '', style: TextStyle(color: Colors.white70, fontFamily: font, fontSize: 12.sp),
-                          //   maxLines: 1,
-                          //   overflow: TextOverflow.ellipsis,
-                          // ),
-                          // Text(widget.song['date'] ?? '', style: TextStyle(color: Colors.white70, fontFamily: font, fontSize: 12.sp),),
-                        ],
+                            // Text(
+                            //   widget.song['ALBUM'] ?? '', style: TextStyle(color: Colors.white70, fontFamily: font, fontSize: 12.sp),
+                            //   maxLines: 1,
+                            //   overflow: TextOverflow.ellipsis,
+                            // ),
+                            // Text(widget.song['date'] ?? '', style: TextStyle(color: Colors.white70, fontFamily: font, fontSize: 12.sp),),
+                          ],
+                        ),
                       ),
-                    ),
 
 
                     if (showIcon)

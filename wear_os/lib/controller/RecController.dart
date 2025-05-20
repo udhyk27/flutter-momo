@@ -57,9 +57,8 @@ class RecController extends GetxController {
           print(historyList);
         }
 
-      } else { // history del 일 경우
-        historyList.clear();
-        print(' HISTORY DELETE ');
+      } else {
+        print(' 알수없는 히스토리 리스트 반환 ');
       }
     });
   }

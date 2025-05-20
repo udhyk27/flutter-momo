@@ -27,6 +27,8 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
 
+  int visibleCount = 5;
+
   @override
   void initState() {
     super.initState();
@@ -80,6 +82,7 @@ class _HistoryState extends State<History> {
 
       if (result == 'success') {
         Fluttertoast.showToast(msg: "삭제되었습니다.");
+        recController.historyList.clear();
       } else {
         Fluttertoast.showToast(msg: "다시 시도해주세요.");
       }
@@ -89,6 +92,7 @@ class _HistoryState extends State<History> {
         http.Response response = await http.get(Uri.parse('https://www.mo-mo.co.kr/api/get_song_history/json?uid=${MyApp.uid}&proc=del'));
         if (response.statusCode == 200) {
           Fluttertoast.showToast(msg: "삭제되었습니다.");
+          recController.historyList.clear();
         }
       } catch (e) {
         print('searched song delete all error');
@@ -98,9 +102,12 @@ class _HistoryState extends State<History> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
     final RecController recController = Get.find<RecController>();
 
     List<Color> gradientColors = [
@@ -108,225 +115,261 @@ class _HistoryState extends State<History> {
       Color.fromRGBO(62, 195, 255, 1.0), // 아래쪽 색
     ];
 
-    return Scaffold(
-      body: Obx(() => Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
+    return Obx(() {
+      int listLength = recController.historyList.length < visibleCount
+        ? recController.historyList.length
+        : visibleCount;
+
+      int totalCount = listLength + 2;
+
+      return Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: gradientColors
-            )
-        ),
-        child: Stack(
-          children: [
-            recController.historyLoading.value
-                ? Center(
-              child: CircularProgressIndicator(
-                color: Colors.grey,
-                strokeWidth: 2.0,
-              ),
-            )
-                :
-            recController.historyList.isEmpty
-            ? Center(child: Text(text),)
-            : ListView.builder(
-              // physics: isAtTop
-              //   ? NeverScrollableScrollPhysics() // 스크롤 방지
-              //   : AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.only(bottom: 10.0),
-              itemCount: recController.historyList.length + 2,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Center(
-                      child: Text(
-                        '히스토리',
-                        style: TextStyle(fontSize: 15.sp),
-                      ),
-                    ),
-                  );
-                } else if (index == recController.historyList.length + 1) {
-                  // 마지막 아이템: 버튼
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 2.h,),
-                      SizedBox(
-                        width: deviceWidth * 0.4,
-                        height: 8.h,
-                        child: ElevatedButton(
-                          onPressed: () {
+              )
+          ),
+          child: Stack(
+            children: [
+              recController.historyLoading.value
+              ? Center(
+                child: CircularProgressIndicator(
+                  color: Colors.grey,
+                  strokeWidth: 2.0,
+                ),
+              )
+              : recController.historyList.isEmpty
+              ?
 
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.grey,
-                            backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
-                          ),
-                          child: Text(
-                            '더보기',
-                            style: TextStyle(fontSize: 12.sp),
-                          ),
+              Column(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      widget.pageController.animateToPage(
+                        0,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    icon: Icon(
+                      Icons.keyboard_double_arrow_up,
+                      color: Colors.white70,
+                      size: 36,
+                    )
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: deviceHeight / 4),
+                    child: Center(child: Text(text),),
+                  )
+                ],
+              )
+
+              : ListView.builder(
+                padding: EdgeInsets.only(bottom: 10.0),
+                itemCount: totalCount,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Center(
+                        child: Text(
+                          '히스토리',
+                          style: TextStyle(fontSize: 15.sp),
                         ),
                       ),
-
-                      SizedBox(height: 2.h,),
-                      SizedBox(
-                      width: deviceWidth * 0.4,
-                      height: 8.h,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  insetPadding: EdgeInsets.symmetric(vertical: 5),
-                                  content: SizedBox(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "삭제하시겠습니까?",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () async {
-                                        Navigator.of(context).pop(); // 알림창 닫기
-                                        await delHistory();
-                                      },
-                                      child: Text("확인", style: TextStyle(color: Colors.black26,fontSize: 10.sp,),),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(); // 취소 시 그냥 닫기
-                                      },
-                                      child: Text("취소", style: TextStyle(color: Colors.black26,fontSize: 10.sp,), ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.grey,
-                            backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
-                          ),
-                          child: Text(
-                            '삭제',
-                            style: TextStyle(fontSize: 12.sp),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 2.h,),
-
-                      SizedBox(
-                        width: deviceWidth * 0.4,
-                        height: 8.h,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            widget.pageController.animateToPage(
-                              0,
-                              duration: Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.grey,
-                            backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
-                          ),
-                          child: Text(
-                            '닫기',
-                            style: TextStyle(fontSize: 12.sp),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 2.h,),
-                    ],
-                  );
-                }
-
-                // 리스트 목록
-                final item = recController.historyList[index - 1];
-
-                return GestureDetector(
-                  onTap: () {
-                    Get.to(() => SongInfo(
-                      song: {
-                        'TITLE': item['title'],
-                        'ALBUM': item['album'],
-                        'IMAGE': item['image'],
-                        'ARTIST': item['artist'],
-                        'date': item['date']
-                      },
-                    ));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3.0),
-                    child: Row(
+                    );
+                  } else if (index == listLength + 1) {
+                    // 마지막 아이템: 버튼
+                    return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child:
-                          ExtendedImage.network(
-                            width: deviceWidth * 0.2,
-                            item['image']!,
-                            fit: BoxFit.cover,
-                            loadStateChanged: (state) {
+                        SizedBox(height: 2.h,),
 
-                              switch (state.extendedImageLoadState) {
-                                case LoadState.loading:
-                                return Image.asset('assets/no_image.png', fit: BoxFit.cover,);
+                        if (recController.historyList.length > visibleCount)
+                          SizedBox(
+                            width: deviceWidth * 0.4,
+                            height: 8.h,
 
-                                case LoadState.completed:
-                                  return null; // 기본 이미지 렌더링
-
-                                case LoadState.failed:
-                                  return Image.asset('assets/no_image.png', fit: BoxFit.cover);
-                                }
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  visibleCount += 5;
+                                });
                               },
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.grey,
+                                backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
+                              ),
+                              child: Text(
+                                '더보기',
+                                style: TextStyle(fontSize: 12.sp),
+                              ),
+                            ),
+
                           ),
-                        ),
-                        SizedBox(width: 10.0),
+
+
+                        // SizedBox(height: 2.h,),
                         SizedBox(
-                          width: deviceWidth * 0.5,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item['title']!,
-                                style: TextStyle(fontSize: 10.sp),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                              Text(
-                                item['artist']!,
-                                style: TextStyle(fontSize: 8.sp),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ],
+                        width: deviceWidth * 0.4,
+                        height: 8.h,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    insetPadding: EdgeInsets.symmetric(vertical: 5),
+                                    content: SizedBox(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "삭제하시겠습니까?",
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () async {
+                                          Navigator.of(context).pop(); // 알림창 닫기
+                                          await delHistory();
+                                        },
+                                        child: Text("확인", style: TextStyle(color: Colors.black26,fontSize: 10.sp,),),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(); // 취소 시 그냥 닫기
+                                        },
+                                        child: Text("취소", style: TextStyle(color: Colors.black26,fontSize: 10.sp,), ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.grey,
+                              backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
+                            ),
+                            child: Text(
+                              '삭제',
+                              style: TextStyle(fontSize: 12.sp),
+                            ),
                           ),
                         ),
+
+                        SizedBox(height: 2.h,),
+
+                        SizedBox(
+                          width: deviceWidth * 0.4,
+                          height: 8.h,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              widget.pageController.animateToPage(
+                                0,
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.grey,
+                              backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
+                            ),
+                            child: Text(
+                              '닫기',
+                              style: TextStyle(fontSize: 12.sp),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 2.h,),
                       ],
+                    );
+                  }
+
+                  // 리스트 목록
+                  final item = recController.historyList[index - 1];
+
+                  return GestureDetector(
+                    onTap: () {
+                      Get.to(() => SongInfo(
+                        song: {
+                          'TITLE': item['title'],
+                          'ALBUM': item['album'],
+                          'IMAGE': item['image'],
+                          'ARTIST': item['artist'],
+                          'date': item['date']
+                        },
+                      ));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3.0),
+
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 26, vertical: 3),
+                        padding: EdgeInsets.all(12),
+                        height: deviceHeight * 0.3,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          image: DecorationImage(
+                            image: ExtendedNetworkImageProvider(item['image']!),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        // 배경 위에 바로 텍스트 배치
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.2), // 반투명 배경
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  item['title']!,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                                Text(
+                                  item['artist']!,
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 10.sp,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
                     ),
-                  ),
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-      )
-    );
+      );
+    });
+
   }
 }
