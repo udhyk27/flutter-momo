@@ -26,8 +26,8 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  // List<Map<String, String>> historyList = [];
-  List<Map<String, String>> historyList = Get.find<RecController>().historyList;
+  List<Map<String, String>> historyList = [];
+  // List<Map<String, String>> historyList = Get.find<RecController>().historyList;
 
   @override
   void initState() {
@@ -36,7 +36,6 @@ class _HistoryState extends State<History> {
     ever(recController.networkType, (_) => fetchData());
   }
 
-  var isLoading = true;
   var networkType = recController.networkType.value;
 
   Future<void> fetchData() async {
@@ -47,11 +46,8 @@ class _HistoryState extends State<History> {
         {'uid':MyApp.uid},
       );
 
-      if (result != null && mounted) {
-        setState(() {
-          historyList = Get.find<RecController>().historyList;
-          isLoading = false;
-        });
+      if (result != 'success' && mounted) {
+        Fluttertoast.showToast(msg: "블루투스 연결이 원활하지 않습니다.");
       }
     } else if (networkType == 'wifi' || networkType == 'cellular') {
       // 와이파이나 셀룰러로 직접 요청
@@ -60,8 +56,7 @@ class _HistoryState extends State<History> {
           'https://www.mo-mo.co.kr/api/get_song_history/json?uid=${MyApp.uid}'));
         if (response.statusCode == 200 && mounted) {
           List<dynamic> apiData = jsonDecode(response.body);
-          setState(() {
-            historyList = apiData.map<Map<String, String>>((item) {
+            recController.historyList.value = apiData.map<Map<String, String>>((item) {
               return {
                 'image': item['IMAGE']?.toString() ?? '',
                 'title': item['TITLE']?.toString() ?? '',
@@ -70,8 +65,7 @@ class _HistoryState extends State<History> {
                 'date': item['date']?.toString() ?? ''
               };
             }).toList();
-            isLoading = false;
-          });
+          recController.historyLoading.value = false;
         }
       } catch (e) {
         print('Watch History Api Error');
@@ -82,15 +76,12 @@ class _HistoryState extends State<History> {
   }
 
   Future<void> delHistory() async {
-
     if (networkType == 'bluetooth') {
-
       // 블루투스 연결이면 폰에 데이터 요청
       final result = await platform.invokeMethod('delHistory', {'uid':MyApp.uid});
 
       if (result == 'success') {
         Fluttertoast.showToast(msg: "삭제되었습니다.");
-
         setState(() {
           historyList.clear();
         });
@@ -120,6 +111,8 @@ class _HistoryState extends State<History> {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
 
+    final RecController recController = Get.find<RecController>();
+
     List<Color> gradientColors = [
       Color.fromRGBO(194, 40, 222, 1.0), // 위쪽 색
       Color.fromRGBO(62, 195, 255, 1.0), // 아래쪽 색
@@ -138,7 +131,7 @@ class _HistoryState extends State<History> {
           ),
         ),
       ),
-      body: Container(
+      body: Obx(() => Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -148,7 +141,8 @@ class _HistoryState extends State<History> {
         ),
         child: Stack(
           children: [
-            isLoading
+            // isLoading
+            recController.historyLoading.value
                 ? Center(
               child: CircularProgressIndicator(
                 color: Colors.grey,
@@ -156,19 +150,16 @@ class _HistoryState extends State<History> {
               ),
             )
                 :
-            historyList.isEmpty
-                ?
-            Center(
-              child: Text(text),
-            )
-                :
-            ListView.builder(
+            // Obx(() {
+              recController.historyList.isEmpty
+            ?
+                Center(child: Text(text),)
+              :
+                ListView.builder(
               padding: EdgeInsets.only(bottom: 10.0),
-              itemCount: historyList.length + 1,
+              itemCount: recController.historyList.length + 1,
               itemBuilder: (context, index) {
-
-
-                if (index == historyList.length) {
+                if (index == recController.historyList.length) {
                   // 마지막 아이템: 버튼
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -206,8 +197,6 @@ class _HistoryState extends State<History> {
                                   insetPadding: EdgeInsets.symmetric(vertical: 5),
                                   // contentPadding: EdgeInsets.all(5), // 안쪽 여백
                                   content: SizedBox(
-                                    // width: 50,
-                                    // height: 20,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment: MainAxisAlignment.center,
@@ -280,7 +269,7 @@ class _HistoryState extends State<History> {
                   );
                 }
 
-                final item = historyList[index];
+                final item = recController.historyList[index];
 
                 return GestureDetector(
                   onTap: () {
@@ -348,9 +337,12 @@ class _HistoryState extends State<History> {
                 );
               },
             ),
+
+            // })
           ],
         ),
       ),
+      )
     );
   }
 }

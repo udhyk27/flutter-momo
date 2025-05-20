@@ -7,6 +7,7 @@ class RecController extends GetxController {
   var isRecognizing = false.obs; // 녹음 중 여부
   var networkType = 'none'.obs;
   var historyList = <Map<String, String>>[].obs;
+  var historyLoading = true.obs;
 
   void setRec(bool value) {
     isRecognizing.value = value;
@@ -40,6 +41,7 @@ class RecController extends GetxController {
         if (song.isEmpty) { // 히스토리 목록 없을 경우
           print('(RecController) history List 비어있습니다.');
           historyList.value = [];
+          historyLoading.value = false;
         } else { // 히스토리 목록 받아왔을 경우
           historyList.value = song.map<Map<String, String>>((item) {
             return {
@@ -50,7 +52,7 @@ class RecController extends GetxController {
               'date': item['date']?.toString() ?? ''
             };
           }).toList();
-
+          historyLoading.value = false;
           print(historyList);
         }
 
