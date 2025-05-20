@@ -93,7 +93,7 @@ class _SongInfoState extends State<SongInfo> {
                   Positioned( // 글씨
                     left: 0,
                     right: 0,
-                    bottom: 20,
+                    bottom: 30,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -104,7 +104,7 @@ class _SongInfoState extends State<SongInfo> {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
-                            fontSize: 18.sp,
+                            fontSize: 16.sp,
                             // shadows: [Shadow(blurRadius: 3, color: Colors.black54)],
                           ),
                         ),
@@ -114,7 +114,7 @@ class _SongInfoState extends State<SongInfo> {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: Colors.white60,
-                            fontSize: 14.sp,
+                            fontSize: 12.sp,
                             // shadows: [Shadow(blurRadius: 2, color: Colors.black38)],
                           ),
                         ),
@@ -124,62 +124,13 @@ class _SongInfoState extends State<SongInfo> {
                         //   overflow: TextOverflow.ellipsis,
                         // ),
                         // Text(widget.song['date'] ?? '', style: TextStyle(color: Colors.white70, fontFamily: font, fontSize: 12.sp),),
-
                       ],
                     ),
                   ),
-
                 ],
               )
             ),
           ),
-          // Column(
-          //   children: [
-          //     SizedBox(height: 10,),
-          //     Text(
-          //       widget.song['TITLE'] ?? '',
-          //       style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15.sp),
-          //       textAlign: TextAlign.center,
-          //       maxLines: 1,
-          //       overflow: TextOverflow.ellipsis,
-          //     ),
-          //     SizedBox(height: 5,),
-          //     Text(
-          //       widget.song['ARTIST'] ?? '', style: TextStyle(fontFamily: font, fontSize: 12.sp),
-          //       maxLines: 1,
-          //       overflow: TextOverflow.ellipsis,
-          //     ),
-          //     Text(
-          //       widget.song['ALBUM'] ?? '', style: TextStyle(fontFamily: font, fontSize: 12.sp),
-          //       maxLines: 1,
-          //       overflow: TextOverflow.ellipsis,
-          //     ),
-          //     Text(widget.song['date'] ?? '', style: TextStyle(fontFamily: font, fontSize: 12.sp),),
-          //     SizedBox(height: 20,),
-          //     SizedBox(
-          //       width: 80,
-          //       height: 20,
-          //       child: ElevatedButton(
-          //         onPressed: () {
-          //           Navigator.pop(context);
-          //         },
-          //         style: ElevatedButton.styleFrom(
-          //           foregroundColor: Colors.grey,
-          //           backgroundColor: Colors.white,
-          //           // overlayColor: null
-          //           // elevation: 0,
-          //         ),
-          //         child: Text(
-          //           '닫기',
-          //           style: TextStyle(
-          //             fontSize: 9.sp
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //     SizedBox(height: 15,)
-          //   ],
-          // )
         ],
       ),
     );;

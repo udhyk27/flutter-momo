@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:wear_os/song_info.dart';
 import 'package:wear_os/widgets/vmidc.dart';
 
 import 'controller/RecController.dart';
@@ -25,43 +24,22 @@ void main() async {
 
 
   try {
-    // final networkType = await platform.invokeMethod('getNetworkType');
-    final networkType = 'bluetooth'; // test
+    final networkType = await platform.invokeMethod('getNetworkType');
+    // final networkType = 'bluetooth'; // test
     // print('연결된 네트워크: $networkType');
 
     if (networkType != "none") {
       Get.find<RecController>().setNetworkType(networkType);
     }
 
-    // if (networkType == 'bluetooth') {
-    //   vmidc.bluetoothReceiver((receivedData) async { // 폰에서 블루투스로 보내는 데이터 리시버
-    //     // 받은 데이터 처리
-    //     print("수신된 곡 정보: $receivedData");
-    //     var song = jsonDecode(receivedData);
-    //
-    //     if (song['data'] != '' && song.containsKey('data')) {
-    //       var result = await Get.to(() => SongInfo(song: song['data']));
-    //
-    //       if (result) {
-    //         await vmidc.stop();
-    //       }
-    //
-    //     }
-    //   });
-    // }
-
     if (networkType == 'bluetooth') {
       Get.find<RecController>().setNetworkType(networkType);
       Get.find<RecController>().initBluetoothReceiver(); // 리시버 등록
     }
-
-
   } catch (e) {
     print('네트워크 확인 실패: $e');
   }
-
   runApp(const MyApp());
-
 }
 
 
@@ -69,7 +47,6 @@ class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   static String? uid = '';
-
 
   @override
   State<MyApp> createState() => _MyAppState();

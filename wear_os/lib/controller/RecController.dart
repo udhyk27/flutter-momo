@@ -1,8 +1,5 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
-
-import '../history.dart';
 import '../main.dart';
 import '../song_info.dart';
 
@@ -60,37 +57,6 @@ class RecController extends GetxController {
       } else { // history del 일 경우
         print(' HISTORY DELETE ');
       }
-
-
-      // if (song is Map && song['data'] != '' && song.containsKey('data')) {
-      //   await Get.to(() => SongInfo(song: song['data']));
-      // } else if (song['err_msg'] != '' && song.containKey('err_msg')) {
-      //   print('(RecController) 곡 정보 찾기 실패 !!');
-      // } else if (song is List) {
-      //   print('(RecController) history List 수신받음 @@');
-      //
-      //   if (song.isEmpty) {
-      //     print('(RecController) history List 비어있습니다.');
-      //     historyList.value = [];
-      //   } else {
-      //     historyList.value = song.map<Map<String, String>>((item) {
-      //       return {
-      //         'image': item['IMAGE']?.toString() ?? '',
-      //         'title': item['TITLE']?.toString() ?? '',
-      //         'artist': item['ARTIST']?.toString() ?? '',
-      //         'album': item['ALBUM']?.toString() ?? '',
-      //         'song_id': item['SONG_ID']?.toString() ?? '',
-      //         'date': item['date']?.toString() ?? '',
-      //         'genre': item['GENRE']?.toString() ?? '',
-      //         'count': item['count']?.toString() ?? '',
-      //       };
-      //     }).toList();
-      //   }
-      //
-      //   print('(RecController) history List ::::: $historyList');
-      //
-      //
-      // }
     });
   }
 }

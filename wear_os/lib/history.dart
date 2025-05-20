@@ -88,23 +88,12 @@ class _HistoryState extends State<History> {
       // 블루투스 연결이면 폰에 데이터 요청
       final result = await platform.invokeMethod('delHistory', {'uid':MyApp.uid});
 
-      if (result) {
+      if (result == 'success') {
         Fluttertoast.showToast(msg: "삭제되었습니다.");
 
         setState(() {
           historyList.clear();
         });
-        // final result = await platform.invokeMethod(
-        //   'requestHistory',
-        //   {'uid':MyApp.uid},
-        // );
-        //
-        // if (result != null && mounted) {
-        //   setState(() {
-        //     historyList = Get.find<RecController>().historyList;
-        //     // isLoading = false;
-        //   });
-        // }
       } else {
         Fluttertoast.showToast(msg: "다시 시도해주세요.");
       }
@@ -330,15 +319,6 @@ class _HistoryState extends State<History> {
                                   return Image.asset('assets/no_image.png', fit: BoxFit.cover);
                                 }
                               },
-
-
-
-                            //   if (state.extendedImageLoadState == LoadState.failed) {
-                            //     return Image.asset('assets/no_image.png',
-                            //         fit: BoxFit.cover);
-                            //   }
-                            //   return null;
-                            // },
                           ),
                         ),
                         SizedBox(width: 10.0),
