@@ -28,6 +28,7 @@ class RecController extends GetxController {
 
         if (song.containsKey('data') && song['data'] != '') { // 곡 찾기 성공
           await Get.to(() => SongInfo(song: song['data']));
+          isRecognizing.value = false;
         } else if (song.containsKey('err_msg') && song['err_msg'] != '') { // 곡 찾기 실패
           print('(RecController) 곡 정보 찾기 실패 !!');
         } else {

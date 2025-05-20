@@ -28,6 +28,8 @@ class History extends StatefulWidget {
 class _HistoryState extends State<History> {
   List<Map<String, String>> historyList = [];
   // List<Map<String, String>> historyList = Get.find<RecController>().historyList;
+  final ScrollController _scrollController = ScrollController();
+  bool isAtTop = true;
 
   @override
   void initState() {
@@ -47,7 +49,7 @@ class _HistoryState extends State<History> {
       );
 
       if (result != 'success' && mounted) {
-        Fluttertoast.showToast(msg: "블루투스 연결이 원활하지 않습니다.");
+        // Fluttertoast.showToast(msg: "블루투스 연결이 원활하지 않습니다.");
       }
     } else if (networkType == 'wifi' || networkType == 'cellular') {
       // 와이파이나 셀룰러로 직접 요청
@@ -119,18 +121,6 @@ class _HistoryState extends State<History> {
     ];
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(deviceHeight * 0.15),
-        child: AppBar(
-          backgroundColor: const Color.fromRGBO(194, 40, 222, 1.0),
-          title: Center(
-            child: Text(
-              '히스토리',
-              style: TextStyle(fontSize: 15.sp),
-            )
-          ),
-        ),
-      ),
       body: Obx(() => Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -141,7 +131,6 @@ class _HistoryState extends State<History> {
         ),
         child: Stack(
           children: [
-            // isLoading
             recController.historyLoading.value
                 ? Center(
               child: CircularProgressIndicator(
@@ -150,21 +139,30 @@ class _HistoryState extends State<History> {
               ),
             )
                 :
-            // Obx(() {
-              recController.historyList.isEmpty
-            ?
-                Center(child: Text(text),)
-              :
-                ListView.builder(
+            recController.historyList.isEmpty
+            ? Center(child: Text(text),)
+            : ListView.builder(
+              // physics: isAtTop
+              //   ? NeverScrollableScrollPhysics() // 스크롤 방지
+              //   : AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.only(bottom: 10.0),
-              itemCount: recController.historyList.length + 1,
+              itemCount: recController.historyList.length + 2,
               itemBuilder: (context, index) {
-                if (index == recController.historyList.length) {
+                if (index == 0) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Center(
+                      child: Text(
+                        '히스토리',
+                        style: TextStyle(fontSize: 15.sp),
+                      ),
+                    ),
+                  );
+                } else if (index == recController.historyList.length + 1) {
                   // 마지막 아이템: 버튼
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
                       SizedBox(height: 2.h,),
                       SizedBox(
                         width: deviceWidth * 0.4,
@@ -195,7 +193,6 @@ class _HistoryState extends State<History> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   insetPadding: EdgeInsets.symmetric(vertical: 5),
-                                  // contentPadding: EdgeInsets.all(5), // 안쪽 여백
                                   content: SizedBox(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -269,7 +266,8 @@ class _HistoryState extends State<History> {
                   );
                 }
 
-                final item = recController.historyList[index];
+                // 리스트 목록
+                final item = recController.historyList[index - 1];
 
                 return GestureDetector(
                   onTap: () {
@@ -337,8 +335,6 @@ class _HistoryState extends State<History> {
                 );
               },
             ),
-
-            // })
           ],
         ),
       ),

@@ -56,19 +56,13 @@ class VMIDC {
       // 권한 요청
       final granted = await platform.invokeMethod('checkAndRequestBluetoothPermissions');
       if (granted == true) {
-        // recController.setStart(true);
         // 세션 시작
         final success = await platform.invokeMethod('startSession');
-
         if (!success) {
-          // print('세션 연결 실패함!!');
+          // Fluttertoast.showToast(msg: "블루투스 연결이 원활하지 않습니다.");
         }
       }
     }
-
-
-
-
     print('vmidc init');
     await _recorder.openRecorder(); // 오디오 세션 오픈
 
@@ -79,7 +73,6 @@ class VMIDC {
     _audioStream = recCtrl.stream.listen((buffer) async {
       // print('data received at: ${DateTime.now()} - buffer size: ${buffer.length}');
       //  iOS일때 180ms에 한번씩 들어오는 데이터 청크 3개로 나누어 dna에 각각 담아서 버퍼에 쌓음
-
       // iOS는 큰 청크로 들어오므로 작은 청크로 나눔
       if (Platform.isIOS && buffer.length > fftHop * 2) {
         // 큰 버퍼를 작은 청크로 분할하여 처리
@@ -127,14 +120,6 @@ class VMIDC {
 
     if (recController.networkType.value == 'bluetooth') {
       await _sendDataToKotlin(_dna.pack());  // 데이터를 폰으로 전송
-
-      // if (m.isNotEmpty) {
-      //   print('데이터가 폰으로 전송되었습니다!');
-      //   print(m); // success true
-      // } else {
-      //   Fluttertoast.showToast(msg: "휴대폰 앱을 재실행해주세요.");
-      //   print('데이터 전송 실패!');
-      // }
     } else { // 셀룰러 또는 와이파이 일때
       // HTTP 요청 호출
       m = await sendDnaToServer(_dna.pack());
@@ -147,11 +132,6 @@ class VMIDC {
       print(m['err_msg']);
 
       await stop();
-
-      // if (num > 5) {
-      //   await stop();
-      // }
-
     }
 
     if (m['data'] != '' && m.containsKey('data')) {
@@ -261,6 +241,7 @@ class VMIDC {
       print('start() 호출되었는데 녹음중');
       await stop();
     }
+
     try {
       await _recorder.startRecorder(
         toStream: recCtrl,
@@ -270,6 +251,7 @@ class VMIDC {
       );
 
       print('녹음이 정상적으로 시작됨!');
+      Get.find<RecController>().setRec(true);
 
       _recordTimer = Timer(Duration(seconds: 10), () async {
 

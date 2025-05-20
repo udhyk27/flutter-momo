@@ -24,8 +24,8 @@ void main() async {
 
 
   try {
-    // final networkType = await platform.invokeMethod('getNetworkType');
-    final networkType = 'bluetooth'; // test
+    final networkType = await platform.invokeMethod('getNetworkType');
+    // final networkType = 'bluetooth'; // test
     // print('연결된 네트워크: $networkType');
 
     if (networkType != "none") {
@@ -171,6 +171,13 @@ class _HomePageState extends State<HomePage> {
       await _vmidc.start(); // 녹음 시작
     } catch (e) {
       print('녹음 실패! ################## $e');
+      Get.find<RecController>().isRecognizing.value = false;
+    }
+  }
+
+  void cancelAsyncTask() async {
+    if (_asyncTask != null) {
+      await _vmidc.stop(); // 녹음 중지
     }
   }
 
@@ -207,8 +214,10 @@ class _HomePageState extends State<HomePage> {
                     Fluttertoast.showToast(msg: "네트워크 연결을 확인해주세요.");
                     return;
                   }
-                  _asyncTask = asyncFunction();
-                  Get.find<RecController>().setRec(true);
+
+                  Get.find<RecController>().isRecognizing.value == true
+                  ? cancelAsyncTask()
+                  : _asyncTask = asyncFunction();
                 },
                 child: Obx(() {
                   return Get.find<RecController>().isRecognizing.value
@@ -244,7 +253,7 @@ class _HomePageState extends State<HomePage> {
             // 화면 하단: 아래 화살표 아이콘
             Obx(() {
               return Get.find<RecController>().isRecognizing.value
-                  ? SizedBox.shrink() // 아무것도 안 보여줌
+                  ? SizedBox.shrink() // 녹음중 일땐 아무것도 안 보여줌
                   : Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -257,7 +266,7 @@ class _HomePageState extends State<HomePage> {
                         curve: Curves.easeInOut,
                       );
                     },
-                    icon:  Icon(
+                    icon: Icon(
                       Icons.keyboard_double_arrow_down,
                       color: Colors.white70,
                       size: 36,
@@ -316,28 +325,28 @@ _showDialog(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               RichText(
-                  text: TextSpan(
-                      children: [
-                        TextSpan(
-                            text: '음악 인식을 위해 마이크 권한을 ',
-                            style: TextStyle(
-                                fontSize: 17
-                            )
-                        ),
-                        TextSpan(
-                            text: '허용',
-                            style: TextStyle(
-                                fontSize: 17
-                            )
-                        ),
-                        TextSpan(
-                            text: ' 해주세요',
-                            style: TextStyle(
-                                fontSize: 17
-                            )
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                        text: '음악 인식을 위해 마이크 권한을 ',
+                        style: TextStyle(
+                            fontSize: 17
                         )
-                      ]
-                  )
+                    ),
+                    TextSpan(
+                        text: '허용',
+                        style: TextStyle(
+                            fontSize: 17
+                        )
+                    ),
+                    TextSpan(
+                        text: ' 해주세요',
+                        style: TextStyle(
+                            fontSize: 17
+                        )
+                    )
+                  ]
+                )
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
