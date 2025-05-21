@@ -307,8 +307,6 @@ class VMIDC {
     await _recorder.closeRecorder(); // 오디오 세션 닫기
     recCtrl.close(); // 스트림 컨트롤러 닫기
     malloc.free(_pcm); // 메모리 해제
-
-    // await platform.invokeMethod('endSession'); // 블루투스 연결 및 소켓 닫기
   }
 }
 

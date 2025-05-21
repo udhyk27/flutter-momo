@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,8 +23,8 @@ void main() async {
 
 
   try {
-    // final networkType = await platform.invokeMethod('getNetworkType');
-    final networkType = 'bluetooth'; // test
+    final networkType = await platform.invokeMethod('getNetworkType');
+    // final networkType = 'bluetooth'; // test
     // print('연결된 네트워크: $networkType');
 
     if (networkType != "none") {
@@ -77,10 +76,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       // 앱이 종료될 때 호출되는 부분
       await vmidc.stop();
       print("앱 종료됨");
-      try {
-        await platform.invokeMethod('endSession'); // 블루투스 연결 및 소켓 닫기 // # 수정 예정
-      } catch (e) {
-        print("블루투스 세션 닫기 에러 :: $e");
+
+      if (Get.find<RecController>().networkType.value == 'bluetooth') {
+        try {
+          print('bluetooth인데 앱 종료됨 !!');
+          final result = await platform.invokeMethod('endSession'); // 블루투스 연결 및 소켓 닫기 // # 수정 예정
+          print('앱종료 $result');
+        } catch (e) {
+          print("블루투스 세션 닫기 에러 :: $e");
+        }
       }
     }
   }
@@ -106,8 +110,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
   }
 }
-
-
 
 class HomePage extends StatefulWidget {
   final PageController pageController;

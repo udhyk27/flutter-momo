@@ -232,13 +232,12 @@ class SettingScreen extends StatefulWidget {
                           behavior: SnackBarBehavior.floating, // 떠 있는 효과
                           margin: EdgeInsets.only( // 화면 가운데로 설정
                             bottom: MediaQuery.of(context).size.height * 0.5,
-                            left: 130,
-                            right: 130,
+                            left: MediaQuery.of(context).size.width / 4,
+                            right: MediaQuery.of(context).size.width / 4,
                           ),
                         ),
                       );
                     },
-                    child: Text('업데이트', style: TextStyle(fontSize: 10),),
                     style: TextButton.styleFrom(
                       backgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
                       foregroundColor: Colors.black,
@@ -248,6 +247,7 @@ class SettingScreen extends StatefulWidget {
                         )
                       )
                     ),
+                    child: Text('업데이트', style: TextStyle(fontSize: 10),),
                   ),
                 ),
               ),
@@ -272,7 +272,7 @@ class SettingScreen extends StatefulWidget {
         return Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), // 모서리 둥글게
           backgroundColor: themeValue == 2 ? Color.fromRGBO(66, 66, 66, 1) : Colors.white,
-          child: Container(
+          child: SizedBox(
             width: c_width * 0.75,
             height: c_height * 0.22,
             child: Column(
@@ -311,36 +311,27 @@ class SettingScreen extends StatefulWidget {
                     ),
 
                     Expanded(
-                      child: Container(
-                        child: TextButton(
-                          onPressed: () {
-
-                            if (msg == '검색내역') { // MODIFY
-                              // context.read<MyAppState>().allRemove();
-
-
-                            }
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  '${msg} 삭제 완료',
-                                  style: TextStyle(color: Colors.white, fontSize: 12),
-                                  textAlign: TextAlign.center,
-                                ),
-                                duration: Duration(seconds: 2), // 문구 뜨는 시간
-                                behavior: SnackBarBehavior.floating, // 떠 있는 효과
-                                margin: EdgeInsets.only( // 화면 가운데로 설정
-                                  bottom: MediaQuery.of(context).size.height * 0.5,
-                                  left: 120,
-                                  right: 120,
-                                ),
+                      child: TextButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${msg} 삭제 완료',
+                                style: TextStyle(color: Colors.white, fontSize: 12),
+                                textAlign: TextAlign.center,
                               ),
-                            );
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('삭제',style: TextStyle(fontSize: 16,color: Color.fromRGBO(64, 220, 196, 1)),),
-                        ),
+                              duration: Duration(seconds: 2), // 문구 뜨는 시간
+                              behavior: SnackBarBehavior.floating, // 떠 있는 효과
+                              margin: EdgeInsets.only( // 화면 가운데로 설정
+                                bottom: c_height * 0.5,
+                                left: c_width / 4,
+                                right: c_width / 4,
+                              ),
+                            ),
+                          );
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('삭제',style: TextStyle(fontSize: 16,color: Color.fromRGBO(64, 220, 196, 1)),),
                       ),
                     ),
                   ],
