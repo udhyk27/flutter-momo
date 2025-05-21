@@ -153,7 +153,7 @@ class VMIDC {
   }
 
   // Kotlin 으로 DNA 전송
-  Future<Map<String, dynamic>> _sendDataToKotlin(List<int> dna) async {
+  Future<void> _sendDataToKotlin(List<int> dna) async {
     print('Watch => Kotlin으로 DNA 전송!');
     try {
       // body
@@ -168,19 +168,26 @@ class VMIDC {
       // print('코틀린으로 보낼 데이터 :: ${data}');
 
       final result = await platform.invokeMethod('sendDataToPhone', {'data': data});
-
-      final Map<String, dynamic> m = Map<String, dynamic>.from(result);
-
       num ++;
 
-      print('Watch => DNA 전송 성공');
-      print(m);
+      print('Watch => DNA 전송 성공여부 $result');
 
-      return m;
+      if (result['success'] == false) {
+        // 블루투스 다시 연결시도 해야함
+        final success = await platform.invokeMethod('startSession');
+        if (!success) {
+          Fluttertoast.showToast(msg: "블루투스 연결이 원활하지 않습니다.");
+        }
+        print('실패함');
+
+
+      } else {
+        print('성공함');
+      }
+
 
     } catch (e) {
       print('오류 발생: $e');
-      return {};
     }
   }
 
@@ -191,7 +198,7 @@ class VMIDC {
       if (call.method == "receiveBluetoothData") {
 
         String receivedData = call.arguments; // 워치에서 받은 데이터
-        print("Flutter로 받은 데이터: $receivedData");
+        // print("Flutter로 받은 데이터: $receivedData");
 
         onDataReceived(receivedData);
       }

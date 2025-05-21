@@ -211,7 +211,7 @@ class _HistoryState extends State<History> {
                           ),
 
 
-                        // SizedBox(height: 2.h,),
+                        SizedBox(height: 2.h,),
                         SizedBox(
                         width: deviceWidth * 0.4,
                         height: 8.h,
@@ -314,52 +314,78 @@ class _HistoryState extends State<History> {
                       padding: const EdgeInsets.symmetric(vertical: 3.0),
 
                       child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 26, vertical: 3),
-                        padding: EdgeInsets.all(12),
+                        margin: EdgeInsets.symmetric(horizontal: 26, vertical: 0.5),
                         height: deviceHeight * 0.3,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
+                          borderRadius: BorderRadius.circular(25),
+
                           image: DecorationImage(
                             image: ExtendedNetworkImageProvider(item['image']!),
                             fit: BoxFit.cover,
                           ),
+
                         ),
-                        // 배경 위에 바로 텍스트 배치
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.2), // 반투명 배경
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  item['title']!,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.bold,
+                        child: Stack(
+                          children: [
+                            // 왼쪽 검은색 그라데이션 배경
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                width: deviceWidth * 0.4,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.centerRight,
+                                    end: Alignment.centerLeft,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withValues(alpha: 0.8), // 왼쪽으로 갈수록 진해짐
+                                    ],
                                   ),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                                Text(
-                                  item['artist']!,
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 10.sp,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(25),
+                                    bottomLeft: Radius.circular(25),
                                   ),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+
+                            // 텍스트 오버레이
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item['title']!,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                    Text(
+                                      item['artist']!,
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 10.sp,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+
+
 
                     ),
                   );

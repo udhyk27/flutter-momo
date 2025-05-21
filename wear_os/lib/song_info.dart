@@ -70,8 +70,8 @@ class _SongInfoState extends State<SongInfo> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  SizedBox(width: mediaWidth * 0.6, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
-                                  Text("곡 발견!", style: TextStyle(color: Colors.white, fontFamily: 'NotoSansKR-Regular',)),
+                                  // SizedBox(width: mediaWidth * 0.6, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
+                                  Text("로딩 중...", style: TextStyle(color: Colors.white, fontFamily: 'NotoSansKR-Regular',)),
                                 ],
                               ),
                             );

@@ -19,7 +19,7 @@ class RecController extends GetxController {
 
   void initBluetoothReceiver() {
     vmidc.bluetoothReceiver((receivedData) async {
-      print("(RecController) 수신된 곡 정보: $receivedData");
+      // print("(RecController) 수신된 곡 정보: $receivedData");
       var song = jsonDecode(receivedData);
 
       if (song is Map) { // DNA 작업일 경우

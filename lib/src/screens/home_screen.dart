@@ -178,70 +178,72 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Expanded(
                 child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center, // 세로 중앙 정렬
-                    children: [
-                      controller.stateVal.value == 0
-                          ? Text(
-                        '노래 분석 중',
-                        style: TextStyle(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center, // 세로 중앙 정렬
+                      children: [
+                        controller.stateVal.value == 0
+                            ? Text(
+                          '노래 분석 중',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color:  themeValue == 0 ? Colors.black : Colors.white
+                          ), // 텍스트 스타일
+                        )
+                            : controller.stateVal.value == 1 // 기본 화면
+                            ? Text(
+                          '지금 이 곡을 찾으려면 모모를 눌러주세요',
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: themeValue == 0 ? Colors.black : Colors.white
+                          ), // 텍스트 스타일
+                        )
+                            : Text(
+                          '노래를 인식할 수 없습니다.',
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color:  themeValue == 0 ? Colors.black : Colors.white
-                        ), // 텍스트 스타일
-                      )
-                          : controller.stateVal.value == 1 // 기본 화면
-                          ? Text(
-                        '지금 이 곡을 찾으려면 모모를 눌러주세요',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: themeValue == 0 ? Colors.black : Colors.white
-                        ), // 텍스트 스타일
-                      )
-                          : Text(
-                        '노래를 인식할 수 없습니다.',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color:  themeValue == 0 ? Colors.black : Colors.white
-                        ), // 텍스트 스타일
-                      ),
+                          ), // 텍스트 스타일
+                        ),
 
-                      const SizedBox(height: 30), // 버튼과 텍스트 사이 간격
+                        const SizedBox(height: 30), // 버튼과 텍스트 사이 간격
 
-                      GestureDetector( // 터치 동작 처리
-                        onTap: () async {
-                          // 비동기 작업 호출
-                          controller.stateVal.value == 0
-                              ? cancelAsyncTask()
-                              : _asyncTask = asyncFunction(); // 함수 호출
-                        },
-                        child: Container(
-                          width: 250,
-                          height: 250,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: controller.stateVal.value == 0
-                                  ? themeValue == 1 ? AssetImage('assets/loading1_blue2.gif') : AssetImage('assets/loading1_pink2.gif')
-                                  : controller.stateVal.value == 1
-                                  ? AssetImage( // 기본 화면
-                                  themeValue == 1
-                                      ? 'assets/momo_assets/blue_logo.png'
-                                      : 'assets/momo_assets/berry_logo.png'
-                              )
-                                  : AssetImage( // 노래 인식 X 화면
-                                  themeValue == 1
-                                      ? 'assets/momo_assets/blue_logo.png'
-                                      : 'assets/momo_assets/berry_logo.png'
+                        GestureDetector( // 터치 동작 처리
+                          onTap: () async {
+                            // 비동기 작업 호출
+                            controller.stateVal.value == 0
+                                ? cancelAsyncTask()
+                                : _asyncTask = asyncFunction(); // 함수 호출
+                          },
+                          child: Container(
+                            width: 250,
+                            height: 250,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: controller.stateVal.value == 0
+                                    ? themeValue == 1 ? AssetImage('assets/loading1_blue2.gif') : AssetImage('assets/loading1_pink2.gif')
+                                    : controller.stateVal.value == 1
+                                    ? AssetImage( // 기본 화면
+                                    themeValue == 1
+                                        ? 'assets/momo_assets/blue_logo.png'
+                                        : 'assets/momo_assets/berry_logo.png'
+                                )
+                                    : AssetImage( // 노래 인식 X 화면
+                                    themeValue == 1
+                                        ? 'assets/momo_assets/blue_logo.png'
+                                        : 'assets/momo_assets/berry_logo.png'
+                                ),
+                                fit: BoxFit.cover, // 이미지를 버튼 크기에 맞게 꽉 채움
                               ),
-                              fit: BoxFit.cover, // 이미지를 버튼 크기에 맞게 꽉 채움
+                              borderRadius: BorderRadius.circular(110), // 원 모양을 유지
                             ),
-                            borderRadius: BorderRadius.circular(110), // 원 모양을 유지
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

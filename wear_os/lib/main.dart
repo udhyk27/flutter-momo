@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
     MyApp.uid = androidInfo.id;
 
     print('WATCH UID : ${MyApp.uid}');
-    print('WATCH MODEL : ${androidInfo.model}');
+    // print('WATCH MODEL : ${androidInfo.model}');
   }
 
   // 자바 파일 실행 함수
