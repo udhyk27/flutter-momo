@@ -25,7 +25,7 @@ void main() async {
   try {
     final networkType = await platform.invokeMethod('getNetworkType');
     // final networkType = 'bluetooth'; // test
-    // print('연결된 네트워크: $networkType');
+    print('연결된 네트워크: $networkType');
 
     if (networkType != "none") {
       Get.find<RecController>().setNetworkType(networkType);
@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  Future<void> getDeviceId() async { // emulator TWR7.230913.001.E7
+  Future<void> getDeviceId() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -141,7 +141,6 @@ class _HomePageState extends State<HomePage> {
     print('WATCH UID : ${MyApp.uid}');
     // print('WATCH MODEL : ${androidInfo.model}');
   }
-
 
   Future<bool> checkConnection() async {
     try {
@@ -152,8 +151,6 @@ class _HomePageState extends State<HomePage> {
       return false;
     }
   }
-
-
 
   Future<void> asyncFunction() async {
     // 마이크 권한 요청
