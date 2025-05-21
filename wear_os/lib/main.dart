@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
     // print('WATCH MODEL : ${androidInfo.model}');
   }
 
-  // 자바 파일 실행 함수
+
   Future<bool> checkConnection() async {
     try {
       final bool isConnected = await platform.invokeMethod('checkConnection');
