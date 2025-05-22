@@ -229,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(width: MediaQuery.of(context).size.width * 0.6, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
 
                       Text(
-                        '음원 인식중입니다...',
+                        '노래 분석 중',
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'NotoSansKR-Regular',

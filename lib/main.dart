@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
-import 'package:momo_final/src/services/bluetooth_receiver.dart';
 import 'package:momo_final/src/services/watch_service.dart';
 
 import 'src/controller/home_controller.dart';
@@ -36,20 +34,20 @@ void main() async {
   Get.put(HomeController());
 
   // 애플워치
-  WatchService watchService = WatchService();
-  watchService.init(); // 이벤트 수신 초기화
+  // WatchService watchService = WatchService();
+  // watchService.init(); // 이벤트 수신 초기화
   // 워치
-  watchService.onAudioDataReceived = (audioData) {
-    print("오디오 데이터 수신 완료! 데이터 길이: ${audioData.length}");
+  // watchService.onAudioDataReceived = (audioData) {
+  //   print("오디오 데이터 수신 완료! 데이터 길이: ${audioData.length}");
 
     // audioData의 바이트 출력 (base64로 인코딩해서 출력할 수도 있음)
-    String base64String = base64Encode(audioData);
-    print("오디오 데이터 (Base64 인코딩): $base64String");
+    // String base64String = base64Encode(audioData);
+    // print("오디오 데이터 (Base64 인코딩): $base64String");
 
     // 추가적으로 raw 데이터 확인 (바이트 배열로 출력)
-    print("오디오 데이터 (Raw 바이트): ${audioData}");
+    // print("오디오 데이터 (Raw 바이트): ${audioData}");
 
-  };
+  // };
 
   // BluetoothReceiver.init((result) {
   //   if (result['data'] != '' && result.containsKey('data')) {
