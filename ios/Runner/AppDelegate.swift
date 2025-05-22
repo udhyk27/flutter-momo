@@ -26,7 +26,7 @@ import WatchConnectivity
         let eventChannel = FlutterEventChannel(name: "watch_channel", binaryMessenger: controller.binaryMessenger)
         eventChannel.setStreamHandler(self)
 
-        GeneratedPluginRegistrant.register(with: self)
+//        GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     

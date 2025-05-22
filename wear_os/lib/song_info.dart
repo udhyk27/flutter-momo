@@ -118,36 +118,41 @@ class _SongInfoState extends State<SongInfo> {
                         left: 0,
                         right: 0,
                         bottom: 30,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              widget.song['TITLE'] ?? '',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16.sp,
-                              ),
+                        child: Center(
+                          child: Container(
+                            width: mediaWidth * 0.8,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  widget.song['TITLE'] ?? '',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.sp,
+                                  ),
+                                ),
+                                Text(
+                                  widget.song['ARTIST'] ?? '',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white60,
+                                    fontSize: 12.sp,
+                                    // shadows: [Shadow(blurRadius: 2, color: Colors.black38)],
+                                  ),
+                                ),
+                                // Text(
+                                //   widget.song['ALBUM'] ?? '', style: TextStyle(color: Colors.white70, fontFamily: font, fontSize: 12.sp),
+                                //   maxLines: 1,
+                                //   overflow: TextOverflow.ellipsis,
+                                // ),
+                                // Text(widget.song['date'] ?? '', style: TextStyle(color: Colors.white70, fontFamily: font, fontSize: 12.sp),),
+                              ],
                             ),
-                            Text(
-                              widget.song['ARTIST'] ?? '',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.white60,
-                                fontSize: 12.sp,
-                                // shadows: [Shadow(blurRadius: 2, color: Colors.black38)],
-                              ),
-                            ),
-                            // Text(
-                            //   widget.song['ALBUM'] ?? '', style: TextStyle(color: Colors.white70, fontFamily: font, fontSize: 12.sp),
-                            //   maxLines: 1,
-                            //   overflow: TextOverflow.ellipsis,
-                            // ),
-                            // Text(widget.song['date'] ?? '', style: TextStyle(color: Colors.white70, fontFamily: font, fontSize: 12.sp),),
-                          ],
+                          ),
                         ),
                       ),
 

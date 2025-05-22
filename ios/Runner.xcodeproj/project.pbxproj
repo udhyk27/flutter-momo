@@ -16,15 +16,10 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		DF05EB1F2D8BF85800CA9B12 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF05EB1E2D8BF85800CA9B12 /* GoogleService-Info.plist */; };
-		DF82923B2D893457008D7020 /* def.h in Sources */ = {isa = PBXBuildFile; fileRef = DF82923A2D893456008D7020 /* def.h */; };
-		DF82923D2D893462008D7020 /* dna.h in Sources */ = {isa = PBXBuildFile; fileRef = DF82923C2D893462008D7020 /* dna.h */; };
-		DF82923F2D89346D008D7020 /* fft.h in Sources */ = {isa = PBXBuildFile; fileRef = DF82923E2D89346D008D7020 /* fft.h */; };
-		DF8292412D893475008D7020 /* mel.h in Sources */ = {isa = PBXBuildFile; fileRef = DF8292402D893475008D7020 /* mel.h */; };
-		DF8292432D89347E008D7020 /* native.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF8292422D89347D008D7020 /* native.cpp */; };
-		DF8292452D893487008D7020 /* table.h in Sources */ = {isa = PBXBuildFile; fileRef = DF8292442D893487008D7020 /* table.h */; };
-		DF8292472D893490008D7020 /* util.h in Sources */ = {isa = PBXBuildFile; fileRef = DF8292462D893490008D7020 /* util.h */; };
 		DF8292492D893500008D7020 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DF8292482D893500008D7020 /* libc++.tbd */; };
+		DFC4927F2DDDC55500EAF1F0 /* MomoWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DFC4925C2DDDC55200EAF1F0 /* MomoWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DFC4928E2DDDC88E00EAF1F0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFC4928D2DDDC88E00EAF1F0 /* GoogleService-Info.plist */; };
+		DFC4928F2DDDC88E00EAF1F0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFC4928D2DDDC88E00EAF1F0 /* GoogleService-Info.plist */; };
 		DFD773752D9293E200E333B0 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFD773742D9293E200E333B0 /* AdSupport.framework */; };
 /* End PBXBuildFile section */
 
@@ -36,19 +31,19 @@
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
 		};
-		DF076AAB2D9D184E00EB17B3 /* PBXContainerItemProxy */ = {
+		DFC4926C2DDDC55500EAF1F0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DF076A9A2D9D184B00EB17B3;
-			remoteInfo = "watchkitapp Watch App";
+			remoteGlobalIDString = DFC4925B2DDDC55200EAF1F0;
+			remoteInfo = "MomoWatch Watch App";
 		};
-		DF076AB52D9D184E00EB17B3 /* PBXContainerItemProxy */ = {
+		DFC492762DDDC55500EAF1F0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DF076A9A2D9D184B00EB17B3;
-			remoteInfo = "watchkitapp Watch App";
+			remoteGlobalIDString = DFC4925B2DDDC55200EAF1F0;
+			remoteInfo = "MomoWatch Watch App";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -63,6 +58,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DFC492802DDDC55500EAF1F0 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				DFC4927F2DDDC55500EAF1F0 /* MomoWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -73,7 +79,6 @@
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		3CFDDBE80EDFA4D3C4B0E0CB /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
-		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
@@ -86,19 +91,13 @@
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A4E56AF9BE1AF912C7F7BEF2 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 		D4E9C42B584319D28E12B0BF /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
-		DF05EB1E2D8BF85800CA9B12 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		DF076A9B2D9D184B00EB17B3 /* watchkitapp Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "watchkitapp Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		DF076AAA2D9D184E00EB17B3 /* watchkitapp Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watchkitapp Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		DF076AB42D9D184E00EB17B3 /* watchkitapp Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watchkitapp Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF2169142D95429200E1DA93 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
-		DF82923A2D893456008D7020 /* def.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = def.h; path = Classes/def.h; sourceTree = "<group>"; };
-		DF82923C2D893462008D7020 /* dna.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = dna.h; path = Classes/dna.h; sourceTree = "<group>"; };
-		DF82923E2D89346D008D7020 /* fft.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = fft.h; path = Classes/fft.h; sourceTree = "<group>"; };
-		DF8292402D893475008D7020 /* mel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mel.h; path = Classes/mel.h; sourceTree = "<group>"; };
-		DF8292422D89347D008D7020 /* native.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = native.cpp; path = Classes/native.cpp; sourceTree = "<group>"; };
-		DF8292442D893487008D7020 /* table.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = table.h; path = Classes/table.h; sourceTree = "<group>"; };
-		DF8292462D893490008D7020 /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = util.h; path = Classes/util.h; sourceTree = "<group>"; };
 		DF8292482D893500008D7020 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		DFC4925C2DDDC55200EAF1F0 /* MomoWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MomoWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFC4926B2DDDC55500EAF1F0 /* MomoWatch Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MomoWatch Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFC492752DDDC55500EAF1F0 /* MomoWatch Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MomoWatch Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFC4928D2DDDC88E00EAF1F0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DFC492922DDDCB8300EAF1F0 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		DFD773742D9293E200E333B0 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		E22EC7EAF798783250E77098 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		F955872768507EF64B52A6F1 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
@@ -106,19 +105,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		DF076A9C2D9D184B00EB17B3 /* watchkitapp Watch App */ = {
+		DFC4925D2DDDC55200EAF1F0 /* MomoWatch Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "watchkitapp Watch App";
+			path = "MomoWatch Watch App";
 			sourceTree = "<group>";
 		};
-		DF076AAD2D9D184E00EB17B3 /* watchkitapp Watch AppTests */ = {
+		DFC4926E2DDDC55500EAF1F0 /* MomoWatch Watch AppTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "watchkitapp Watch AppTests";
+			path = "MomoWatch Watch AppTests";
 			sourceTree = "<group>";
 		};
-		DF076AB72D9D184E00EB17B3 /* watchkitapp Watch AppUITests */ = {
+		DFC492782DDDC55500EAF1F0 /* MomoWatch Watch AppUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "watchkitapp Watch AppUITests";
+			path = "MomoWatch Watch AppUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -142,21 +141,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DF076A982D9D184B00EB17B3 /* Frameworks */ = {
+		DFC492592DDDC55200EAF1F0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DF076AA72D9D184E00EB17B3 /* Frameworks */ = {
+		DFC492682DDDC55500EAF1F0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DF076AB12D9D184E00EB17B3 /* Frameworks */ = {
+		DFC492722DDDC55500EAF1F0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -199,18 +198,11 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
-				DF8292462D893490008D7020 /* util.h */,
-				DF8292442D893487008D7020 /* table.h */,
-				DF8292422D89347D008D7020 /* native.cpp */,
-				DF8292402D893475008D7020 /* mel.h */,
-				DF82923E2D89346D008D7020 /* fft.h */,
-				DF82923C2D893462008D7020 /* dna.h */,
-				DF82923A2D893456008D7020 /* def.h */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
-				DF076A9C2D9D184B00EB17B3 /* watchkitapp Watch App */,
-				DF076AAD2D9D184E00EB17B3 /* watchkitapp Watch AppTests */,
-				DF076AB72D9D184E00EB17B3 /* watchkitapp Watch AppUITests */,
+				DFC4925D2DDDC55200EAF1F0 /* MomoWatch Watch App */,
+				DFC4926E2DDDC55500EAF1F0 /* MomoWatch Watch AppTests */,
+				DFC492782DDDC55500EAF1F0 /* MomoWatch Watch AppUITests */,
 				97C146EF1CF9000F007C117D /* Products */,
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				F504791EA0A5A04C2D2A9062 /* Pods */,
@@ -223,9 +215,9 @@
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				331C8081294A63A400263BE5 /* RunnerTests.xctest */,
-				DF076A9B2D9D184B00EB17B3 /* watchkitapp Watch App.app */,
-				DF076AAA2D9D184E00EB17B3 /* watchkitapp Watch AppTests.xctest */,
-				DF076AB42D9D184E00EB17B3 /* watchkitapp Watch AppUITests.xctest */,
+				DFC4925C2DDDC55200EAF1F0 /* MomoWatch Watch App.app */,
+				DFC4926B2DDDC55500EAF1F0 /* MomoWatch Watch AppTests.xctest */,
+				DFC492752DDDC55500EAF1F0 /* MomoWatch Watch AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -234,7 +226,6 @@
 			isa = PBXGroup;
 			children = (
 				DF2169142D95429200E1DA93 /* Runner.entitlements */,
-				DF05EB1E2D8BF85800CA9B12 /* GoogleService-Info.plist */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
@@ -242,7 +233,8 @@
 				1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */,
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
-				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				DFC4928D2DDDC88E00EAF1F0 /* GoogleService-Info.plist */,
+				DFC492922DDDCB8300EAF1F0 /* Runner-Bridging-Header.h */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -295,6 +287,7 @@
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				66EF192B3F45E4B9BF5330F1 /* [CP] Embed Pods Frameworks */,
 				CEAB7D82837A4CBA090D4CE2 /* [CP] Copy Pods Resources */,
+				DFC492802DDDC55500EAF1F0 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
@@ -305,72 +298,72 @@
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DF076A9A2D9D184B00EB17B3 /* watchkitapp Watch App */ = {
+		DFC4925B2DDDC55200EAF1F0 /* MomoWatch Watch App */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DF076ABC2D9D184E00EB17B3 /* Build configuration list for PBXNativeTarget "watchkitapp Watch App" */;
+			buildConfigurationList = DFC4928A2DDDC55500EAF1F0 /* Build configuration list for PBXNativeTarget "MomoWatch Watch App" */;
 			buildPhases = (
-				DF076A972D9D184B00EB17B3 /* Sources */,
-				DF076A982D9D184B00EB17B3 /* Frameworks */,
-				DF076A992D9D184B00EB17B3 /* Resources */,
+				DFC492582DDDC55200EAF1F0 /* Sources */,
+				DFC492592DDDC55200EAF1F0 /* Frameworks */,
+				DFC4925A2DDDC55200EAF1F0 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				DF076A9C2D9D184B00EB17B3 /* watchkitapp Watch App */,
+				DFC4925D2DDDC55200EAF1F0 /* MomoWatch Watch App */,
 			);
-			name = "watchkitapp Watch App";
+			name = "MomoWatch Watch App";
 			packageProductDependencies = (
 			);
-			productName = "watchkitapp Watch App";
-			productReference = DF076A9B2D9D184B00EB17B3 /* watchkitapp Watch App.app */;
+			productName = "MomoWatch Watch App";
+			productReference = DFC4925C2DDDC55200EAF1F0 /* MomoWatch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DF076AA92D9D184E00EB17B3 /* watchkitapp Watch AppTests */ = {
+		DFC4926A2DDDC55500EAF1F0 /* MomoWatch Watch AppTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DF076AC02D9D184E00EB17B3 /* Build configuration list for PBXNativeTarget "watchkitapp Watch AppTests" */;
+			buildConfigurationList = DFC4928B2DDDC55500EAF1F0 /* Build configuration list for PBXNativeTarget "MomoWatch Watch AppTests" */;
 			buildPhases = (
-				DF076AA62D9D184E00EB17B3 /* Sources */,
-				DF076AA72D9D184E00EB17B3 /* Frameworks */,
-				DF076AA82D9D184E00EB17B3 /* Resources */,
+				DFC492672DDDC55500EAF1F0 /* Sources */,
+				DFC492682DDDC55500EAF1F0 /* Frameworks */,
+				DFC492692DDDC55500EAF1F0 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DF076AAC2D9D184E00EB17B3 /* PBXTargetDependency */,
+				DFC4926D2DDDC55500EAF1F0 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				DF076AAD2D9D184E00EB17B3 /* watchkitapp Watch AppTests */,
+				DFC4926E2DDDC55500EAF1F0 /* MomoWatch Watch AppTests */,
 			);
-			name = "watchkitapp Watch AppTests";
+			name = "MomoWatch Watch AppTests";
 			packageProductDependencies = (
 			);
-			productName = "watchkitapp Watch AppTests";
-			productReference = DF076AAA2D9D184E00EB17B3 /* watchkitapp Watch AppTests.xctest */;
+			productName = "MomoWatch Watch AppTests";
+			productReference = DFC4926B2DDDC55500EAF1F0 /* MomoWatch Watch AppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		DF076AB32D9D184E00EB17B3 /* watchkitapp Watch AppUITests */ = {
+		DFC492742DDDC55500EAF1F0 /* MomoWatch Watch AppUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DF076AC42D9D184E00EB17B3 /* Build configuration list for PBXNativeTarget "watchkitapp Watch AppUITests" */;
+			buildConfigurationList = DFC4928C2DDDC55500EAF1F0 /* Build configuration list for PBXNativeTarget "MomoWatch Watch AppUITests" */;
 			buildPhases = (
-				DF076AB02D9D184E00EB17B3 /* Sources */,
-				DF076AB12D9D184E00EB17B3 /* Frameworks */,
-				DF076AB22D9D184E00EB17B3 /* Resources */,
+				DFC492712DDDC55500EAF1F0 /* Sources */,
+				DFC492722DDDC55500EAF1F0 /* Frameworks */,
+				DFC492732DDDC55500EAF1F0 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DF076AB62D9D184E00EB17B3 /* PBXTargetDependency */,
+				DFC492772DDDC55500EAF1F0 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				DF076AB72D9D184E00EB17B3 /* watchkitapp Watch AppUITests */,
+				DFC492782DDDC55500EAF1F0 /* MomoWatch Watch AppUITests */,
 			);
-			name = "watchkitapp Watch AppUITests";
+			name = "MomoWatch Watch AppUITests";
 			packageProductDependencies = (
 			);
-			productName = "watchkitapp Watch AppUITests";
-			productReference = DF076AB42D9D184E00EB17B3 /* watchkitapp Watch AppUITests.xctest */;
+			productName = "MomoWatch Watch AppUITests";
+			productReference = DFC492752DDDC55500EAF1F0 /* MomoWatch Watch AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -392,17 +385,16 @@
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 1100;
 					};
-					DF076A9A2D9D184B00EB17B3 = {
+					DFC4925B2DDDC55200EAF1F0 = {
 						CreatedOnToolsVersion = 16.2;
-						LastSwiftMigration = 1620;
 					};
-					DF076AA92D9D184E00EB17B3 = {
+					DFC4926A2DDDC55500EAF1F0 = {
 						CreatedOnToolsVersion = 16.2;
-						TestTargetID = DF076A9A2D9D184B00EB17B3;
+						TestTargetID = DFC4925B2DDDC55200EAF1F0;
 					};
-					DF076AB32D9D184E00EB17B3 = {
+					DFC492742DDDC55500EAF1F0 = {
 						CreatedOnToolsVersion = 16.2;
-						TestTargetID = DF076A9A2D9D184B00EB17B3;
+						TestTargetID = DFC4925B2DDDC55200EAF1F0;
 					};
 				};
 			};
@@ -421,9 +413,9 @@
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
 				331C8080294A63A400263BE5 /* RunnerTests */,
-				DF076A9A2D9D184B00EB17B3 /* watchkitapp Watch App */,
-				DF076AA92D9D184E00EB17B3 /* watchkitapp Watch AppTests */,
-				DF076AB32D9D184E00EB17B3 /* watchkitapp Watch AppUITests */,
+				DFC4925B2DDDC55200EAF1F0 /* MomoWatch Watch App */,
+				DFC4926A2DDDC55500EAF1F0 /* MomoWatch Watch AppTests */,
+				DFC492742DDDC55500EAF1F0 /* MomoWatch Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -442,27 +434,28 @@
 			files = (
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
-				DF05EB1F2D8BF85800CA9B12 /* GoogleService-Info.plist in Resources */,
+				DFC4928E2DDDC88E00EAF1F0 /* GoogleService-Info.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DF076A992D9D184B00EB17B3 /* Resources */ = {
+		DFC4925A2DDDC55200EAF1F0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFC4928F2DDDC88E00EAF1F0 /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFC492692DDDC55500EAF1F0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DF076AA82D9D184E00EB17B3 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DF076AB22D9D184E00EB17B3 /* Resources */ = {
+		DFC492732DDDC55500EAF1F0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -596,33 +589,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF8292472D893490008D7020 /* util.h in Sources */,
-				DF8292452D893487008D7020 /* table.h in Sources */,
-				DF8292432D89347E008D7020 /* native.cpp in Sources */,
-				DF8292412D893475008D7020 /* mel.h in Sources */,
-				DF82923F2D89346D008D7020 /* fft.h in Sources */,
-				DF82923D2D893462008D7020 /* dna.h in Sources */,
-				DF82923B2D893457008D7020 /* def.h in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DF076A972D9D184B00EB17B3 /* Sources */ = {
+		DFC492582DDDC55200EAF1F0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DF076AA62D9D184E00EB17B3 /* Sources */ = {
+		DFC492672DDDC55500EAF1F0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DF076AB02D9D184E00EB17B3 /* Sources */ = {
+		DFC492712DDDC55500EAF1F0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -637,15 +623,15 @@
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
 		};
-		DF076AAC2D9D184E00EB17B3 /* PBXTargetDependency */ = {
+		DFC4926D2DDDC55500EAF1F0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DF076A9A2D9D184B00EB17B3 /* watchkitapp Watch App */;
-			targetProxy = DF076AAB2D9D184E00EB17B3 /* PBXContainerItemProxy */;
+			target = DFC4925B2DDDC55200EAF1F0 /* MomoWatch Watch App */;
+			targetProxy = DFC4926C2DDDC55500EAF1F0 /* PBXContainerItemProxy */;
 		};
-		DF076AB62D9D184E00EB17B3 /* PBXTargetDependency */ = {
+		DFC492772DDDC55500EAF1F0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DF076A9A2D9D184B00EB17B3 /* watchkitapp Watch App */;
-			targetProxy = DF076AB52D9D184E00EB17B3 /* PBXContainerItemProxy */;
+			target = DFC4925B2DDDC55200EAF1F0 /* MomoWatch Watch App */;
+			targetProxy = DFC492762DDDC55500EAF1F0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1190,7 +1176,7 @@
 			};
 			name = Release;
 		};
-		DF076ABD2D9D184E00EB17B3 /* Debug */ = {
+		DFC492812DDDC55500EAF1F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1198,32 +1184,22 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"watchkitapp Watch App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"MomoWatch Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = AH88P8729J;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/Flutter/**",
-					"$(inherited)/**",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"\"$(PROJECT_DIR)/watchkitapp\\\\ Watch\\\\ App/bridge\"/**",
-				);
-				INFOPLIST_KEY_CFBundleDisplayName = watchkitapp;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음악을 인식하기 위해 마이크 권한을 허용해주세요.";
+				INFOPLIST_KEY_CFBundleDisplayName = MomoWatch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
-				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.oneidlab.Momo.iOS;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1232,21 +1208,20 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = .watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.oneidlab.Momo.iOS.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 8.7;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Debug;
 		};
-		DF076ABE2D9D184E00EB17B3 /* Release */ = {
+		DFC492822DDDC55500EAF1F0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1254,32 +1229,22 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"watchkitapp Watch App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"MomoWatch Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = AH88P8729J;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/Flutter/**",
-					"$(inherited)/**",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"\"$(PROJECT_DIR)/watchkitapp\\\\ Watch\\\\ App/bridge\"/**",
-				);
-				INFOPLIST_KEY_CFBundleDisplayName = watchkitapp;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음악을 인식하기 위해 마이크 권한을 허용해주세요.";
+				INFOPLIST_KEY_CFBundleDisplayName = MomoWatch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
-				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.oneidlab.Momo.iOS;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1287,19 +1252,18 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = .watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.oneidlab.Momo.iOS.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 8.7;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Release;
 		};
-		DF076ABF2D9D184E00EB17B3 /* Profile */ = {
+		DFC492832DDDC55500EAF1F0 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1307,32 +1271,22 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"watchkitapp Watch App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"MomoWatch Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = AH88P8729J;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/Flutter/**",
-					"$(inherited)/**",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"\"$(PROJECT_DIR)/watchkitapp\\\\ Watch\\\\ App/bridge\"/**",
-				);
-				INFOPLIST_KEY_CFBundleDisplayName = watchkitapp;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음악을 인식하기 위해 마이크 권한을 허용해주세요.";
+				INFOPLIST_KEY_CFBundleDisplayName = MomoWatch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
-				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.oneidlab.Momo.iOS;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1340,19 +1294,18 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = .watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.oneidlab.Momo.iOS.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 8.7;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Profile;
 		};
-		DF076AC12D9D184E00EB17B3 /* Debug */ = {
+		DFC492842DDDC55500EAF1F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1373,7 +1326,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.watchkitapp-Watch-AppTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.MomoWatch-Watch-AppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
@@ -1381,12 +1334,12 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/watchkitapp Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/watchkitapp Watch App";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MomoWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MomoWatch Watch App";
 				WATCHOS_DEPLOYMENT_TARGET = 11.2;
 			};
 			name = Debug;
 		};
-		DF076AC22D9D184E00EB17B3 /* Release */ = {
+		DFC492852DDDC55500EAF1F0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1406,18 +1359,18 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.watchkitapp-Watch-AppTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.MomoWatch-Watch-AppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/watchkitapp Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/watchkitapp Watch App";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MomoWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MomoWatch Watch App";
 				WATCHOS_DEPLOYMENT_TARGET = 11.2;
 			};
 			name = Release;
 		};
-		DF076AC32D9D184E00EB17B3 /* Profile */ = {
+		DFC492862DDDC55500EAF1F0 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1437,18 +1390,18 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.watchkitapp-Watch-AppTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.MomoWatch-Watch-AppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/watchkitapp Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/watchkitapp Watch App";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MomoWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MomoWatch Watch App";
 				WATCHOS_DEPLOYMENT_TARGET = 11.2;
 			};
 			name = Profile;
 		};
-		DF076AC52D9D184E00EB17B3 /* Debug */ = {
+		DFC492872DDDC55500EAF1F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1468,7 +1421,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.watchkitapp-Watch-AppUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.MomoWatch-Watch-AppUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
@@ -1476,12 +1429,12 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = "watchkitapp Watch App";
+				TEST_TARGET_NAME = "MomoWatch Watch App";
 				WATCHOS_DEPLOYMENT_TARGET = 11.2;
 			};
 			name = Debug;
 		};
-		DF076AC62D9D184E00EB17B3 /* Release */ = {
+		DFC492882DDDC55500EAF1F0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1500,18 +1453,18 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.watchkitapp-Watch-AppUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.MomoWatch-Watch-AppUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = "watchkitapp Watch App";
+				TEST_TARGET_NAME = "MomoWatch Watch App";
 				WATCHOS_DEPLOYMENT_TARGET = 11.2;
 			};
 			name = Release;
 		};
-		DF076AC72D9D184E00EB17B3 /* Profile */ = {
+		DFC492892DDDC55500EAF1F0 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1530,13 +1483,13 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.watchkitapp-Watch-AppUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.oneidlab.Momo.iOS.MomoWatch-Watch-AppUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = "watchkitapp Watch App";
+				TEST_TARGET_NAME = "MomoWatch Watch App";
 				WATCHOS_DEPLOYMENT_TARGET = 11.2;
 			};
 			name = Profile;
@@ -1574,32 +1527,32 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DF076ABC2D9D184E00EB17B3 /* Build configuration list for PBXNativeTarget "watchkitapp Watch App" */ = {
+		DFC4928A2DDDC55500EAF1F0 /* Build configuration list for PBXNativeTarget "MomoWatch Watch App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DF076ABD2D9D184E00EB17B3 /* Debug */,
-				DF076ABE2D9D184E00EB17B3 /* Release */,
-				DF076ABF2D9D184E00EB17B3 /* Profile */,
+				DFC492812DDDC55500EAF1F0 /* Debug */,
+				DFC492822DDDC55500EAF1F0 /* Release */,
+				DFC492832DDDC55500EAF1F0 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DF076AC02D9D184E00EB17B3 /* Build configuration list for PBXNativeTarget "watchkitapp Watch AppTests" */ = {
+		DFC4928B2DDDC55500EAF1F0 /* Build configuration list for PBXNativeTarget "MomoWatch Watch AppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DF076AC12D9D184E00EB17B3 /* Debug */,
-				DF076AC22D9D184E00EB17B3 /* Release */,
-				DF076AC32D9D184E00EB17B3 /* Profile */,
+				DFC492842DDDC55500EAF1F0 /* Debug */,
+				DFC492852DDDC55500EAF1F0 /* Release */,
+				DFC492862DDDC55500EAF1F0 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DF076AC42D9D184E00EB17B3 /* Build configuration list for PBXNativeTarget "watchkitapp Watch AppUITests" */ = {
+		DFC4928C2DDDC55500EAF1F0 /* Build configuration list for PBXNativeTarget "MomoWatch Watch AppUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DF076AC52D9D184E00EB17B3 /* Debug */,
-				DF076AC62D9D184E00EB17B3 /* Release */,
-				DF076AC72D9D184E00EB17B3 /* Profile */,
+				DFC492872DDDC55500EAF1F0 /* Debug */,
+				DFC492882DDDC55500EAF1F0 /* Release */,
+				DFC492892DDDC55500EAF1F0 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

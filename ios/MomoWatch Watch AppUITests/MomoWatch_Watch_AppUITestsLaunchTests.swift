@@ -1,13 +1,13 @@
 //
-//  watchkitapp_Watch_AppUITestsLaunchTests.swift
-//  watchkitapp Watch AppUITests
+//  MomoWatch_Watch_AppUITestsLaunchTests.swift
+//  MomoWatch Watch AppUITests
 //
-//  Created by 방경식 on 4/2/25.
+//  Created by 방경식 on 5/21/25.
 //
 
 import XCTest
 
-final class watchkitapp_Watch_AppUITestsLaunchTests: XCTestCase {
+final class MomoWatch_Watch_AppUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
