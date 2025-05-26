@@ -176,7 +176,7 @@ class _HistoryState extends State<History> {
                       child: Center(
                         child: Text(
                           '히스토리',
-                          style: TextStyle(fontSize: 15.sp),
+                          style: TextStyle(fontSize: 15.sp, color: Colors.white),
                         ),
                       ),
                     );
@@ -199,8 +199,10 @@ class _HistoryState extends State<History> {
                                 });
                               },
                               style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.grey,
-                                backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
+                                // foregroundColor: Colors.grey,
+                                // backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.black54
                               ),
                               child: Text(
                                 '더보기',
@@ -257,8 +259,10 @@ class _HistoryState extends State<History> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.grey,
-                              backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
+                              // foregroundColor: Colors.grey,
+                              // backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.black54
                             ),
                             child: Text(
                               '삭제',
@@ -281,8 +285,10 @@ class _HistoryState extends State<History> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.grey,
-                              backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
+                              // foregroundColor: Colors.grey,
+                              // backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.black54
                             ),
                             child: Text(
                               '닫기',

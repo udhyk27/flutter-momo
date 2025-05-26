@@ -49,7 +49,7 @@ class VMIDC {
   Future<bool> init() async {
 
     // 네트워크 타입 확인
-    print('네트워크 타입 :: ${recController.networkType.value}');
+    // print('네트워크 타입 :: ${recController.networkType.value}');
 
     // 블루투스일때만 블루투스 권한 및 세션 시작
     if (recController.networkType.value == 'bluetooth') {
