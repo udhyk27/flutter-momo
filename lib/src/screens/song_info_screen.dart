@@ -217,14 +217,11 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
         actions: [
           IconButton(
             onPressed: () { // 공유
-
               Share.share(
-                  // "${ApiService.shareUrl}?f_id=${widget.songId}",
                   'Momo\n${ApiService.shareUrl}?f_id=${widget.song.songId}\n\n${ApiService.share_msgUrl}',
                   sharePositionOrigin:
                   Rect.fromLTRB(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5)
               );
-
             },
             icon: Icon(Icons.share, color: themeValue == 2 ? Colors.white : Colors.black,),
           )
@@ -285,7 +282,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                           margin: EdgeInsets.only(top: 20, bottom: 20, left: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-
                             children: [
                               Text(
                                 title,
@@ -343,11 +339,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
                         isLoading
                           ?
-                        Container(
-                          child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,),
-                        )
+                        CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,)
                           :
-
                           isCNTS
                             ?
                           ChartContainer(
@@ -373,10 +366,10 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
                     Container(
                       decoration: BoxDecoration(
-                          color: themeValue == 2
-                              ? const Color.fromRGBO(42, 42, 42, 1)
-                              : const Color.fromRGBO(250, 250, 250, 1),
-                          borderRadius: BorderRadius.circular(5)
+                        color: themeValue == 2
+                          ? const Color.fromRGBO(42, 42, 42, 1)
+                          : const Color.fromRGBO(250, 250, 250, 1),
+                        borderRadius: BorderRadius.circular(5)
                       ),
                       height: 40,
                       width: 200,
@@ -386,7 +379,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                           Image.asset('assets/result_search.png', width: 20),
                           Container(
                             margin: const EdgeInsets.only(left: 10, right: 10),
-                            child: Text('총 검색 : ',
+                            child: Text('총 검색 : ${count}회',
                               style: TextStyle(
                                 fontSize: 17,
                                 color: themeValue == 2
@@ -394,12 +387,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                   : Colors.black
                               )
                             ),
-                          ),
-                          Text('${count}',
-                              style: const TextStyle(fontSize: 17)
-                          ),
-                          const Text('회',
-                              style: TextStyle(fontSize: 17)
                           ),
                           Spacer(),
                         ],

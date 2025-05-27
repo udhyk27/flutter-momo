@@ -34,3 +34,4 @@ Runner/GeneratedPluginRegistrant.*
 !default.perspectivev3
 Classes/
 watchkitapp Watch App/cpp/
+Runner/Classes/

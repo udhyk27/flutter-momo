@@ -67,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
+
     try {
       if (!mounted) return;
       await _vmidc.start(); // 녹음 시작
@@ -215,8 +216,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () async {
                             // 비동기 작업 호출
                             controller.stateVal.value == 0
-                                ? cancelAsyncTask()
-                                : _asyncTask = asyncFunction(); // 함수 호출
+                              ? cancelAsyncTask()
+                              : _asyncTask = asyncFunction(); // 함수 호출
                           },
                           child: Container(
                             width: 250,

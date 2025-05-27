@@ -176,7 +176,7 @@ class _HistoryState extends State<History> {
                       child: Center(
                         child: Text(
                           '히스토리',
-                          style: TextStyle(fontSize: 15.sp, color: Colors.white),
+                          style: TextStyle(fontSize: 15.sp, color: Colors.white, fontWeight: FontWeight.w500),
                         ),
                       ),
                     );
@@ -199,8 +199,6 @@ class _HistoryState extends State<History> {
                                 });
                               },
                               style: ElevatedButton.styleFrom(
-                                // foregroundColor: Colors.grey,
-                                // backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
                                 foregroundColor: Colors.white,
                                 backgroundColor: Colors.black54
                               ),
@@ -259,8 +257,6 @@ class _HistoryState extends State<History> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              // foregroundColor: Colors.grey,
-                              // backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
                                 foregroundColor: Colors.white,
                                 backgroundColor: Colors.black54
                             ),
@@ -285,8 +281,6 @@ class _HistoryState extends State<History> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              // foregroundColor: Colors.grey,
-                              // backgroundColor: const Color.fromRGBO(242, 250, 255, 1.0),
                                 foregroundColor: Colors.white,
                                 backgroundColor: Colors.black54
                             ),

@@ -184,3 +184,11 @@ GoogleService-Info.plist
 
 
 ios/watchkitapp Watch App/Classes
+ios/Runner/Classes/def.h
+ios/Runner/Classes/dna.h
+ios/Runner/Classes/fft.h
+ios/Runner/Classes/mel.h
+ios/Runner/Classes/native.cpp
+ios/Runner/Classes/native.h
+ios/Runner/Classes/table.h
+ios/Runner/Classes/util.h

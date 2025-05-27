@@ -43,7 +43,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
             isLoading = false;
           });
         }
-        // print(fullSearchList.toString());
       }
     } catch (e) {
       print('검색 목록 리스트 API 오류');
