@@ -16,11 +16,7 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		D77DB977DF7B42A48C5396D7 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 297201DCCDA502A0607D6FA5 /* Pods_Runner.framework */; };
-		DF3D40142DDF03A800C05A02 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFC4928D2DDDC88E00EAF1F0 /* GoogleService-Info.plist */; };
-		DF5330D12DDF0E5400ECE384 /* native.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF5330CD2DDF0E5400ECE384 /* native.cpp */; };
-		DF8292492D893500008D7020 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DF8292482D893500008D7020 /* libc++.tbd */; };
-		DFD773752D9293E200E333B0 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFD773742D9293E200E333B0 /* AdSupport.framework */; };
+		DF86D0B22DE42629003961D7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF86D0B12DE42629003961D7 /* GoogleService-Info.plist */; };
 		DFE43BFA2DE694F90096DDCC /* native.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFE43BF62DE694F90096DDCC /* native.cpp */; };
 /* End PBXBuildFile section */
 
