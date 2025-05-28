@@ -129,6 +129,8 @@ class VMIDC {
   // HTTP 요청 함수
   Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
 
+    print('서버로 보낼 값 ::: ${base64Encode(Uint8List.fromList(dna))}');
+
     final arr = { // 서버로 전송할 값
       'uid' : MyApp.uid,
       'req_times' : num,

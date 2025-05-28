@@ -57,34 +57,16 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     // 마이크 권한 요청
-    // PermissionStatus status = await Permission.microphone.status;
-    // if (status == PermissionStatus.permanentlyDenied) { // 마이크 권한 영구적으로 거부된 경우
-    //   PermissionToast();
-    //   await Permission.microphone.request();
-    //   return;
-    // } else if (status == PermissionStatus.denied) { // 사용자가 마이크 권한 거부한 경우
-    //   requestMicPermission(context);
-    //   Permission.microphone.request();
-    //   return;
-    // }
-
-    // 마이크 권한 상태 확인
     PermissionStatus status = await Permission.microphone.status;
-
-    if (status.isPermanentlyDenied) {
-      // 영구적으로 거부된 경우 (설정에서 직접 허용해야 함)
-      PermissionToast(); // 사용자에게 안내하는 토스트 메시지
-      openAppSettings(); // 설정 화면으로 이동
+    if (status == PermissionStatus.permanentlyDenied) { // 마이크 권한 영구적으로 거부된 경우
+      PermissionToast();
+      await Permission.microphone.request();
       return;
+    } else if (status == PermissionStatus.denied) { // 사용자가 마이크 권한 거부한 경우
+      // requestMicPermission(context);
+      Permission.microphone.request();
     }
 
-    if (status.isDenied) {
-      // 단순 거부된 경우, 권한 재요청
-      PermissionStatus newStatus = await Permission.microphone.request();
-      if (!newStatus.isGranted && Platform.isAndroid) {
-        requestMicPermission(context); // 사용자에게 권한 필요 알림
-      }
-    }
 
 
     try {

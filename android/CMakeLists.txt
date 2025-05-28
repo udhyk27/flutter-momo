@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.4.1)
 add_library(
         native
         SHARED
-        ../ios/Classes/native.cpp
+        ../ios/Runner/Classes/native.cpp
 )
 
 add_compile_options(-Wno-write-strings -Wwritable-strings)
