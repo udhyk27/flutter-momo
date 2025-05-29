@@ -2,81 +2,62 @@ import SwiftUI
 
 // 기본 화면
 struct ContentView: View {
-    @State private var showSongInfo = false
-
+//    @State private var showSongInfo = false
+    
+    let vmidc = Vmidc()
+    @StateObject private var appState = AppState.shared
+    
     var body: some View {
         NavigationStack {
-            VStack {
-                Button("Test") {
-                }
-
-                Spacer()
-            }
-            .navigationBarBackButtonHidden(true)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(UIColor(red: 255/255, green: 195/255, blue: 200/255, alpha: 1.0)))
-            .navigationDestination(isPresented: $showSongInfo) {
-                SongInfoView()
-            }
-        }
-    }
-}
-
-// 음악인식 결과
-struct SongInfoView: View {
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        ScrollView {
-            VStack {
-                Spacer()
-
-                AsyncImage(url: URL(string: "https://adm.airmonitor.co.kr/resource_music/2019/064/KA0094064/KA0094064.jpg")) { image in
-                    image
-                        .resizable()
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .scaledToFit()
-                } placeholder: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.gray.opacity(0.3))
-                        ProgressView()
+            ZStack {
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color(red: 62/255, green: 195/255, blue: 255/255),   // 하늘색
+                        Color(red: 194/255, green: 40/255, blue: 222/255)   // 보라색
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
+                
+                VStack {
+                    Spacer()
+                    Button(action: {
+                        // 버튼 클릭 액션
+                        vmidc.start()
+                    }) {
+                        if (appState.isRecording) {
+                            Text("음악 인식 중...")
+                                .foregroundColor(.white)
+                                .font(.title3)
+                                .bold()
+                        } else {
+                            Image("blue_logo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100) // 원하는 크기로 조절
+                        }
                     }
-                    .frame(width: 150, height: 150)
+                    .buttonStyle(.plain)
+                    Spacer()
                 }
-
-                VStack(alignment: .leading) {
-                    Text("Home Sweet Home")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundColor(.black)
-
-                    Text("카더가든")
-                        .foregroundColor(.black)
-
-                    Text("APARTMENT")
-                        .foregroundColor(.black)
-
-                    Text("2017.12.02")
-                        .foregroundColor(.black)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear {
+                    vmidc.openSession()
                 }
-
-                Button("닫기") {
-                    dismiss()
+                .onDisappear {
+                    vmidc.closeSession()
                 }
-                .padding()
-                .padding(.top, 20)
-                .padding(.bottom, 30)
-                .foregroundColor(.black)
-                .clipShape(RoundedRectangle(cornerRadius: 5))
             }
             .navigationBarBackButtonHidden(true)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.white)
+//            .navigationDestination(isPresented: $showSongInfo) {
+//                SongInfoView()
+//            }
         }
-        .ignoresSafeArea()
     }
 }
+
+
 
 #Preview {
     ContentView()
