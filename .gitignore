@@ -192,3 +192,7 @@ ios/Runner/Classes/native.cpp
 ios/Runner/Classes/native.h
 ios/Runner/Classes/table.h
 ios/Runner/Classes/util.h
+ios/watch_ios Watch App/Classes/native.h
+ios/watch_ios Watch App/Classes/native.cpp
+ios/watch_ios Watch App/Classes/mel.h
+ios/watch_ios Watch App/Classes/fft.h

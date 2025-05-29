@@ -43,16 +43,13 @@ struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onAppear {
-                    vmidc.openSession()
+                    vmidc.openSession() // 오디오 세션 오픈
                 }
                 .onDisappear {
-                    vmidc.closeSession()
+                    vmidc.closeSession() // 오디오 세션 닫기
                 }
             }
             .navigationBarBackButtonHidden(true)
-//            .navigationDestination(isPresented: $showSongInfo) {
-//                SongInfoView()
-//            }
         }
     }
 }
