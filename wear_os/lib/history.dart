@@ -67,7 +67,7 @@ class _HistoryState extends State<History> {
           recController.historyLoading.value = false;
         }
       } catch (e) {
-        print('Watch History Api Error');
+        print('Watch History Api Error :: $e');
       }
     } else { // 네트워크 연결 감지 안되면
       text = '네트워크 연결상태를 확인해주세요.';
@@ -95,7 +95,7 @@ class _HistoryState extends State<History> {
           recController.historyList.clear();
         }
       } catch (e) {
-        print('searched song delete all error');
+        print('searched song delete all error : $e');
       }
     } else {
       Fluttertoast.showToast(msg: "네트워크 연결상태를 확인해주세요.");
