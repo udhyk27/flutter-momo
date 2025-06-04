@@ -11,7 +11,7 @@ struct SongInfoView: View {
 
     var body: some View {
         ZStack {
-            // ✅ 전체 화면 배경 이미지
+            // 전체 화면 배경 이미지
             AsyncImage(url: URL(string: "https://adm.airmonitor.co.kr/resource_music/2019/064/KA0094064/KA0094064.jpg")) { image in
                 image
                     .resizable()
@@ -23,7 +23,7 @@ struct SongInfoView: View {
                 ProgressView()
             }
 
-            // ✅ 텍스트와 버튼
+            // 텍스트와 버튼
             VStack(spacing: 10) {
                 Spacer()
 

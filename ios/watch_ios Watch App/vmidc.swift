@@ -16,6 +16,7 @@ class Vmidc: NSObject {
     func getDeviceUUID() -> String {
         let defaults = UserDefaults.standard
         if let uuid = defaults.string(forKey: "deviceUUID") {
+            print("uuid : \(uuid)")
             return uuid
         } else {
             let newUUID = UUID().uuidString
@@ -39,7 +40,7 @@ class Vmidc: NSObject {
     
     private var appState = AppState.shared
     
-    func openSession() { // 
+    func openSession() {
         if appState.isRecording { return }
 
         do {
@@ -57,10 +58,44 @@ class Vmidc: NSObject {
         
         do {
            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        
+           pcm.deallocate()  // 메모리 해제
+            
            print("오디오 세션 닫기 완료 @@")
        } catch {
            print("오디오 세션 닫기 실패: \(error)")
        }
+    }
+    
+    func checkPermission() {
+        let session = AVAudioSession.sharedInstance()
+           
+           switch session.recordPermission {
+           case .undetermined:
+               // 권한 요청
+               session.requestRecordPermission { [weak self] granted in
+                   DispatchQueue.main.async {
+                       if granted {
+                           print("마이크 권한 허용됨")
+                           self?.start()
+                       } else {
+                           print("마이크 권한 거부됨")
+                           // 필요 시 사용자에게 권한 설정 안내 가능
+                       }
+                   }
+               }
+               
+           case .denied:
+               print("마이크 권한 거부됨")
+               // 필요 시 권한 설정으로 유도하는 UI 안내 가능
+               
+           case .granted:
+               print("마이크 권한 이미 허용됨")
+               start()
+               
+           @unknown default:
+               print("알 수 없는 권한 상태")
+           }
     }
 
     func start() {
@@ -98,8 +133,7 @@ class Vmidc: NSObject {
         audioEngine?.stop()
         audioEngine?.inputNode.removeTap(onBus: 0)
         audioEngine = nil
-        
-        pcm.deallocate()  // 메모리 해제
+
         
         wbuf.clear()
         dna.clear()
@@ -108,7 +142,7 @@ class Vmidc: NSObject {
     }
 
     func processBuffer(_ buffer: AVAudioPCMBuffer) {
-        print("processBuffer 호출됨 !!")
+        print("[VMIDC] processBuffer 호출됨, frameLength: \(buffer.frameLength)")
         print("buffer.format: \(buffer.format)")
         
         if let channelData = buffer.floatChannelData {
@@ -193,13 +227,35 @@ class Vmidc: NSObject {
         
         let byteArray = dna.pack()   // [UInt8]
         let data = Data(byteArray)   // Data 타입 변환
-        let base64String = data.base64EncodedString()  // base64 인코딩 문자열 변환q
+        let base64String = data.base64EncodedString()  // base64 인코딩 문자열 변환
+        
+//        print(base64String)
+        print("byte ::: \(data.count)")
+
+        
+//        
+//        if let decodedData = Data(base64Encoded: base64String) {
+//            let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+//            let fileURL = documents.appendingPathComponent("recorded.wav")
+//            do {
+//                try decodedData.write(to: fileURL)
+//                print("오디오 저장 위치: \(fileURL)")
+//            } catch {
+//                print("파일 저장 실패: \(error)")
+//            }
+//        } else {
+//            print("base64 디코딩 실패")
+//        }
+        
 //        let base64String = "MkTdGkMw7OOmzMENQ2F8w2LMxxlP8txDdaznGUZyZeMR6sQ4cS7FcxuoyWURzs/jH6jLRikdfcc56EmHVK6xkzfAS6kwp+djG4RvuEiOldObzGGpSIqcD2uEybFzrhjre8TRoVSutFof8BI2V47S0jrl9ZRIhp3DP9phdkynrZk/GtN3TgavwSwa82RItu/ISZTDrFimP9nrhNOuGIxvDjYY0+4crp9ZBj7T7pisNpnfOkvuGKwlkTOkzSy0DSWTH6jJZHCha5Mz5MswWL6cnzrozKgWNpwfM1bSqtWIMpMilvGLRY7KzyvwyZNGj/lKN7bGiFaOzco/l2umWO3Ni2e0AptibFc2pyS6mnN9MwlWc0saax0WNF9MfMgjtDBIVWEMeuh5UrQfPHiYnfnjAjRhp5sySpIkkzJpbCz2oyFnbmaOs1jWrUdXpIxUUKEuImbUsM04FzWnJ2LMxrRRPMPEOpGnSROp10NB1MXYnjgYqlqMK0vTjOcZSKmTuE11bYc2qlvP07y/jqL4RjlzVMI5ZoIYMxIzzTYwqzQ6M2fGOU4yWLMzMYuycHQpOiNnGiluRsJT75bmNLiSJJHIZHQzamY5Qsqchza68CzTMS1bNk3SRnOKOtsrIWO0VSwl5jiW2HLplrDPhjPpOTeZM5ohP1Ji0tK7nwdkdSscihb1ITo2V1JS7OVX3IJFmQkV0Ck6im5a8jD11s2DjlkJP9UlOdZ9L/JhpjSYo5d4LSvcI3PC9kreINdsmKmnWWpj4CNclEzZyzBfi6ophbl8euDjcO48x5u5daK8p555bF7Js3iIMc6TiV1rzq5nXHx1k47SknIuQ5EXS3bGdjVxKyApkkLWHJazl0tD2GdwEi3FMWZifFLb8ZcGIJVFvaAImSI+UvBC35CPDdG+dHNjZZP23MhMEtuodw6dklZ5ZiZSNm7AzkpbsicEmtIp7axhdjdNUMtK5pjbjhqX5NRtbVYnVWLjUua6t240ydo8S1FIO1ZoS3nHtn+OnUvJPkxX"
+        
+//        let base64String = "r7oPfCSZHE6OvZ59dMjc3q5+D3womBxOj78ffXTI3F6J6Z4+ZNpc5s+/H350mVxaiemePGTKTPbLuh98ZJkcXojtnj10yEzW774PfGSZHE6OvZ59dMjc3q9+D3womBxux78ff3SIXF7j555+PMxQLcdvHuf0bJZlU3WepF3IJDbGeZ+2PM+JZpZ9v7JU7kx0xzQ/8lTOTj3HNJ/HUildehZ+jm/NCFgwV25fLsoqHb3j/l8lb668tNZv38d6Jb1/xm6f7hwx0Wyzzn/vWpJ6M0KOv9s27VFXQ/sOvXzOtc5Xb1+z1KoY9Yf3HqvmqlGp4+5ek2yL5XnD7x9jTxWldmGepaH8Ed8YW+3m3f1M8lwzP6phrLhauVvFU275wSkPYZ6k4+wRUhhb7PaV/Az0WBM3ouG8KV6ZX8XSb/lBqh9zOOxz7FEev1PFa2r+yTwPUbai4fw53plfxfbv/Um6HjI7bHlsmB67U8VrbnrZaA9RnqXh/DHeGU/t5t39TfIcMjvqcayYWrlTxXNuetFoD2GepaH8Ed4YS+3m3fxM8lwzP6phrLhauVvFU275wSkPYZ6k4+wRUhhb7PaV/Az0WBM2ouH4OV6ZH9Xab3lBuh+wjZJwMptwjq5uf578c71eaX1yOLbJOB9faHY2/cmebFl59nQ2616vDRszH87NGE+ZLOb49koaFx5oWxLtzVhnETVtstJIkw6eYXmZfVXMVxB37nD2lDmTPno1j3VWrXrctmaKeZnIEz1iNA/9xt98s23WSOUZmQ9fUe6p/FQ7DMxxxFxxiXmHPnb9NvtQ7ixyXIps6UiaZh59aJ+92jks3bRynZnCWgo/aSc3+9GvKJ1XN1eTWnmtXGjtmPfTLC/uWobr3JoSN46MvPH9XWs6LY9y3JMcGzvPYubk2dPlOlg97JmTTro0TXnLb3SMa2e16ebOQNMbJx5SV959m6ZWbZnMzCAzeqYfadr9fFEmRkmSiYwpSrI9TmxzPrSZpmnSOJuZcmo+D49Yeav0S6ca"
+        
         
         // JSON에 넣을 데이터 구성
         let arr: [String: Any] = [
             "uid": uuid,
-            "req_times": sendCount,               // 서버에 보내는 요청 횟수, 변수로 선언해 주세요
+            "req_times": sendCount, // 서버에 보내는 요청 횟수, 변수로 선언해 주세요
             "dna_data": base64String
         ]
 
@@ -235,15 +291,15 @@ class Vmidc: NSObject {
                 print("서버 응답 원문:\n\(jsonString)")
                 
                 // JSON 파싱해서 err_msg 존재 확인
-//                  if let json = try? JSONSerialization.jsonObject(with: responseData) as? [String: Any] {
-//                      if let errMsg = json["err_msg"] as? String, !errMsg.isEmpty {
-//                          
-//                          print("서버 에러 메시지 감지: \(errMsg), 녹음 중단")
-//                          DispatchQueue.main.async {
-//                              self.stop()
-//                          }
-//                      }
-//                  }
+                  if let json = try? JSONSerialization.jsonObject(with: responseData) as? [String: Any] {
+                      if let errMsg = json["err_msg"] as? String, !errMsg.isEmpty {
+                          
+                          print("서버 에러 메시지 감지: \(errMsg), 녹음 중단")
+                          DispatchQueue.main.async {
+                              self.stop()
+                          }
+                      }
+                  }
             }
         
 //            let result = try JSONDecoder().decode(SongResult.self, from: responseData)

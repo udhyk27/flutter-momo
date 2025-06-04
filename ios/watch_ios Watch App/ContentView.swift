@@ -24,7 +24,7 @@ struct ContentView: View {
                     Spacer()
                     Button(action: {
                         // 버튼 클릭 액션
-                        vmidc.start()
+                        vmidc.checkPermission() // 마이크 권한 확인하고 허용이면 start
                     }) {
                         if (appState.isRecording) {
                             Text("음악 인식 중...")
