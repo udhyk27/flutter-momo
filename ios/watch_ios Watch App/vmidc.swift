@@ -113,7 +113,12 @@ class Vmidc: NSObject {
 
         inputNode.installTap(onBus: 0, bufferSize: 2048, format: format) { [weak self] buffer, _ in
             print("processBuffer 호출중임, frameLength: \(buffer.frameLength)")
-            self?.processBuffer(buffer)
+//            self?.processBuffer(buffer)
+            
+            
+            
+            
+            
         }
 
         do {
@@ -144,72 +149,78 @@ class Vmidc: NSObject {
     func processBuffer(_ buffer: AVAudioPCMBuffer) {
         print("[VMIDC] processBuffer 호출됨, frameLength: \(buffer.frameLength)")
         print("buffer.format: \(buffer.format)")
-        
-        if let channelData = buffer.floatChannelData {
-            print("floatChannelData 존재 - 변환 시작")
-            let frameLength = Int(buffer.frameLength)
-            let channels = Int(buffer.format.channelCount)
-            var bytes = [UInt8]()
-            
-            // 전체 버퍼를 작은 청크 단위로 나누어 처리
-            var offset = 0
-            let totalBytes = frameLength * channels * 2  // int16 2바이트씩
-            
-            while offset < totalBytes {
-                bytes.removeAll(keepingCapacity: true)
-                
-                // 청크 크기: fftHop * channels * 2  바이트씩
-                let chunkByteSize = min(fftHop * channels * 2, totalBytes - offset)
-                let chunkFrameCount = chunkByteSize / (channels * 2)
-                
-                // frame과 channel 단위로 변환 후 bytes에 추가
-                for frame in (offset / (channels * 2))..<(offset / (channels * 2)) + chunkFrameCount {
-                    for ch in 0..<channels {
-                        let floatSample = channelData[ch][frame]
-                        let intSample = Int16(max(min(floatSample, 1.0), -1.0) * Float(Int16.max))
-                        let byte1 = UInt8(truncatingIfNeeded: intSample & 0xFF)
-                        let byte2 = UInt8(truncatingIfNeeded: (intSample >> 8) & 0xFF)
-                        bytes.append(byte1)
-                        bytes.append(byte2)
-                    }
-                }
-                
-                // wbuf에 청크 푸시
-                let success = wbuf.push(bytes)
-                if !success {
-                    print("WaveBuf 용량 부족으로 데이터 푸시 실패")
-                    return
-                }
-                print("WaveBuf에 푸시 성공, 현재 길이: \(wbuf.length)")
-                
-                if wbuf.length >= fftN * 2 {
-                    wbuf.read(fftN * 2, to: pcm)
-                    dna.push(pcm: pcm)
-                    print("dna length: \(dna.length), qLen: \(qLen)")
-                    wbuf.pop(fftHop * 2)
-                    
-                    if dna.length == qLen {
 
-                        let now = Date()
-                        let formatter = DateFormatter()
-                        formatter.dateFormat = "HH:mm:ss.SSS"
-                        let timeString = formatter.string(from: now)
-                        print("[\(timeString)] 32개의 DNA 쌓임, 서버로 전송 !!")
-                        
-                        Task {
-                            print("sendDnaToServerAndProcess 시작")
-                            await sendDnaToServerAndProcess()
-                            print("sendDnaToServerAndProcess 종료")
-                        }
+        guard let channelData = buffer.floatChannelData else {
+            print("int16ChannelData와 floatChannelData 모두 없음")
+            return
+        }
+
+        let frameLength = Int(buffer.frameLength)
+        let channels = Int(buffer.format.channelCount)
+        var bytes = [UInt8]()
+        
+        print("buffer.format: \(buffer.format)")
+        
+        let totalBytes = frameLength * channels * 2  // Int16 2바이트씩
+        var offset = 0
+        
+        while offset < totalBytes {
+            bytes.removeAll(keepingCapacity: true)
+            
+            let chunkByteSize = min(fftHop * channels * 2, totalBytes - offset)
+            let chunkFrameCount = chunkByteSize / (channels * 2)
+            
+            let startFrame = offset / (channels * 2)
+            let endFrame = startFrame + chunkFrameCount
+            
+            for frame in startFrame..<endFrame {
+                for ch in 0..<channels {
+                    let floatSample = channelData[ch][frame]
+                    let clampedSample = max(-1.0, min(floatSample, 1.0))
+                    let intSample = Int16(clampedSample * Float(Int16.max))
+                    
+                    let byte1 = UInt8(truncatingIfNeeded: intSample & 0xFF)
+                    let byte2 = UInt8(truncatingIfNeeded: (intSample >> 8) & 0xFF)
+                    bytes.append(byte1)
+                    bytes.append(byte2)
+                }
+            }
+
+            // wbuf에 청크 푸시
+            let success = wbuf.push(bytes)
+            if !success {
+                print("WaveBuf 용량 부족으로 데이터 푸시 실패")
+                return
+            }
+            print("WaveBuf에 푸시 성공, 현재 길이: \(wbuf.length)")
+            print("bytes :::: \(bytes)")
+
+            // 충분한 데이터가 쌓였으면 dna에 푸시
+            while wbuf.length >= fftN * 2 {
+                wbuf.read(fftN * 2, to: pcm)
+                dna.push(pcm: pcm)
+                print("dna length: \(dna.length), qLen: \(qLen)")
+                wbuf.pop(fftHop * 2)
+                
+                if dna.length == qLen {
+                    let now = Date()
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "HH:mm:ss.SSS"
+                    let timeString = formatter.string(from: now)
+                    print("[\(timeString)] 32개의 DNA 쌓임, 서버로 전송 !!")
+                    
+                    Task {
+                        print("sendDnaToServerAndProcess 시작")
+                        await sendDnaToServerAndProcess()
+                        print("sendDnaToServerAndProcess 종료")
                     }
                 }
-                
-                offset += chunkByteSize
             }
-        } else {
-            print("int16ChannelData와 floatChannelData 모두 없음")
+            
+            offset += chunkByteSize
         }
     }
+
 
 
     // dna.pack()이 Data 타입 반환한다고 가정
