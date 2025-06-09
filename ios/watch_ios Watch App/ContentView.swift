@@ -21,7 +21,11 @@ struct ContentView: View {
                 VStack {
                     Spacer()
                     Button(action: {
-                        vmidc.checkPermission()
+                        if appState.isRecording {
+                            vmidc.stop()
+                        } else {
+                            vmidc.checkPermission()
+                        }
                     }) {
                         if appState.isRecording {
                             Text("음악 인식 중...")
