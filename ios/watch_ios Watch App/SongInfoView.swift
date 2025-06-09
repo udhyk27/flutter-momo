@@ -1,61 +1,78 @@
-//
-//  SongInfoView.swift
-//  Runner
-//
-//  Created by 방경식 on 5/29/25.
-//
 import SwiftUI
 
 struct SongInfoView: View {
     @Environment(\.dismiss) private var dismiss
-
+    
+    let songData: [String: String]
+    
     var body: some View {
         ZStack {
-            // 전체 화면 배경 이미지
-            AsyncImage(url: URL(string: "https://adm.airmonitor.co.kr/resource_music/2019/064/KA0094064/KA0094064.jpg")) { image in
+            // 배경 이미지
+            AsyncImage(url: URL(string: songData["IMAGE"] ?? "")) { image in
                 image
                     .resizable()
+                    .aspectRatio(contentMode: .fill)
                     .scaledToFill()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .clipped() // 이미지 영역 밖 잘린 부분 숨김
                     .ignoresSafeArea()
             } placeholder: {
                 Color.black.opacity(0.3)
                     .ignoresSafeArea()
                 ProgressView()
             }
-
-            // 텍스트와 버튼
-            VStack(spacing: 10) {
-                Spacer()
-
-                VStack(spacing: 6) {
-                    Text("Home Sweet Home")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-
-                    Text("카더가든")
-                        .foregroundColor(.white)
-
-                    Text("APARTMENT")
-                        .foregroundColor(.white)
-
-                    Text("2017.12.02")
-                        .foregroundColor(.white)
+            
+            // 닫기 버튼 - 상단 우측
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+//                            .foregroundColor(.white)
+                            .font(.system(size: 24))
+                            .opacity(0.8)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.top, 20)
+                    .padding(.trailing, 20)
                 }
-                .multilineTextAlignment(.center)
-
-                Button("닫기") {
-                    dismiss()
-                }
-                .padding()
-                .foregroundColor(.white)
-                .background(Color.black.opacity(0.3))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .padding(.top, 20)
-
                 Spacer()
             }
-            .padding()
+            
+            // 텍스트와 그라데이션 배경 - 하단에 딱 붙임
+            GeometryReader { geo in
+                VStack {
+                    Spacer() // 위 공간은 비우고
+                    
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.black.opacity(0.8), Color.clear]),
+                        startPoint: .bottom,
+                        endPoint: .top
+                    )
+                    .frame(height: geo.size.height / 2)  // 화면 높이 절반만큼
+                    .overlay(
+                        VStack(spacing: 4) {
+                            Text(songData["TITLE"] ?? "제목")
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                            
+                            Text(songData["ARTIST"] ?? "가수")
+                                .foregroundColor(.white)
+                            
+                            Text(songData["ALBUM"] ?? "앨범")
+                                .foregroundColor(.white)
+
+                        }
+                        .padding(.bottom, 20)
+                        .padding(.horizontal, 20),
+                        alignment: .bottom
+                    )
+                }
+                .ignoresSafeArea(edges: .bottom)
+            }
         }
         .navigationBarBackButtonHidden(true)
     }
