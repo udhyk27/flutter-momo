@@ -969,6 +969,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/ios/watch_ios Watch App/native.h\"/**";
 				INFOPLIST_FILE = "watch-ios-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = MomoWatch;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음악을 인식하기 위해 마이크 권한을 허용해주세요.";
@@ -1016,6 +1017,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/ios/watch_ios Watch App/native.h\"/**";
 				INFOPLIST_FILE = "watch-ios-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = MomoWatch;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음악을 인식하기 위해 마이크 권한을 허용해주세요.";
@@ -1060,6 +1062,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/ios/watch_ios Watch App/native.h\"/**";
 				INFOPLIST_FILE = "watch-ios-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = MomoWatch;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음악을 인식하기 위해 마이크 권한을 허용해주세요.";

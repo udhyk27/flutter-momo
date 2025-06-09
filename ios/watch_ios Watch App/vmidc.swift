@@ -3,10 +3,11 @@ import Foundation
 import AVFoundation
 import AVFoundation
 
-class Vmidc: NSObject {
+class Vmidc: ObservableObject {
     private var audioEngine: AVAudioEngine?
     
-    @Published var foundSongData: String? = nil
+    @Published var foundSongData: [String: String]? = nil
+
     
     let wbuf = WaveBuf()
     let dna = DnaBuf()
@@ -156,6 +157,7 @@ class Vmidc: NSObject {
 
             let inputFrames = buffer.frameLength
             let outputFrames = convertedBuffer.frameLength
+            
             print("입력 프레임 수: \(inputFrames), 변환된 프레임 수: \(outputFrames)")
             print("변환된 샘플레이트: \(convertedBuffer.format.sampleRate)")
             
@@ -272,7 +274,9 @@ class Vmidc: NSObject {
 
     func stop() {
         print("VMIDC stopped")
-        appState.isRecording = false
+        DispatchQueue.main.async {
+            self.appState.isRecording = false
+        }
         
         audioEngine?.stop()
         audioEngine?.inputNode.removeTap(onBus: 0)
@@ -365,11 +369,10 @@ class Vmidc: NSObject {
                       }
                       
                       // 곡 찾았을 때
-                      if let data = json["data"] as? String, !data.isEmpty {
+                      if let data = json["data"] as? [String: String], !data.isEmpty {
                           print("곡 찾음 !!")
-                          self.stop()
-                          
                           DispatchQueue.main.async {
+                              self.stop()
                               self.foundSongData = data
                           }
                           
