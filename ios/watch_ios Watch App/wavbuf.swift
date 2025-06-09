@@ -9,6 +9,7 @@
 import Foundation
 
 class WaveBuf {
+    
     private var buf: [UInt8]
     private var cur: Int = 0
     private let capacity: Int

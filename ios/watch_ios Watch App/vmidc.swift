@@ -1,9 +1,12 @@
 import SwiftUI
 import Foundation
 import AVFoundation
+import AVFoundation
 
 class Vmidc: NSObject {
     private var audioEngine: AVAudioEngine?
+    
+    @Published var foundSongData: String? = nil
     
     let wbuf = WaveBuf()
     let dna = DnaBuf()
@@ -97,9 +100,11 @@ class Vmidc: NSObject {
                print("알 수 없는 권한 상태")
            }
     }
-
+    
+    var isSendingDna = false // 클래스 프로퍼티로 선언
+    
     func start() {
-        print(" VMIDC started")
+        print("VMIDC started")
         appState.isRecording = true
         
         audioEngine = AVAudioEngine()
@@ -107,29 +112,163 @@ class Vmidc: NSObject {
         
         wbuf.clear()
         dna.clear()
-
+        
         let inputNode = audioEngine.inputNode
-        let format = inputNode.inputFormat(forBus: 0)
+        let inputFormat = inputNode.inputFormat(forBus: 0)
+        
+        // 원하는 출력 포맷: 16000Hz mono, 16-bit float
+        let desiredSampleRate: Double = 16000
+        let outputFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+                                         sampleRate: desiredSampleRate,
+                                         channels: 1,
+                                         interleaved: false)!
 
-        inputNode.installTap(onBus: 0, bufferSize: 2048, format: format) { [weak self] buffer, _ in
-            print("processBuffer 호출중임, frameLength: \(buffer.frameLength)")
-//            self?.processBuffer(buffer)
+        guard let converter = AVAudioConverter(from: inputFormat, to: outputFormat) else {
+            print("Converter 생성 실패")
+            return
+        }
+        
+        print("Sample rate: \(inputFormat.sampleRate)") // 48000
+        print("Output Sample rate: \(outputFormat.sampleRate)") // 16000 (출력)
+        
+        
+        inputNode.installTap(onBus: 0, bufferSize: 2048, format: inputFormat) { [weak self] buffer, _ in
+            guard let self = self else { return }
             
+            // 출력 버퍼 준비 (16000Hz 변환용)
+            guard let convertedBuffer = AVAudioPCMBuffer(pcmFormat: outputFormat,
+                                                         frameCapacity: AVAudioFrameCount(Double(buffer.frameLength) * desiredSampleRate / inputFormat.sampleRate)) else {
+                return
+            }
+
+            var error: NSError?
+            let inputBlock: AVAudioConverterInputBlock = { _, outStatus in
+                outStatus.pointee = .haveData
+                return buffer
+            }
+
+            converter.convert(to: convertedBuffer, error: &error, withInputFrom: inputBlock)
+
+            if let error = error {
+                print("변환 실패: \(error)")
+                return
+            }
+
+            let inputFrames = buffer.frameLength
+            let outputFrames = convertedBuffer.frameLength
+            print("입력 프레임 수: \(inputFrames), 변환된 프레임 수: \(outputFrames)")
+            print("변환된 샘플레이트: \(convertedBuffer.format.sampleRate)")
             
+            print("변환된 frameLength: \(convertedBuffer.frameLength)")
             
-            
-            
+            if let int16Samples = self.float32ToInt16(buffer: convertedBuffer) {
+                let byteData = self.int16ArrayToBytes(int16Samples)
+
+                print("전체 byteData 길이: \(byteData.count)")
+
+                var offset = 0
+                let chunkSize = self.fftHop * 2  // Int16 -> 2 bytes
+
+                while offset < byteData.count {
+                    let end = min(offset + chunkSize, byteData.count)
+                    let chunk = Array(byteData[offset..<end])
+
+                    let success = self.wbuf.push(chunk)
+                    if success {
+                        print("청크 wbuf에 push 완료 (길이: \(chunk.count), wbuf 총 길이: \(self.wbuf.length))")
+                    } else {
+                        print("청크 wbuf push 실패")
+                    }
+                    
+                    print("변환된 Int16 샘플 수: \(int16Samples.count)")
+                    let minSample = int16Samples.min() ?? 0
+                    let maxSample = int16Samples.max() ?? 0
+                    print("Int16 값 범위: \(minSample) ~ \(maxSample)")
+                    
+                    // 처리 루틴 (wbuf → dna)
+                    while self.wbuf.length >= self.fftN * 2 {
+                        self.wbuf.read(self.fftN * 2, to: self.pcm)
+                        self.dna.push(pcm: self.pcm)
+                        print("DNA length: \(self.dna.length)")
+
+                        self.wbuf.pop(self.fftHop * 2)
+
+                        if self.dna.length == self.qLen && !self.isSendingDna {
+                            self.isSendingDna = true
+                            
+                            let now = Date()
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "HH:mm:ss.SSS"
+                            let timeString = formatter.string(from: now)
+                            print("[\(timeString)] 32개의 DNA 쌓임, 서버로 전송 !!")
+                            
+                            
+                            Task {
+                                await self.sendDnaToServerAndProcess()
+                                self.isSendingDna = false
+                            }
+                        }
+                    }
+
+                    offset += chunkSize
+                }
+            }
         }
 
+        
         do {
             try audioEngine.start()
             print("레코더 시작")
         } catch {
             print("Failed to start audio engine: \(error)")
             appState.isRecording = false
-            return
         }
     }
+
+    
+    
+    
+    func float32ToInt16(buffer: AVAudioPCMBuffer) -> [Int16]? {
+        guard let floatChannelData = buffer.floatChannelData else {
+            print("floatChannelData가 없음")
+            return nil
+        }
+        
+        let frameLength = Int(buffer.frameLength)
+        let channelCount = Int(buffer.format.channelCount)
+        
+        var int16Array = [Int16]()
+        int16Array.reserveCapacity(frameLength * channelCount)
+        
+        for ch in 0..<channelCount {
+            let floatData = floatChannelData[ch]
+            for i in 0..<frameLength {
+                // Float32 샘플값을 -1.0 ~ 1.0 범위로 가정
+                let sample = floatData[i]
+                // 클램핑: -1.0~1.0 벗어나면 자르기
+                let clampedSample = max(-1.0, min(1.0, sample))
+                // Float -> Int16 변환 (-32768 ~ 32767 범위)
+                let int16Sample = Int16(clampedSample * Float(Int16.max))
+                int16Array.append(int16Sample)
+            }
+        }
+        
+        return int16Array
+    }
+    
+    func int16ArrayToBytes(_ samples: [Int16]) -> [UInt8] {
+        var bytes = [UInt8]()
+        for sample in samples {
+            let byte1 = UInt8(truncatingIfNeeded: sample & 0xFF)
+            let byte2 = UInt8(truncatingIfNeeded: (sample >> 8) & 0xFF)
+            
+            bytes.append(byte1)
+            bytes.append(byte2)
+            
+        }
+        return bytes
+    }
+    
 
     func stop() {
         print("VMIDC stopped")
@@ -145,82 +284,6 @@ class Vmidc: NSObject {
         
         sendCount = 0
     }
-
-    func processBuffer(_ buffer: AVAudioPCMBuffer) {
-        print("[VMIDC] processBuffer 호출됨, frameLength: \(buffer.frameLength)")
-        print("buffer.format: \(buffer.format)")
-
-        guard let channelData = buffer.floatChannelData else {
-            print("int16ChannelData와 floatChannelData 모두 없음")
-            return
-        }
-
-        let frameLength = Int(buffer.frameLength)
-        let channels = Int(buffer.format.channelCount)
-        var bytes = [UInt8]()
-        
-        print("buffer.format: \(buffer.format)")
-        
-        let totalBytes = frameLength * channels * 2  // Int16 2바이트씩
-        var offset = 0
-        
-        while offset < totalBytes {
-            bytes.removeAll(keepingCapacity: true)
-            
-            let chunkByteSize = min(fftHop * channels * 2, totalBytes - offset)
-            let chunkFrameCount = chunkByteSize / (channels * 2)
-            
-            let startFrame = offset / (channels * 2)
-            let endFrame = startFrame + chunkFrameCount
-            
-            for frame in startFrame..<endFrame {
-                for ch in 0..<channels {
-                    let floatSample = channelData[ch][frame]
-                    let clampedSample = max(-1.0, min(floatSample, 1.0))
-                    let intSample = Int16(clampedSample * Float(Int16.max))
-                    
-                    let byte1 = UInt8(truncatingIfNeeded: intSample & 0xFF)
-                    let byte2 = UInt8(truncatingIfNeeded: (intSample >> 8) & 0xFF)
-                    bytes.append(byte1)
-                    bytes.append(byte2)
-                }
-            }
-
-            // wbuf에 청크 푸시
-            let success = wbuf.push(bytes)
-            if !success {
-                print("WaveBuf 용량 부족으로 데이터 푸시 실패")
-                return
-            }
-            print("WaveBuf에 푸시 성공, 현재 길이: \(wbuf.length)")
-            print("bytes :::: \(bytes)")
-
-            // 충분한 데이터가 쌓였으면 dna에 푸시
-            while wbuf.length >= fftN * 2 {
-                wbuf.read(fftN * 2, to: pcm)
-                dna.push(pcm: pcm)
-                print("dna length: \(dna.length), qLen: \(qLen)")
-                wbuf.pop(fftHop * 2)
-                
-                if dna.length == qLen {
-                    let now = Date()
-                    let formatter = DateFormatter()
-                    formatter.dateFormat = "HH:mm:ss.SSS"
-                    let timeString = formatter.string(from: now)
-                    print("[\(timeString)] 32개의 DNA 쌓임, 서버로 전송 !!")
-                    
-                    Task {
-                        print("sendDnaToServerAndProcess 시작")
-                        await sendDnaToServerAndProcess()
-                        print("sendDnaToServerAndProcess 종료")
-                    }
-                }
-            }
-            
-            offset += chunkByteSize
-        }
-    }
-
 
 
     // dna.pack()이 Data 타입 반환한다고 가정
@@ -239,42 +302,29 @@ class Vmidc: NSObject {
         let byteArray = dna.pack()   // [UInt8]
         let data = Data(byteArray)   // Data 타입 변환
         let base64String = data.base64EncodedString()  // base64 인코딩 문자열 변환
+//        let base64String = "l/H/zgwPs0u36HW1Uo50X7fYe5IgjXNdn7/1LCudd1s+9+WlQJtJeT7/6x1Vq9NMP/37LFGtsma/Xb946dp4St6evaLEJ+c6p2+NqlI3d0M6tpsLIe32Qt/990cp0zZ7N+o7Jla6s3t/c/OKVKs+bfv+72V1LTZ7XvPtnkQ5Mmle8+WiEHsza531+askWTNrzfiePmwdu2MfSK+2cBk/fmVE9yn0uNlv77Y+ynSsuH638X3LSY2/TF/z7Z4QerJf5qRnshBtMxvO+PjlqIy4HT9jNs6DSflKX/PtvhB5u1K+87siliube/+S5S4VKDl/v7ueHMCPfC8/++6OQsmMfeiU2d2uy2YYvMfJJV1/dGoUU9pZJBvTGD7HSOQZn8gmkIzzZS5b8xk8xWi5ZV8nZUpMs0m218I829f3a1pLagwQGAbzSxqzH1sfX+cx3zxLG5vNZs9xsjF7R333pfokKVOy8szMSpoe6xVz7cV/awVCysS56FmmHnyP2Rr7xTITcPAaDl5Zxhe/4XZnemtmZxhblskYXU4dPM1fnXPSZGZTTNN9HG2SFOmSOEfuo8QC04zacZwv5463u/l6rauWMjQjyEcLR0sePB7e3MVOzUxksc1EtlpajnaaTi/H5q5IE52yLLZLrR7ve2p2r66UGjIZ0h+vS0sdbyGnlnhm7WMmUuYcp0PDHG4zrvdaLaUndgzKmaUXQz5zlVRq6bNmJNmaktHJZlsU4XjC/t1hrSMmteLS/gnSDeln4rmapIxjNL1MyuVZ0x43fjg5M8+gEjAvqabIZLML5e4079yN7njCOOOJrkP6CB7PybtVn6ZKJmJWHaZD+hhvMS63WiStIzTXthyuU/MJn/Y43TucpmPIzKrJVGf7CV1wlbdM2zg+DWDTGeJ81By7Zw4cFmc6ejZi5xrHY5YxbyMvtlIttSdc69yc7kNTG9fKLWtH5k4uM6bKjOlL2xr3yx3JMatyTVZc2mDVVlcPuaee5m5z6WBMseJhcMo4F70nrap6bdtk"
         
-//        print(base64String)
+//        let base64String = "b4cqJRuz5RPvgygtivH0I/lfHO4YY3QLeY9ybBvjcgv5rkrciXHkGW4XGu3Oae0b59Narna0rRlhO85e8/acI306QmPGvMlJZZcmn53RyANiloaSScPkSas/DKeN65gN7x6kthHT3A/tMZaeZ9u1EWsVgZ6b49gNbqKSnjaheRVNqlmMZrBmEfk/j5PZyPwL/0MOr5eP9AWrLzub0C3VGisjuqbEqLlPY4ueJsY4x1lzD0+Z1yjcCX3OSsvOIX0LaS6XHu+ttR1hJjOjwuzkG6olM8O0/dVJ62M34vab4Qn8Gq9v57BlJnqerk+xsf0Xava4unQg7RetbUVMnjGnGccWSst5Sssi6JyaZGbMNSbMjJu+MWtSBvfsjtXMxDks0IdHM7JaTQr2vl2xuVMte84HXmpES/O45iZLto4IeUzHgJMVKH37BVWtfUbMNPBZ+eTRnDH2ygRdPZ0z5IFpXBx6GPd1zcsELJ5Vcc45K20bZRrbaFNPjKS+JkVube8ZHHBwR3O51YyxmkwEDhCXXHOpZ3vjWtagIR43YRxEk2nTLGdysl77mCcsPWkyd09pYahmNubD2BivzN8meYIfRUOnDrOx8bKU1+zeEjN2nmdmqt7zaTYbEfHt0atea65xqsMHbdLZsQTEPDMzC0n7IJiWaevBHNMA3HUuZhJpbmWyPJJGFp3LpPUlrEKbXTlpZ8JgaHj705Lhrp0NemSycXTHb0Aw3ZmoZ/9NMX9RPU5Ut3Gam3O9pM1OuQ7ml+9omOxgjmPXOzzsjA0shkePZhR4SCa3ONcYpj7NxNZhn2ZZ5EKO0NlSIAY12QrtkNNhluUDTtIV2zB2Jt7wzJDnKP6oUfMiVvIMtjZqJpZR7QsubFC4clrjFCZ+Nko3F29qdM1pkbI5czTOzDmMhqcNeLbqplNJ1zWlaLhNHjfDbnU/6XCrWbqepWhabAF7x80MB8wJ63k/2SHkHuxDZp6zNFg2Rs5kaxuBx5g928RmzmPJpyOSuWqzFHDKORxXmNgI"
+        
+        print("DNA pack 길이: \(byteArray.count)")
+        print("앞쪽 바이트 샘플: \(byteArray[0..<10])")
+        
+        
         print("byte ::: \(data.count)")
 
-        
-//        
-//        if let decodedData = Data(base64Encoded: base64String) {
-//            let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-//            let fileURL = documents.appendingPathComponent("recorded.wav")
-//            do {
-//                try decodedData.write(to: fileURL)
-//                print("오디오 저장 위치: \(fileURL)")
-//            } catch {
-//                print("파일 저장 실패: \(error)")
-//            }
-//        } else {
-//            print("base64 디코딩 실패")
-//        }
-        
-//        let base64String = "MkTdGkMw7OOmzMENQ2F8w2LMxxlP8txDdaznGUZyZeMR6sQ4cS7FcxuoyWURzs/jH6jLRikdfcc56EmHVK6xkzfAS6kwp+djG4RvuEiOldObzGGpSIqcD2uEybFzrhjre8TRoVSutFof8BI2V47S0jrl9ZRIhp3DP9phdkynrZk/GtN3TgavwSwa82RItu/ISZTDrFimP9nrhNOuGIxvDjYY0+4crp9ZBj7T7pisNpnfOkvuGKwlkTOkzSy0DSWTH6jJZHCha5Mz5MswWL6cnzrozKgWNpwfM1bSqtWIMpMilvGLRY7KzyvwyZNGj/lKN7bGiFaOzco/l2umWO3Ni2e0AptibFc2pyS6mnN9MwlWc0saax0WNF9MfMgjtDBIVWEMeuh5UrQfPHiYnfnjAjRhp5sySpIkkzJpbCz2oyFnbmaOs1jWrUdXpIxUUKEuImbUsM04FzWnJ2LMxrRRPMPEOpGnSROp10NB1MXYnjgYqlqMK0vTjOcZSKmTuE11bYc2qlvP07y/jqL4RjlzVMI5ZoIYMxIzzTYwqzQ6M2fGOU4yWLMzMYuycHQpOiNnGiluRsJT75bmNLiSJJHIZHQzamY5Qsqchza68CzTMS1bNk3SRnOKOtsrIWO0VSwl5jiW2HLplrDPhjPpOTeZM5ohP1Ji0tK7nwdkdSscihb1ITo2V1JS7OVX3IJFmQkV0Ck6im5a8jD11s2DjlkJP9UlOdZ9L/JhpjSYo5d4LSvcI3PC9kreINdsmKmnWWpj4CNclEzZyzBfi6ophbl8euDjcO48x5u5daK8p555bF7Js3iIMc6TiV1rzq5nXHx1k47SknIuQ5EXS3bGdjVxKyApkkLWHJazl0tD2GdwEi3FMWZifFLb8ZcGIJVFvaAImSI+UvBC35CPDdG+dHNjZZP23MhMEtuodw6dklZ5ZiZSNm7AzkpbsicEmtIp7axhdjdNUMtK5pjbjhqX5NRtbVYnVWLjUua6t240ydo8S1FIO1ZoS3nHtn+OnUvJPkxX"
-        
-//        let base64String = "r7oPfCSZHE6OvZ59dMjc3q5+D3womBxOj78ffXTI3F6J6Z4+ZNpc5s+/H350mVxaiemePGTKTPbLuh98ZJkcXojtnj10yEzW774PfGSZHE6OvZ59dMjc3q9+D3womBxux78ff3SIXF7j555+PMxQLcdvHuf0bJZlU3WepF3IJDbGeZ+2PM+JZpZ9v7JU7kx0xzQ/8lTOTj3HNJ/HUildehZ+jm/NCFgwV25fLsoqHb3j/l8lb668tNZv38d6Jb1/xm6f7hwx0Wyzzn/vWpJ6M0KOv9s27VFXQ/sOvXzOtc5Xb1+z1KoY9Yf3HqvmqlGp4+5ek2yL5XnD7x9jTxWldmGepaH8Ed8YW+3m3f1M8lwzP6phrLhauVvFU275wSkPYZ6k4+wRUhhb7PaV/Az0WBM3ouG8KV6ZX8XSb/lBqh9zOOxz7FEev1PFa2r+yTwPUbai4fw53plfxfbv/Um6HjI7bHlsmB67U8VrbnrZaA9RnqXh/DHeGU/t5t39TfIcMjvqcayYWrlTxXNuetFoD2GepaH8Ed4YS+3m3fxM8lwzP6phrLhauVvFU275wSkPYZ6k4+wRUhhb7PaV/Az0WBM2ouH4OV6ZH9Xab3lBuh+wjZJwMptwjq5uf578c71eaX1yOLbJOB9faHY2/cmebFl59nQ2616vDRszH87NGE+ZLOb49koaFx5oWxLtzVhnETVtstJIkw6eYXmZfVXMVxB37nD2lDmTPno1j3VWrXrctmaKeZnIEz1iNA/9xt98s23WSOUZmQ9fUe6p/FQ7DMxxxFxxiXmHPnb9NvtQ7ixyXIps6UiaZh59aJ+92jks3bRynZnCWgo/aSc3+9GvKJ1XN1eTWnmtXGjtmPfTLC/uWobr3JoSN46MvPH9XWs6LY9y3JMcGzvPYubk2dPlOlg97JmTTro0TXnLb3SMa2e16ebOQNMbJx5SV959m6ZWbZnMzCAzeqYfadr9fFEmRkmSiYwpSrI9TmxzPrSZpmnSOJuZcmo+D49Yeav0S6ca"
-        
         
         // JSON에 넣을 데이터 구성
         let arr: [String: Any] = [
             "uid": uuid,
-            "req_times": sendCount, // 서버에 보내는 요청 횟수, 변수로 선언해 주세요
+            "req_times": sendCount,
             "dna_data": base64String
         ]
 
         var request = URLRequest(url: URL(string: "https://www.mo-mo.co.kr/tpi/getdnasong")!)
         request.httpMethod = "POST"
-        request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        print("서버로 보낼 값 :::: \(base64String)")
+        print("서버로 보낼 값 :::: \(arr)")
         let now = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
@@ -298,6 +348,9 @@ class Vmidc: NSObject {
         do {
             let (responseData, _) = try await URLSession.shared.data(for: request)
             
+//            dna.clear()
+//            print("clear 후 dna.length:", dna.length)
+            
             if let jsonString = String(data: responseData, encoding: .utf8) {
                 print("서버 응답 원문:\n\(jsonString)")
                 
@@ -310,6 +363,19 @@ class Vmidc: NSObject {
                               self.stop()
                           }
                       }
+                      
+                      // 곡 찾았을 때
+                      if let data = json["data"] as? String, !data.isEmpty {
+                          print("곡 찾음 !!")
+                          self.stop()
+                          
+                          DispatchQueue.main.async {
+                              self.foundSongData = data
+                          }
+                          
+                          
+                      }
+                      
                   }
             }
         

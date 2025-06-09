@@ -53,6 +53,16 @@ class DnaBuf {
     }
 
     func pack() -> [UInt8] {
+        let hCount = cur * 8
+        let fCount = cur * 16
+
+        guard H.count >= hCount else {
+            fatalError("❌ H count 부족: H.count=\(H.count), 필요=\(hCount)")
+        }
+        guard F.count >= fCount else {
+            fatalError("❌ F count 부족: F.count=\(F.count), 필요=\(fCount)")
+        }
+        
         var result = [UInt8](repeating: 0, count: cur * 24)
         for i in 0..<(cur * 8) {
             result[i] = H[i]
