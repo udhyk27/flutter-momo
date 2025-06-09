@@ -1,8 +1,11 @@
 import SwiftUI
 
+// 기본 화면
 struct ContentView: View {
-    @StateObject var vmidc = Vmidc()
-    @State private var navigateToSongInfo = false
+//    @State private var showSongInfo = false
+    
+    let vmidc = Vmidc()
+    
     @StateObject private var appState = AppState.shared
     
     var body: some View {
@@ -21,9 +24,11 @@ struct ContentView: View {
                 VStack {
                     Spacer()
                     Button(action: {
-                        vmidc.checkPermission()
+                        // 버튼 클릭 액션
+                        vmidc.checkPermission() // 마이크 권한 확인하고 허용이면 start
+                        
                     }) {
-                        if appState.isRecording {
+                        if (appState.isRecording) {
                             Text("음악 인식 중...")
                                 .foregroundColor(.white)
                                 .font(.title3)
@@ -32,7 +37,7 @@ struct ContentView: View {
                             Image("blue_logo")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 100, height: 100)
+                                .frame(width: 100, height: 100) // 원하는 크기로 조절
                         }
                     }
                     .buttonStyle(.plain)
@@ -40,23 +45,19 @@ struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onAppear {
-                    vmidc.openSession()
+                    vmidc.openSession() // 오디오 세션 오픈
                 }
                 .onDisappear {
-                    vmidc.closeSession()
+                    vmidc.closeSession() // 오디오 세션 닫기
                 }
             }
             .navigationBarBackButtonHidden(true)
-            .onChange(of: vmidc.foundSongData) { newValue in
-                if newValue != nil {
-                    navigateToSongInfo = true
-                }
-            }
-            .navigationDestination(isPresented: $navigateToSongInfo) {
-                if let songData = vmidc.foundSongData {
-                    SongInfoView(songData: songData)
-                }
-            }
         }
     }
+}
+
+
+
+#Preview {
+    ContentView()
 }

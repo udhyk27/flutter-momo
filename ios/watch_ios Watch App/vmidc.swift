@@ -3,11 +3,10 @@ import Foundation
 import AVFoundation
 import AVFoundation
 
-class Vmidc: ObservableObject {
+class Vmidc: NSObject {
     private var audioEngine: AVAudioEngine?
     
-    @Published var foundSongData: [String: String]? = nil
-
+    @Published var foundSongData: String? = nil
     
     let wbuf = WaveBuf()
     let dna = DnaBuf()
@@ -273,9 +272,7 @@ class Vmidc: ObservableObject {
 
     func stop() {
         print("VMIDC stopped")
-        DispatchQueue.main.async {
-            self.appState.isRecording = false
-        }
+        appState.isRecording = false
         
         audioEngine?.stop()
         audioEngine?.inputNode.removeTap(onBus: 0)
@@ -368,10 +365,11 @@ class Vmidc: ObservableObject {
                       }
                       
                       // 곡 찾았을 때
-                      if let data = json["data"] as? [String: String], !data.isEmpty {
+                      if let data = json["data"] as? String, !data.isEmpty {
                           print("곡 찾음 !!")
+                          self.stop()
+                          
                           DispatchQueue.main.async {
-                              self.stop()
                               self.foundSongData = data
                           }
                           
