@@ -306,11 +306,14 @@ class Vmidc: ObservableObject {
         let byteArray = dna.pack()   // [UInt8]
         let data = Data(byteArray)   // Data 타입 변환
         let base64String = data.base64EncodedString()  // base64 인코딩 문자열 변환
-//        let base64String = "l/H/zgwPs0u36HW1Uo50X7fYe5IgjXNdn7/1LCudd1s+9+WlQJtJeT7/6x1Vq9NMP/37LFGtsma/Xb946dp4St6evaLEJ+c6p2+NqlI3d0M6tpsLIe32Qt/990cp0zZ7N+o7Jla6s3t/c/OKVKs+bfv+72V1LTZ7XvPtnkQ5Mmle8+WiEHsza531+askWTNrzfiePmwdu2MfSK+2cBk/fmVE9yn0uNlv77Y+ynSsuH638X3LSY2/TF/z7Z4QerJf5qRnshBtMxvO+PjlqIy4HT9jNs6DSflKX/PtvhB5u1K+87siliube/+S5S4VKDl/v7ueHMCPfC8/++6OQsmMfeiU2d2uy2YYvMfJJV1/dGoUU9pZJBvTGD7HSOQZn8gmkIzzZS5b8xk8xWi5ZV8nZUpMs0m218I829f3a1pLagwQGAbzSxqzH1sfX+cx3zxLG5vNZs9xsjF7R333pfokKVOy8szMSpoe6xVz7cV/awVCysS56FmmHnyP2Rr7xTITcPAaDl5Zxhe/4XZnemtmZxhblskYXU4dPM1fnXPSZGZTTNN9HG2SFOmSOEfuo8QC04zacZwv5463u/l6rauWMjQjyEcLR0sePB7e3MVOzUxksc1EtlpajnaaTi/H5q5IE52yLLZLrR7ve2p2r66UGjIZ0h+vS0sdbyGnlnhm7WMmUuYcp0PDHG4zrvdaLaUndgzKmaUXQz5zlVRq6bNmJNmaktHJZlsU4XjC/t1hrSMmteLS/gnSDeln4rmapIxjNL1MyuVZ0x43fjg5M8+gEjAvqabIZLML5e4079yN7njCOOOJrkP6CB7PybtVn6ZKJmJWHaZD+hhvMS63WiStIzTXthyuU/MJn/Y43TucpmPIzKrJVGf7CV1wlbdM2zg+DWDTGeJ81By7Zw4cFmc6ejZi5xrHY5YxbyMvtlIttSdc69yc7kNTG9fKLWtH5k4uM6bKjOlL2xr3yx3JMatyTVZc2mDVVlcPuaee5m5z6WBMseJhcMo4F70nrap6bdtk"
-        
-//        let base64String = "b4cqJRuz5RPvgygtivH0I/lfHO4YY3QLeY9ybBvjcgv5rkrciXHkGW4XGu3Oae0b59Narna0rRlhO85e8/acI306QmPGvMlJZZcmn53RyANiloaSScPkSas/DKeN65gN7x6kthHT3A/tMZaeZ9u1EWsVgZ6b49gNbqKSnjaheRVNqlmMZrBmEfk/j5PZyPwL/0MOr5eP9AWrLzub0C3VGisjuqbEqLlPY4ueJsY4x1lzD0+Z1yjcCX3OSsvOIX0LaS6XHu+ttR1hJjOjwuzkG6olM8O0/dVJ62M34vab4Qn8Gq9v57BlJnqerk+xsf0Xava4unQg7RetbUVMnjGnGccWSst5Sssi6JyaZGbMNSbMjJu+MWtSBvfsjtXMxDks0IdHM7JaTQr2vl2xuVMte84HXmpES/O45iZLto4IeUzHgJMVKH37BVWtfUbMNPBZ+eTRnDH2ygRdPZ0z5IFpXBx6GPd1zcsELJ5Vcc45K20bZRrbaFNPjKS+JkVube8ZHHBwR3O51YyxmkwEDhCXXHOpZ3vjWtagIR43YRxEk2nTLGdysl77mCcsPWkyd09pYahmNubD2BivzN8meYIfRUOnDrOx8bKU1+zeEjN2nmdmqt7zaTYbEfHt0atea65xqsMHbdLZsQTEPDMzC0n7IJiWaevBHNMA3HUuZhJpbmWyPJJGFp3LpPUlrEKbXTlpZ8JgaHj705Lhrp0NemSycXTHb0Aw3ZmoZ/9NMX9RPU5Ut3Gam3O9pM1OuQ7ml+9omOxgjmPXOzzsjA0shkePZhR4SCa3ONcYpj7NxNZhn2ZZ5EKO0NlSIAY12QrtkNNhluUDTtIV2zB2Jt7wzJDnKP6oUfMiVvIMtjZqJpZR7QsubFC4clrjFCZ+Nko3F29qdM1pkbI5czTOzDmMhqcNeLbqplNJ1zWlaLhNHjfDbnU/6XCrWbqepWhabAF7x80MB8wJ63k/2SHkHuxDZp6zNFg2Rs5kaxuBx5g928RmzmPJpyOSuWqzFHDKORxXmNgI"
-        
+
         print("DNA pack 길이: \(byteArray.count)")
+        
+        if byteArray.count != 768 {
+            self.start()
+            return
+        }
+        
         print("앞쪽 바이트 샘플: \(byteArray[0..<10])")
         
         

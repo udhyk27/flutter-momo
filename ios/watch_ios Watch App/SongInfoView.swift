@@ -47,24 +47,23 @@ struct SongInfoView: View {
                     Spacer() // 위 공간은 비우고
                     
                     LinearGradient(
-                        gradient: Gradient(colors: [Color.black.opacity(0.8), Color.clear]),
+                        gradient: Gradient(colors: [Color.black.opacity(1.5), Color.clear]),
                         startPoint: .bottom,
                         endPoint: .top
                     )
                     .frame(height: geo.size.height / 2)  // 화면 높이 절반만큼
                     .overlay(
-                        VStack(spacing: 4) {
-                            Text(songData["TITLE"] ?? "제목")
+                        VStack(spacing: 2) {
+                            Text(songData["TITLE"] ?? "")
                                 .font(.title3)
-                                .fontWeight(.bold)
+                                .fontWeight(.medium)
                                 .foregroundColor(.white)
-                            
-                            Text(songData["ARTIST"] ?? "가수")
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                            Text(songData["ARTIST"] ?? "")
                                 .foregroundColor(.white)
-                            
-                            Text(songData["ALBUM"] ?? "앨범")
-                                .foregroundColor(.white)
-
+                                .lineLimit(1)
+                                .truncationMode(.tail)
                         }
                         .padding(.bottom, 20)
                         .padding(.horizontal, 20),
