@@ -165,7 +165,7 @@ class _HistoryState extends State<History> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: deviceHeight / 4),
-                    child: Center(child: Text(text),),
+                    child: Center(child: Text(text, style: TextStyle(color: Colors.white),),),
                   )
                 ],
               )

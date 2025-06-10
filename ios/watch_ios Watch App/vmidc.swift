@@ -1,7 +1,6 @@
 import SwiftUI
 import Foundation
 import AVFoundation
-import AVFoundation
 
 @MainActor
 class Vmidc: ObservableObject {
@@ -100,11 +99,13 @@ class Vmidc: ObservableObject {
     }
     
     var isSendingDna = false // 클래스 프로퍼티로 선언
+    private var bufferCount = 0
     
     func start() {
         print("VMIDC started")
-        appState.isRecording = true
         
+        appState.isRecording = true
+
         audioEngine = AVAudioEngine()
         guard let audioEngine = audioEngine else { return }
         
@@ -132,6 +133,12 @@ class Vmidc: ObservableObject {
         
         inputNode.installTap(onBus: 0, bufferSize: 2048, format: inputFormat) { [weak self] buffer, _ in
             guard let self = self else { return }
+
+            self.bufferCount += 1 // 버퍼 스킵
+              if self.bufferCount <= 5 {
+                  print("버퍼 \(self.bufferCount)개 스킵 중 (마이크 안정화)")
+                  return
+              }
             
             // 출력 버퍼 준비 (16000Hz 변환용)
             guard let convertedBuffer = AVAudioPCMBuffer(pcmFormat: outputFormat,
@@ -214,13 +221,14 @@ class Vmidc: ObservableObject {
             }
         }
 
-        
-        do {
-            try audioEngine.start()
-            print("레코더 시작")
-        } catch {
-            print("Failed to start audio engine: \(error)")
-            appState.isRecording = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // 오디오 안정화 후 시작
+            do {
+                try audioEngine.start()
+                print("레코더 시작")
+            } catch {
+                print("Failed to start audio engine: \(error)")
+                self.appState.isRecording = false
+            }
         }
     }
 
@@ -271,6 +279,9 @@ class Vmidc: ObservableObject {
 
     func stop() {
         print("VMIDC stopped")
+        
+        WKInterfaceDevice.current().play(.failure)
+        
         DispatchQueue.main.async {
             self.appState.isRecording = false
         }
@@ -354,23 +365,28 @@ class Vmidc: ObservableObject {
                 
                 // JSON 파싱해서 err_msg 존재 확인
                   if let json = try? JSONSerialization.jsonObject(with: responseData) as? [String: Any] {
-                      if let errMsg = json["err_msg"] as? String, !errMsg.isEmpty {
-                          
+                      
+                      if let errMsg = json["err_msg"] as? String, !errMsg.isEmpty { // 에러 메시지
                           print("서버 에러 메시지 감지: \(errMsg), 녹음 중단")
                           DispatchQueue.main.async { [weak self] in
                               self?.stop()
                           }
-                      }
-                      
-                      // 곡 찾았을 때
-                      if let data = json["data"] as? [String: String], !data.isEmpty {
-                          print("곡 찾음 !!")
+                          
+                      } else if let songId = json["song_id"], json["data"] == nil { // song_id 키값만 왔을 때
+                          print("곡은 감지됐지만 data가 없음 → 녹음 중단")
+                          DispatchQueue.main.async { [weak self] in
+                              self?.stop()
+                          }
+                          
+                      } else if let data = json["data"] as? [String: String], !data.isEmpty { // 곡 찾았을 때
+                          WKInterfaceDevice.current().play(.success)
                           DispatchQueue.main.async { [weak self] in
                               self?.stop()
                               self?.foundSongData = data
                           }
-
                       }
+                      
+                      
                       
                   }
             }

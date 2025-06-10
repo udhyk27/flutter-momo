@@ -31,43 +31,55 @@ struct HistoryView: View {
                         .foregroundColor(.gray)
                 } else {
                     List(historyList, id: \.title) { item in
-                        ZStack(alignment: .bottomLeading) {
-                            AsyncImage(url: URL(string: item.image)) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                            } placeholder: {
-                                Color.gray.opacity(0.3)
-                            }
-                            .frame(height: 120)
-                            .clipped()
-                            .cornerRadius(12)
+                        NavigationLink(
+                            destination: SongInfoView(songData: [
+                                "TITLE": item.title,
+                                "ARTIST": item.artist
+                            ])
+                        ) {
+                            ZStack(alignment: .bottomLeading) {
+                                AsyncImage(url: URL(string: item.image)) { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                } placeholder: {
+                                    Color.gray.opacity(0.3)
+                                }
+                                .frame(height: 120)
+                                .clipped()
+                                .cornerRadius(12)
 
-                            // 텍스트 오버레이
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(item.title)
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                                    .lineLimit(1)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(item.title)
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .lineLimit(1)
 
-                                Text(item.artist)
-                                    .font(.subheadline)
-                                    .foregroundColor(.white.opacity(0.9))
-                                    .lineLimit(1)
+                                    Text(item.artist)
+                                        .font(.subheadline)
+                                        .foregroundColor(.white.opacity(0.9))
+                                        .lineLimit(1)
+                                }
+                                .padding(8)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color.black.opacity(0.5), Color.black.opacity(0.0)]),
+                                        startPoint: .bottom,
+                                        endPoint: .top
+                                    )
+                                )
                             }
-                            .padding(8)
-                            .background(Color.black.opacity(0.4)) // 반투명 배경
+                            .listRowInsets(EdgeInsets())
+                            .padding(.vertical, 4)
                         }
-                        .listRowInsets(EdgeInsets()) // 이미지가 리스트 끝까지 차게
-                        .padding(.vertical, 4)
                     }
                     .listStyle(.plain)
                 }
             }
-//            .navigationTitle("히스토리")
             .onAppear {
                 if uuid == nil {
-                    uuid = vmidc.getDeviceUUID()  // 한 번만 가져오기
+                    uuid = vmidc.getDeviceUUID()
                 }
                 fetchHistory()
             }

@@ -32,12 +32,16 @@ struct ContentView: View {
                         }
                     }) {
                         if appState.isRecording {
-                            Text("음악 인식 중...")
-                                .foregroundColor(.white)
-                                .font(.title3)
-                                .bold()
+                            VStack(spacing: 2) { // 텍스트와 로딩바 사이 약간의 간격
+                                Text("음악 인식 중...")
+                                    .foregroundColor(.white)
+                                    .font(.title3)
+                                    .bold()
+                                
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            }
                         } else {
-//                            Image("blue_logo")
                             Image("blue_logo")
                                 .resizable()
                                 .scaledToFit()
@@ -89,6 +93,10 @@ struct ContentView: View {
             .navigationDestination(isPresented: $navigateToSongInfo) {
                 if let songData = vmidc.foundSongData {
                     SongInfoView(songData: songData)
+                        .onDisappear{
+                            vmidc.foundSongData = nil
+                            navigateToSongInfo = false
+                        }
                 }
             }
         }
