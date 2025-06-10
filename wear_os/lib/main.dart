@@ -193,7 +193,7 @@ class _HomePageState extends State<HomePage> {
       // Color.fromRGBO(62, 195, 255, 1.0), // 위쪽 색
       // Color.fromRGBO(194, 40, 222, 1.0), // 아래쪽 색
 
-
+      // darkmode
       Color.fromRGBO(0, 0, 0, 1.0),
       Color.fromRGBO(158, 158, 158, 1.0)
 

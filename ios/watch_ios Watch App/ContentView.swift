@@ -54,16 +54,18 @@ struct ContentView: View {
                         Button(action: {
                             showHistory = true
                         }) {
-//                            Image(systemName: "chevron.right")
-                            Image(systemName: "chevron.forward.2")
+                            Image(systemName: "chevron.forward")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 14, height: 14)
                                 .foregroundColor(.white)
                                 .padding(8)
+                                .background(Color.black.opacity(0.2))
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .padding(5)
                         }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                     Spacer()
                 }
             

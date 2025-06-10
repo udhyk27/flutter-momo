@@ -18,6 +18,8 @@ struct HistoryView: View {
     
     @State private var historyList: [HistoryItem] = []
     @State private var isLoading = false
+    
+    @State private var uuid: String? = nil
 
     var body: some View {
         NavigationView {
@@ -64,14 +66,17 @@ struct HistoryView: View {
             }
 //            .navigationTitle("히스토리")
             .onAppear {
+                if uuid == nil {
+                    uuid = vmidc.getDeviceUUID()  // 한 번만 가져오기
+                }
                 fetchHistory()
             }
         }
     }
 
     func fetchHistory() {
-        let uid = vmidc.getDeviceUUID()
-        guard let url = URL(string: "https://www.mo-mo.co.kr/api/get_song_history/json?uid=\(uid)") else { return }
+        guard let uid = uuid,
+                      let url = URL(string: "https://www.mo-mo.co.kr/api/get_song_history/json?uid=\(uid)") else { return }
 
         DispatchQueue.main.async {
             isLoading = true
