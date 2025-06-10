@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this); // 앱 생명주기 변경을 감지
     WidgetsBinding.instance.addPostFrameCallback((_) {
       precacheImage(const AssetImage('assets/loading2_blue.gif'), context,);
-      precacheImage(const AssetImage('assets/blue_logo.png'), context);
+      precacheImage(const AssetImage('assets/berry_logo.png'), context);
     });
   }
 
@@ -190,8 +190,13 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
 
     List<Color> gradientColors = [
-      Color.fromRGBO(62, 195, 255, 1.0), // 위쪽 색
-      Color.fromRGBO(194, 40, 222, 1.0), // 아래쪽 색
+      // Color.fromRGBO(62, 195, 255, 1.0), // 위쪽 색
+      // Color.fromRGBO(194, 40, 222, 1.0), // 아래쪽 색
+
+
+      Color.fromRGBO(0, 0, 0, 1.0),
+      Color.fromRGBO(158, 158, 158, 1.0)
+
     ];
 
     return Scaffold(
@@ -241,7 +246,8 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.6,
                     child: Image.asset(
-                      'assets/blue_logo.png',
+                      'assets/berry_logo.png',
+                      // 'assets/blue_logo.png',
                       fit: BoxFit.contain,
                     ),
                   );

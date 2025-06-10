@@ -19,8 +19,10 @@ class _SongInfoState extends State<SongInfo> {
 
   String font = 'NotoSansKR-Regular';
   List<Color> gradientColors = [
-    Color.fromRGBO(62, 195, 255, 1.0), // 위쪽 색
-    Color.fromRGBO(194, 40, 222, 1.0), // 아래쪽 색
+    // Color.fromRGBO(62, 195, 255, 1.0), // 위쪽 색
+    // Color.fromRGBO(194, 40, 222, 1.0), // 아래쪽 색
+    Color.fromRGBO(0, 0, 0, 1.0),
+    Color.fromRGBO(158, 158, 158, 1.0)
   ];
 
   bool showIcon = false;

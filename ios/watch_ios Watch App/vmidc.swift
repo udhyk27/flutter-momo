@@ -3,6 +3,7 @@ import Foundation
 import AVFoundation
 import AVFoundation
 
+@MainActor
 class Vmidc: ObservableObject {
     private var audioEngine: AVAudioEngine?
     
@@ -27,10 +28,6 @@ class Vmidc: ObservableObject {
             defaults.set(newUUID, forKey: "deviceUUID")
             return newUUID
         }
-
-        // TEST
-//        return "AP3A.250530.001.A1"
-
     }
 
     
@@ -315,8 +312,6 @@ class Vmidc: ObservableObject {
         }
         
         print("앞쪽 바이트 샘플: \(byteArray[0..<10])")
-        
-        
         print("byte ::: \(data.count)")
 
         
@@ -327,7 +322,7 @@ class Vmidc: ObservableObject {
             "dna_data": base64String
         ]
 
-        var request = URLRequest(url: URL(string: "https://www.mo-mo.co.kr/tpi/getdnasong")!)
+        var request = URLRequest(url: URL(string: "https://www.mo-mo.co.kr/api/getdnasong")!)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
@@ -354,10 +349,6 @@ class Vmidc: ObservableObject {
 
         do {
             let (responseData, _) = try await URLSession.shared.data(for: request)
-            
-//            dna.clear()
-//            print("clear 후 dna.length:", dna.length)
-            
             if let jsonString = String(data: responseData, encoding: .utf8) {
                 print("서버 응답 원문:\n\(jsonString)")
                 
@@ -366,37 +357,26 @@ class Vmidc: ObservableObject {
                       if let errMsg = json["err_msg"] as? String, !errMsg.isEmpty {
                           
                           print("서버 에러 메시지 감지: \(errMsg), 녹음 중단")
-                          DispatchQueue.main.async {
-                              self.stop()
+                          DispatchQueue.main.async { [weak self] in
+                              self?.stop()
                           }
                       }
                       
                       // 곡 찾았을 때
                       if let data = json["data"] as? [String: String], !data.isEmpty {
                           print("곡 찾음 !!")
-                          DispatchQueue.main.async {
-                              self.stop()
-                              self.foundSongData = data
+                          DispatchQueue.main.async { [weak self] in
+                              self?.stop()
+                              self?.foundSongData = data
                           }
-                          
-                          
+
                       }
                       
                   }
             }
-        
-//            let result = try JSONDecoder().decode(SongResult.self, from: responseData)
-//            print("서버에서 돌려받은 값 : \(result)")
-
         } catch {
             print("Server or decoding error: \(error)")
         }
     }
 
 }
-
-// 서버 응답 데이터 모델
-//struct SongResult: Codable {
-//    let ret: String
-//    let data: String
-//}

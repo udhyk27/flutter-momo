@@ -5,6 +5,8 @@ struct ContentView: View {
     @State private var navigateToSongInfo = false
     @StateObject private var appState = AppState.shared
     
+    @State private var showHistory = false  // 추가
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -12,6 +14,8 @@ struct ContentView: View {
                     gradient: Gradient(colors: [
                         Color(red: 62/255, green: 195/255, blue: 255/255),   // 하늘색
                         Color(red: 194/255, green: 40/255, blue: 222/255)   // 보라색
+//                        Color(red: 0/255, green: 0/255, blue: 0/255),
+//                        Color(red: 158/255, green: 158/255, blue: 158/255)
                     ]),
                     startPoint: .top,
                     endPoint: .bottom
@@ -33,6 +37,7 @@ struct ContentView: View {
                                 .font(.title3)
                                 .bold()
                         } else {
+//                            Image("blue_logo")
                             Image("blue_logo")
                                 .resizable()
                                 .scaledToFit()
@@ -41,6 +46,29 @@ struct ContentView: View {
                     }
                     .buttonStyle(.plain)
                     Spacer()
+                }
+                
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            showHistory = true
+                        }) {
+//                            Image(systemName: "chevron.right")
+                            Image(systemName: "chevron.forward.2")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 14, height: 14)
+                                .foregroundColor(.white)
+                                .padding(8)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    Spacer()
+                }
+            
+                .navigationDestination(isPresented: $showHistory) {
+                    HistoryView()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onAppear {
