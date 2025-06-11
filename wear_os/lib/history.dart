@@ -111,12 +111,12 @@ class _HistoryState extends State<History> {
     final RecController recController = Get.find<RecController>();
 
     List<Color> gradientColors = [
-      // Color.fromRGBO(194, 40, 222, 1.0), // 위쪽 색
-      // Color.fromRGBO(62, 195, 255, 1.0), // 아래쪽 색
+      Color.fromRGBO(194, 40, 222, 1.0), // 위쪽 색
+      Color.fromRGBO(62, 195, 255, 1.0), // 아래쪽 색
 
       // darkmode
-      Color.fromRGBO(158, 158, 158, 1.0),
-      Color.fromRGBO(0, 0, 0, 1.0)
+      // Color.fromRGBO(158, 158, 158, 1.0),
+      // Color.fromRGBO(0, 0, 0, 1.0)
     ];
 
     return Obx(() {
@@ -325,6 +325,7 @@ class _HistoryState extends State<History> {
 
                           image: DecorationImage(
                             image: ExtendedNetworkImageProvider(item['image']!),
+                            // image: const AssetImage('assets/no_image.png'),
                             fit: BoxFit.cover,
                           ),
 

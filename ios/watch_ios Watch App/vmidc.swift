@@ -30,7 +30,7 @@ class Vmidc: ObservableObject {
     }
 
     
-    private var sendCount = 0
+    private var sendCount = 1
     private let maxSendCount = 5
     
     
@@ -171,7 +171,7 @@ class Vmidc: ObservableObject {
                 let byteData = self.int16ArrayToBytes(int16Samples)
 
                 print("전체 byteData 길이: \(byteData.count)")
-
+                
                 var offset = 0
                 let chunkSize = self.fftHop * 2  // Int16 -> 2 bytes
 
@@ -294,7 +294,7 @@ class Vmidc: ObservableObject {
         wbuf.clear()
         dna.clear()
         
-        sendCount = 0
+        sendCount = 1
     }
 
 
@@ -308,7 +308,7 @@ class Vmidc: ObservableObject {
               self.stop()
               return
         }
-        sendCount += 1
+        
         print("sendCount: \(sendCount)")
         
         let byteArray = dna.pack()   // [UInt8]
@@ -347,7 +347,7 @@ class Vmidc: ObservableObject {
         do { // 서버로 전송
             request.httpBody = try JSONSerialization.data(withJSONObject: arr)
             
-            
+            sendCount += 1
             dna.clear()
             print("clear 후 dna.length:", dna.length)
             
@@ -372,7 +372,7 @@ class Vmidc: ObservableObject {
                               self?.stop()
                           }
                           
-                      } else if let songId = json["song_id"], json["data"] == nil { // song_id 키값만 왔을 때
+                      } else if json["song_id"] != nil, json["data"] == nil { // song_id 키값만 왔을 때
                           print("곡은 감지됐지만 data가 없음 → 녹음 중단")
                           DispatchQueue.main.async { [weak self] in
                               self?.stop()

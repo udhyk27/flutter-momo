@@ -122,7 +122,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   final VMIDC _vmidc = VMIDC();
-
   Future<void>? _asyncTask;
 
   @override
@@ -139,7 +138,6 @@ class _HomePageState extends State<HomePage> {
     MyApp.uid = androidInfo.id;
 
     print('WATCH UID : ${MyApp.uid}');
-    // print('WATCH MODEL : ${androidInfo.model}');
   }
 
   Future<bool> checkConnection() async {
@@ -190,12 +188,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
 
     List<Color> gradientColors = [
-      // Color.fromRGBO(62, 195, 255, 1.0), // 위쪽 색
-      // Color.fromRGBO(194, 40, 222, 1.0), // 아래쪽 색
+      Color.fromRGBO(62, 195, 255, 1.0), // 위쪽 색
+      Color.fromRGBO(194, 40, 222, 1.0), // 아래쪽 색
 
       // darkmode
-      Color.fromRGBO(0, 0, 0, 1.0),
-      Color.fromRGBO(158, 158, 158, 1.0)
+      // Color.fromRGBO(0, 0, 0, 1.0),
+      // Color.fromRGBO(158, 158, 158, 1.0)
 
     ];
 
@@ -243,13 +241,29 @@ class _HomePageState extends State<HomePage> {
                     ],
                   )
                       :
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: Image.asset(
-                      'assets/berry_logo.png',
-                      // 'assets/blue_logo.png',
-                      fit: BoxFit.contain,
-                    ),
+                  Stack(
+                    children: [
+                      Positioned(
+                        top: 40,
+                        left: 0,
+                        right: 0,
+                        child: Text(
+                          "곡을 찾으려면 모모를 눌러주세요",
+                          style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Image.asset(
+                            'assets/blue_logo.png',
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ],
                   );
                 }),
               ),
