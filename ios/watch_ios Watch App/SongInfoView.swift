@@ -7,24 +7,28 @@ struct SongInfoView: View {
     @State private var showCloseButton = false
 
     var body: some View {
-        ZStack {
-            // 배경 이미지
-            AsyncImage(url: URL(string: songData["IMAGE"] ?? "")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .scaledToFill()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .clipped()
-                    .ignoresSafeArea()
-            } placeholder: {
-                Color.black.opacity(0.3)
-                    .ignoresSafeArea()
-                ProgressView()
-            }
+        GeometryReader { geo in
+            ZStack {
+                // 배경 이미지
+                AsyncImage(url: URL(string: songData["IMAGE"] ?? "")) { phase in
+                    if let image = phase.image {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(maxWidth: geo.size.width, maxHeight: .infinity)
+                            .clipped()
+                            .ignoresSafeArea()
+                    } else {
+                        ZStack {
+                            Color.black.opacity(0.3)
+                                .ignoresSafeArea()
+                            ProgressView()
+                        }
+                    }
+                }
 
             // 하단 텍스트 & 닫기버튼 오버레이
-            GeometryReader { geo in
+
                 VStack {
                     Spacer()
 

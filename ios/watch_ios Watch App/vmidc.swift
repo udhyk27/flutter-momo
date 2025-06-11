@@ -173,7 +173,7 @@ class Vmidc: ObservableObject {
                 print("전체 byteData 길이: \(byteData.count)")
 
 
-                // 원래 코드
+                
                 var offset = 0
                 let chunkSize = self.fftHop * 2  // Int16 -> 2 bytes
 
@@ -226,14 +226,12 @@ class Vmidc: ObservableObject {
             }
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // 오디오 안정화 후 시작
-            do {
-                try audioEngine.start()
-                print("0.5초 후 레코더 시작")
-            } catch {
-                print("Failed to start audio engine: \(error)")
-                self.appState.isRecording = false
-            }
+        do {
+            print("레코더 시작")
+            try audioEngine.start()
+        } catch {
+            print("Failed to start audio engine: \(error)")
+            self.appState.isRecording = false
         }
     }
 
@@ -381,7 +379,7 @@ class Vmidc: ObservableObject {
                               self?.stop()
                           }
                           
-                      } else if json["song_id"] != nil, json["data"] == nil { // song_id 키값만 왔을 때
+                      } else if let _ = json["song_id"], let data = json["data"] as? String, data.isEmpty { // song_id 키값만 왔을 때
                           print("곡은 감지됐지만 data가 없음 → 녹음 중단")
                           DispatchQueue.main.async { [weak self] in
                               self?.stop()
@@ -393,10 +391,40 @@ class Vmidc: ObservableObject {
                               self?.stop()
                               self?.foundSongData = data
                           }
+                      } else if json["ret"] as? Int == 0, // 아무것도 못찾고 통신 잘 되었을 때
+                                let data = json["data"] as? String, data.isEmpty,
+                                let errMsg = json["err_msg"] as? String, errMsg.isEmpty {
+                          
+                          Task {
+                              print("send Count :::::: \(sendCount)")
+                              // 데이터 갈아치우고 다시 start()
+
+                                  
+//                          audioEngine?.stop()
+                              audioEngine?.inputNode.removeTap(onBus: 0)
+                              audioEngine = nil
+                              
+                              
+                              wbuf.clear()
+                              dna.clear()
+                              
+                              print("5보다 작아서 계속 시작 함 @@")
+                              DispatchQueue.main.async {
+                                  self.start()
+                              }
+
+                                  
+                              
+                              
+                          }
+                          
                       }
                       
                       
                       
+
+                      
+
                   }
             }
         } catch {
