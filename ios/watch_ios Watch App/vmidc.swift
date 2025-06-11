@@ -171,7 +171,9 @@ class Vmidc: ObservableObject {
                 let byteData = self.int16ArrayToBytes(int16Samples)
 
                 print("전체 byteData 길이: \(byteData.count)")
-                
+
+
+                // 원래 코드
                 var offset = 0
                 let chunkSize = self.fftHop * 2  // Int16 -> 2 bytes
 
@@ -218,13 +220,16 @@ class Vmidc: ObservableObject {
 
                     offset += chunkSize
                 }
+                
+                
+                
             }
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // 오디오 안정화 후 시작
             do {
                 try audioEngine.start()
-                print("레코더 시작")
+                print("0.5초 후 레코더 시작")
             } catch {
                 print("Failed to start audio engine: \(error)")
                 self.appState.isRecording = false
@@ -303,11 +308,7 @@ class Vmidc: ObservableObject {
         
         let uuid = getDeviceUUID()
         
-        if sendCount >= maxSendCount {
-              print("최대 전송 횟수 도달, 전송 중단")
-              self.stop()
-              return
-        }
+
         
         print("sendCount: \(sendCount)")
         
@@ -318,6 +319,7 @@ class Vmidc: ObservableObject {
         print("DNA pack 길이: \(byteArray.count)")
         
         if byteArray.count != 768 {
+            print("데이터 768바이트 아니여서 다시 start() 호출")
             self.start()
             return
         }
@@ -348,6 +350,13 @@ class Vmidc: ObservableObject {
             request.httpBody = try JSONSerialization.data(withJSONObject: arr)
             
             sendCount += 1
+            
+            if sendCount > maxSendCount {
+                  print("최대 전송 횟수 도달, 전송 중단")
+                  self.stop()
+                  return
+            }
+            
             dna.clear()
             print("clear 후 dna.length:", dna.length)
             
