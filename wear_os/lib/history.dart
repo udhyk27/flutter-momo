@@ -129,11 +129,12 @@ class _HistoryState extends State<History> {
       return Scaffold(
         body: Container(
           decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: gradientColors
-              )
+            color: Colors.black87
+              // gradient: LinearGradient(
+              //   begin: Alignment.topCenter,
+              //   end: Alignment.bottomCenter,
+              //   colors: gradientColors
+              // )
           ),
           child: Stack(
             children: [
@@ -204,7 +205,7 @@ class _HistoryState extends State<History> {
                               },
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white,
-                                backgroundColor: Colors.black54
+                                backgroundColor: Colors.white54
                               ),
                               child: Text(
                                 '더보기',
@@ -262,7 +263,7 @@ class _HistoryState extends State<History> {
                             },
                             style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white,
-                                backgroundColor: Colors.black54
+                                backgroundColor: Colors.white54
                             ),
                             child: Text(
                               '삭제',
@@ -286,7 +287,7 @@ class _HistoryState extends State<History> {
                             },
                             style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white,
-                                backgroundColor: Colors.black54
+                                backgroundColor: Colors.white54
                             ),
                             child: Text(
                               '닫기',

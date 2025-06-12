@@ -62,11 +62,12 @@ class _SongInfoState extends State<SongInfo> {
                           // 로딩 중일 때 보여줄 커스텀 위젯
                             return Container(
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: gradientColors
-                                )
+                                color: Colors.black87
+                                // gradient: LinearGradient(
+                                //   begin: Alignment.topCenter,
+                                //   end: Alignment.bottomCenter,
+                                //   colors: gradientColors
+                                // )
                               ),
                               alignment: Alignment.center,
                               child: Column(
