@@ -325,8 +325,8 @@ class _HistoryState extends State<History> {
                           borderRadius: BorderRadius.circular(25),
 
                           image: DecorationImage(
-                            image: ExtendedNetworkImageProvider(item['image']!),
-                            // image: const AssetImage('assets/no_image.png'),
+                            // image: ExtendedNetworkImageProvider(item['image']!),
+                            image: const AssetImage('assets/no_image.png'),
                             fit: BoxFit.cover,
                           ),
 

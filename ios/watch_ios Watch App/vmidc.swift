@@ -6,8 +6,10 @@ import AVFoundation
 class Vmidc: ObservableObject {
     private var audioEngine: AVAudioEngine?
     
+    
     @Published var foundSongData: [String: String]? = nil
-
+    @Published var statusText: String = "음악 인식 중..."
+    
     
     let wbuf = WaveBuf()
     let dna = DnaBuf()
@@ -98,7 +100,7 @@ class Vmidc: ObservableObject {
            }
     }
     
-    var isSendingDna = false // 클래스 프로퍼티로 선언
+//    var isSendingDna = false // 클래스 프로퍼티로 선언
     private var bufferCount = 0
     
     func start() {
@@ -196,26 +198,32 @@ class Vmidc: ObservableObject {
                     // 처리 루틴 (wbuf → dna)
                     while self.wbuf.length >= self.fftN * 2 {
                         self.wbuf.read(self.fftN * 2, to: self.pcm)
+                        
+                        
+                        
                         self.dna.push(pcm: self.pcm)
                         print("DNA length: \(self.dna.length)")
 
                         self.wbuf.pop(self.fftHop * 2)
 
-                        if self.dna.length == self.qLen && !self.isSendingDna {
-                            self.isSendingDna = true
-                            
-                            let now = Date()
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "HH:mm:ss.SSS"
-                            let timeString = formatter.string(from: now)
-                            print("[\(timeString)] 32개의 DNA 쌓임, 서버로 전송 !!")
-                            
+                        if self.dna.length == self.qLen {
                             
                             Task {
+                                let now = Date()
+                                let formatter = DateFormatter()
+                                formatter.dateFormat = "HH:mm:ss.SSS"
+                                let timeString = formatter.string(from: now)
+                                print("[\(timeString)] 32개의 DNA 쌓임, 서버로 전송 !!")
+                                
                                 await self.sendDnaToServerAndProcess()
-                                self.isSendingDna = false
+                                
                             }
                         }
+                        
+                        if self.dna.length >= 50 {
+                            self.stop()
+                        }
+                    
                     }
 
                     offset += chunkSize
@@ -293,7 +301,7 @@ class Vmidc: ObservableObject {
         audioEngine?.inputNode.removeTap(onBus: 0)
         audioEngine = nil
 
-        
+        statusText = "음악 인식 중..."
         wbuf.clear()
         dna.clear()
         
@@ -318,7 +326,8 @@ class Vmidc: ObservableObject {
         
         if byteArray.count != 768 {
             print("데이터 768바이트 아니여서 다시 start() 호출")
-            self.start()
+//            
+//            self.start()
             return
         }
         
@@ -348,6 +357,7 @@ class Vmidc: ObservableObject {
             request.httpBody = try JSONSerialization.data(withJSONObject: arr)
             
             sendCount += 1
+            statusText = String("음악 인식 중...(\(sendCount))")
             
             if sendCount > maxSendCount {
                   print("최대 전송 횟수 도달, 전송 중단")
@@ -355,10 +365,16 @@ class Vmidc: ObservableObject {
                   return
             }
             
+            
+            audioEngine?.stop()
+            audioEngine?.inputNode.removeTap(onBus: 0)
+            audioEngine = nil
+            
+            wbuf.clear()
             dna.clear()
+            
+            print("clear 후 wbuf.length:", wbuf.length)
             print("clear 후 dna.length:", dna.length)
-            
-            
             
         } catch {
             print("JSON 변환 에러: \(error)")
@@ -391,6 +407,9 @@ class Vmidc: ObservableObject {
                               self?.stop()
                               self?.foundSongData = data
                           }
+                          
+                          statusText = "음악 인식 중..."
+                          
                       } else if json["ret"] as? Int == 0, // 아무것도 못찾고 통신 잘 되었을 때
                                 let data = json["data"] as? String, data.isEmpty,
                                 let errMsg = json["err_msg"] as? String, errMsg.isEmpty {
@@ -400,13 +419,13 @@ class Vmidc: ObservableObject {
                               // 데이터 갈아치우고 다시 start()
 
                                   
-//                          audioEngine?.stop()
-                              audioEngine?.inputNode.removeTap(onBus: 0)
-                              audioEngine = nil
+//                              audioEngine?.stop()
+//                              audioEngine?.inputNode.removeTap(onBus: 0)
+//                              audioEngine = nil
                               
                               
-                              wbuf.clear()
-                              dna.clear()
+//                              wbuf.clear()
+//                              dna.clear()
                               
                               print("5보다 작아서 계속 시작 함 @@")
                               DispatchQueue.main.async {
@@ -419,7 +438,6 @@ class Vmidc: ObservableObject {
                           }
                           
                       }
-                      
                       
                       
 

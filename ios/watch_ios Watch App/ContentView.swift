@@ -7,6 +7,7 @@ struct ContentView: View {
     
     @State private var showHistory = false  // 추가
     
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -33,7 +34,7 @@ struct ContentView: View {
                     }) {
                         if appState.isRecording {
                             VStack(spacing: 2) { // 텍스트와 로딩바 사이 약간의 간격
-                                Text("음악 인식 중...")
+                                Text(vmidc.statusText)
                                     .foregroundColor(.white)
                                     .font(.title3)
                                     .bold()
