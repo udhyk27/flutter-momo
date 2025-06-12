@@ -106,6 +106,13 @@ class Vmidc: ObservableObject {
     func start() {
         print("VMIDC started")
         
+        // 기존 오디오엔진이 있다면 중지 및 정리
+        if let oldEngine = audioEngine {
+            oldEngine.stop()
+            oldEngine.inputNode.removeTap(onBus: 0)
+            audioEngine = nil
+        }
+        
         appState.isRecording = true
 
         audioEngine = AVAudioEngine()
