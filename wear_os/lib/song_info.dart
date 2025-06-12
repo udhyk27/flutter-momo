@@ -62,18 +62,17 @@ class _SongInfoState extends State<SongInfo> {
                           // 로딩 중일 때 보여줄 커스텀 위젯
                             return Container(
                               decoration: BoxDecoration(
-                                color: Colors.black87
-                                // gradient: LinearGradient(
-                                //   begin: Alignment.topCenter,
-                                //   end: Alignment.bottomCenter,
-                                //   colors: gradientColors
-                                // )
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: gradientColors
+                                )
                               ),
                               alignment: Alignment.center,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  // SizedBox(width: mediaWidth * 0.6, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
+                                  SizedBox(width: mediaWidth * 0.6, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
                                   Text("로딩 중...", style: TextStyle(color: Colors.white, fontFamily: 'NotoSansKR-Regular',)),
                                 ],
                               ),

@@ -129,12 +129,11 @@ class _HistoryState extends State<History> {
       return Scaffold(
         body: Container(
           decoration: BoxDecoration(
-            color: Colors.black87
-              // gradient: LinearGradient(
-              //   begin: Alignment.topCenter,
-              //   end: Alignment.bottomCenter,
-              //   colors: gradientColors
-              // )
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: gradientColors
+              )
           ),
           child: Stack(
             children: [
@@ -205,7 +204,7 @@ class _HistoryState extends State<History> {
                               },
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white,
-                                backgroundColor: Colors.white54
+                                backgroundColor: Colors.black54
                               ),
                               child: Text(
                                 '더보기',
@@ -263,7 +262,7 @@ class _HistoryState extends State<History> {
                             },
                             style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white,
-                                backgroundColor: Colors.white54
+                                backgroundColor: Colors.black54
                             ),
                             child: Text(
                               '삭제',
@@ -287,7 +286,7 @@ class _HistoryState extends State<History> {
                             },
                             style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white,
-                                backgroundColor: Colors.white54
+                                backgroundColor: Colors.black54
                             ),
                             child: Text(
                               '닫기',
@@ -325,8 +324,8 @@ class _HistoryState extends State<History> {
                           borderRadius: BorderRadius.circular(25),
 
                           image: DecorationImage(
-                            // image: ExtendedNetworkImageProvider(item['image']!),
-                            image: const AssetImage('assets/no_image.png'),
+                            image: ExtendedNetworkImageProvider(item['image']!),
+                            // image: const AssetImage('assets/no_image.png'),
                             fit: BoxFit.cover,
                           ),
 

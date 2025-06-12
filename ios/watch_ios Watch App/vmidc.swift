@@ -180,12 +180,10 @@ class Vmidc: ObservableObject {
                 let byteData = self.int16ArrayToBytes(int16Samples)
 
                 print("전체 byteData 길이: \(byteData.count)")
-
-
                 
                 var offset = 0
-                let chunkSize = self.fftHop * 2  // Int16 -> 2 bytes
-
+                let chunkSize = (self.fftHop / 5) * 2  // Int16 -> 2 bytes
+                
                 while offset < byteData.count {
                     let end = min(offset + chunkSize, byteData.count)
                     let chunk = Array(byteData[offset..<end])
@@ -227,7 +225,7 @@ class Vmidc: ObservableObject {
                             }
                         }
                         
-                        if self.dna.length >= 50 {
+                        if self.dna.length >= 40 {
                             self.stop()
                         }
                     

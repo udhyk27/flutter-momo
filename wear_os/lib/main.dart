@@ -57,8 +57,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this); // 앱 생명주기 변경을 감지
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      precacheImage(const AssetImage('assets/loading1_blue2.gif'), context,);
-      precacheImage(const AssetImage('assets/berry_logo.png'), context);
+      precacheImage(const AssetImage('assets/loading2_blue.gif'), context,);
+      precacheImage(const AssetImage('assets/blue_logo.png'), context);
     });
   }
 
@@ -200,12 +200,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.black87
-          // gradient: LinearGradient(
-          //   begin: Alignment.topCenter,
-          //   end: Alignment.bottomCenter,
-          //   colors: gradientColors
-          // )
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: gradientColors
+          )
         ),
         child: Stack(
           children: [
@@ -229,11 +228,8 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-
-                      // SizedBox(width: MediaQuery.of(context).size.width * 0.6, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
-                      // SizedBox(width: MediaQuery.of(context).size.width * 0.6, child: Image.asset('assets/loading1_blue2.gif', fit: BoxFit.contain,)),
-                      SizedBox(child: CircularProgressIndicator(strokeWidth: 2.0,color: Colors.white,)),SizedBox(height: 20,),
-
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.6, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
+                      // SizedBox(child: CircularProgressIndicator(strokeWidth: 2.0,color: Colors.white,)),SizedBox(height: 20,),
                       Text(
                         '노래 분석 중',
                         style: TextStyle(
@@ -261,7 +257,7 @@ class _HomePageState extends State<HomePage> {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.5,
                           child: Image.asset(
-                            'assets/berry_logo.png',
+                            'assets/blue_logo.png',
                             fit: BoxFit.contain,
                           ),
                         ),
