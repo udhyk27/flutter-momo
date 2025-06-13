@@ -72,7 +72,7 @@ class _SongInfoState extends State<SongInfo> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  SizedBox(width: mediaWidth * 0.6, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
+                                  SizedBox(width: mediaWidth * 0.5, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
                                   Text("로딩 중...", style: TextStyle(color: Colors.white, fontFamily: 'NotoSansKR-Regular',)),
                                 ],
                               ),
@@ -116,39 +116,45 @@ class _SongInfoState extends State<SongInfo> {
                       ),
 
                     if (imageLoaded)
-                      Positioned( // 글씨
+                      Positioned(
                         left: 0,
                         right: 0,
                         bottom: 30,
-                        child: Center(
-                          child: Container(
-                            width: mediaWidth * 0.8,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Center(
+                              child: SizedBox(
+                                width: mediaWidth * 0.8,
+                                child: Text(
                                   widget.song['TITLE'] ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16.sp,
                                   ),
                                 ),
-                                Text(
+                              ),
+                            ),
+                            Center(
+                              child: SizedBox(
+                                width: mediaWidth * 0.6,
+                                child: Text(
                                   widget.song['ARTIST'] ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.white60,
                                     fontSize: 12.sp,
-                                    // shadows: [Shadow(blurRadius: 2, color: Colors.black38)],
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
 

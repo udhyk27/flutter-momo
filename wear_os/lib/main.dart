@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.6, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.5, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
                       // SizedBox(child: CircularProgressIndicator(strokeWidth: 2.0,color: Colors.white,)),SizedBox(height: 20,),
                       Text(
                         '노래 분석 중',

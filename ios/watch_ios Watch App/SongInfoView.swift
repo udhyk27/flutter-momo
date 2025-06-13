@@ -28,7 +28,6 @@ struct SongInfoView: View {
                 }
 
             // 하단 텍스트 & 닫기버튼 오버레이
-
                 VStack {
                     Spacer()
 

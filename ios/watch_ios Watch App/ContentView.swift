@@ -67,9 +67,8 @@ struct ContentView: View {
                                     .frame(width: 14, height: 14)
                                     .foregroundColor(.white)
                                     .padding(8)
-                                    .background(Color.black.opacity(0.2))
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    .padding(5)
+                                    .background(Color.black.opacity(0.15))
+                                    .clipShape(RoundedRectangle(cornerRadius: 20))
                             }
                             .buttonStyle(.plain)
                         }
