@@ -1,6 +1,10 @@
 import SwiftUI
 import Foundation
 import AVFoundation
+#if os(watchOS)
+import WatchKit
+#endif
+
 
 @MainActor
 class Vmidc: ObservableObject {
@@ -233,9 +237,7 @@ class Vmidc: ObservableObject {
 
                     offset += chunkSize
                 }
-                
-                
-                
+
             }
         }
 
@@ -295,9 +297,9 @@ class Vmidc: ObservableObject {
 
     func stop() {
         print("VMIDC stopped")
-        
-        WKInterfaceDevice.current().play(.failure)
-        
+        #if os(watchOS)
+            WKInterfaceDevice.current().play(.failure)
+        #endif
         DispatchQueue.main.async {
             self.appState.isRecording = false
         }
@@ -407,7 +409,9 @@ class Vmidc: ObservableObject {
                           }
                           
                       } else if let data = json["data"] as? [String: String], !data.isEmpty { // 곡 찾았을 때
+                        #if os(watchOS)
                           WKInterfaceDevice.current().play(.success)
+                        #endif
                           DispatchQueue.main.async { [weak self] in
                               self?.stop()
                               self?.foundSongData = data
@@ -422,15 +426,6 @@ class Vmidc: ObservableObject {
                           Task {
                               print("send Count :::::: \(sendCount)")
                               // 데이터 갈아치우고 다시 start()
-
-                                  
-//                              audioEngine?.stop()
-//                              audioEngine?.inputNode.removeTap(onBus: 0)
-//                              audioEngine = nil
-                              
-                              
-//                              wbuf.clear()
-//                              dna.clear()
                               
                               print("5보다 작아서 계속 시작 함 @@")
                               DispatchQueue.main.async {

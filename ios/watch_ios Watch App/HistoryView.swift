@@ -85,7 +85,6 @@ struct HistoryView: View {
     @State private var itemsPerPage = 5
     
     @State private var isLoadingMore = false
-    @State private var showToast = false
     
     @State private var uuid: String? = nil
 
@@ -146,22 +145,6 @@ struct HistoryView: View {
                 }
                 fetchHistory()
             }
-            .overlay(
-                Group {
-                    if showToast {
-                        Text("기록이 삭제되었습니다")
-                            .padding()
-                            .background(Color.black.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                            .transition(.opacity)
-                            .zIndex(1)
-                    }
-                }
-                .animation(.easeInOut(duration: 0.3), value: showToast)
-                , alignment: .top
-            )
-
         }
         
     }
@@ -224,14 +207,8 @@ struct HistoryView: View {
                 DispatchQueue.main.async {
                     isLoading = false
                     fetchHistory()
-
-                    showToast = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        showToast = false
-                    }
                 }
             }
-
             if let error = error {
                 print("삭제 요청 실패: \(error.localizedDescription)")
                 return

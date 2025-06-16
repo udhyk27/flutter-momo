@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:momo_final/src/services/watch_service.dart';
 
 import 'src/controller/home_controller.dart';
 import 'src/screens/main_page.dart';
@@ -32,39 +30,6 @@ void main() async {
   await apiService.getApiData();
 
   Get.put(HomeController());
-
-  // 애플워치
-  // WatchService watchService = WatchService();
-  // watchService.init(); // 이벤트 수신 초기화
-  // 워치
-  // watchService.onAudioDataReceived = (audioData) {
-  //   print("오디오 데이터 수신 완료! 데이터 길이: ${audioData.length}");
-
-    // audioData의 바이트 출력 (base64로 인코딩해서 출력할 수도 있음)
-    // String base64String = base64Encode(audioData);
-    // print("오디오 데이터 (Base64 인코딩): $base64String");
-
-    // 추가적으로 raw 데이터 확인 (바이트 배열로 출력)
-    // print("오디오 데이터 (Raw 바이트): ${audioData}");
-
-  // };
-
-  // BluetoothReceiver.init((result) {
-  //   if (result['data'] != '' && result.containsKey('data')) {
-  //
-  //     print("곡 정보: ${result['data']}");
-  //     print('호출됨 @@@@@@#####');
-  //
-  //     // const MethodChannel _channel = MethodChannel('com.example.clone_momo_app/bluetooth');
-  //     // _channel.invokeMethod('songResultResponse', jsonEncode(result['data']));
-  //
-  //     print("(폰 플러터) 서버에서 받은 결과값 플러터 => 코틀린으로 전송 !!");
-  //
-  //   } else {
-  //     print("곡 정보 없음: ${result['err_msg'] ?? result['error']}");
-  //   }
-  // });
-
   runApp(MyApp());
 }
 

@@ -42,8 +42,9 @@ class _SongInfoState extends State<SongInfo> {
         });
       },
       child: Scaffold(
-        backgroundColor: const Color.fromRGBO(62, 195, 255, 1.0),
-        body: ListView(
+        // backgroundColor: const Color.fromRGBO(62, 195, 255, 1.0),
+          backgroundColor: Colors.black,
+          body: ListView(
           children: [
             AspectRatio(
               aspectRatio: 1,
@@ -52,48 +53,51 @@ class _SongInfoState extends State<SongInfo> {
                 child: Stack (
                   children: [
 
-                    ExtendedImage.network(
-                      widget.song['IMAGE'] ?? '',
-                      fit: BoxFit.cover,
+                    Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: ExtendedImage.network(
+                        widget.song['IMAGE'] ?? '',
+                        fit: BoxFit.contain,
 
-                      loadStateChanged: (state) {
-                        switch (state.extendedImageLoadState) {
-                          case LoadState.loading:
-                          // 로딩 중일 때 보여줄 커스텀 위젯
-                            return Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: gradientColors
-                                )
-                              ),
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(width: mediaWidth * 0.5, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
-                                  Text("로딩 중...", style: TextStyle(color: Colors.white, fontFamily: 'NotoSansKR-Regular',)),
-                                ],
-                              ),
-                            );
+                        loadStateChanged: (state) {
+                          switch (state.extendedImageLoadState) {
+                            case LoadState.loading:
+                            // 로딩 중일 때 보여줄 커스텀 위젯
+                              return Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: gradientColors
+                                  )
+                                ),
+                                alignment: Alignment.center,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(width: mediaWidth * 0.5, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
+                                    Text("로딩 중...", style: TextStyle(color: Colors.white, fontFamily: 'NotoSansKR-Regular',)),
+                                  ],
+                                ),
+                              );
 
-                          case LoadState.completed:
-                            if (!imageLoaded) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                if (mounted) {
-                                  setState(() {
-                                    imageLoaded = true;
-                                  });
-                                }
-                              });
-                            }
-                            return null; // 기본 이미지 렌더링
+                            case LoadState.completed:
+                              if (!imageLoaded) {
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  if (mounted) {
+                                    setState(() {
+                                      imageLoaded = true;
+                                    });
+                                  }
+                                });
+                              }
+                              return null; // 기본 이미지 렌더링
 
-                          case LoadState.failed:
-                            return Image.asset('assets/no_image.png', fit: BoxFit.cover);
-                        }
-                      },
+                            case LoadState.failed:
+                              return Image.asset('assets/no_image.png', fit: BoxFit.cover);
+                          }
+                        },
+                      ),
                     ),
                     if (imageLoaded)
                       Positioned(
