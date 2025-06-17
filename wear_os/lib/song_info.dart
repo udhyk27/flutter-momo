@@ -53,38 +53,41 @@ class _SongInfoState extends State<SongInfo> {
                     child: AspectRatio(
                     aspectRatio: 1,
                     child:
-                      ExtendedImage.network(
-                        widget.song['IMAGE'] ?? '',
-                        // fit: BoxFit.cover,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: ExtendedImage.network(
+                          widget.song['IMAGE'] ?? '',
+                          fit: BoxFit.cover,
 
-                        loadStateChanged: (state) {
-                          switch (state.extendedImageLoadState) {
-                            case LoadState.loading:
-                            // 로딩 중일 때 보여줄 커스텀 위젯
-                              return Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.black
-                                ),
-                                alignment: Alignment.center,
-                                child: Text("로딩 중...", style: TextStyle(color: Colors.white, fontFamily: 'NotoSansKR-Regular',)),
-                              );
+                          loadStateChanged: (state) {
+                            switch (state.extendedImageLoadState) {
+                              case LoadState.loading:
+                              // 로딩 중일 때 보여줄 커스텀 위젯
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text("로딩 중...", style: TextStyle(color: Colors.white, fontFamily: 'NotoSansKR-Regular',)),
+                                );
 
-                            case LoadState.completed:
-                              if (!imageLoaded) {
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
-                                  if (mounted) {
-                                    setState(() {
-                                      imageLoaded = true;
-                                    });
-                                  }
-                                });
-                              }
-                              return null; // 기본 이미지 렌더링
+                              case LoadState.completed:
+                                if (!imageLoaded) {
+                                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                                    if (mounted) {
+                                      setState(() {
+                                        imageLoaded = true;
+                                      });
+                                    }
+                                  });
+                                }
+                                return null; // 기본 이미지 렌더링
 
-                            case LoadState.failed:
-                              return Image.asset('assets/no_image.png', fit: BoxFit.cover);
-                          }
-                        },
+                              case LoadState.failed:
+                                return Image.asset('assets/no_image.png', fit: BoxFit.cover);
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
