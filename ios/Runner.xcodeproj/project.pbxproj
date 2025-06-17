@@ -15,9 +15,10 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		ABD06CE31FC6F20B911261AB /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07B153F3B5D8916D13731C88 /* Pods_RunnerTests.framework */; };
+		DF65BE602DFFDD1000AE54CA /* native.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFE43BF62DE694F90096DDCC /* native.cpp */; };
+		DF65BE612DFFE6F200AE54CA /* watch_ios Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DFE43BFF2DE6EA1B0096DDCC /* watch_ios Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DF86D0B22DE42629003961D7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF86D0B12DE42629003961D7 /* GoogleService-Info.plist */; };
 		DF9A0EC02DFBCA6B00831F77 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = DF9A0EBF2DFBCA6B00831F77 /* Kingfisher */; };
-		DFE43BFA2DE694F90096DDCC /* native.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFE43BF62DE694F90096DDCC /* native.cpp */; };
 		F4DDD1721DDC0025A7A76422 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B5B38E1092773D39F8C82F5 /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
+		};
+		DF65BE622DFFE6F200AE54CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DFE43BFE2DE6EA1B0096DDCC;
+			remoteInfo = "watch_ios Watch App";
+		};
+		DF65BE652DFFE6FA00AE54CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DFE43BFE2DE6EA1B0096DDCC;
+			remoteInfo = "watch_ios Watch App";
 		};
 		DFE43C0F2DE6EA1E0096DDCC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -62,6 +77,17 @@
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DF65BE642DFFE6F200AE54CA /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				DF65BE612DFFE6F200AE54CA /* watch_ios Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -103,9 +129,22 @@
 		DFE43C182DE6EA1E0096DDCC /* watch_ios Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watch_ios Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DF65BE9A2DFFF65900AE54CA /* Exceptions for "watch_ios Watch App" folder in "watch_ios Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DFE43BFE2DE6EA1B0096DDCC /* watch_ios Watch App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DFE43C002DE6EA1B0096DDCC /* watch_ios Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DF65BE9A2DFFF65900AE54CA /* Exceptions for "watch_ios Watch App" folder in "watch_ios Watch App" target */,
+			);
 			path = "watch_ios Watch App";
 			sourceTree = "<group>";
 		};
@@ -295,14 +334,17 @@
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
-				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				A60441BAAA3E8022E7A41CFC /* [CP] Embed Pods Frameworks */,
 				5E799E086128B45C8E580832 /* [CP] Copy Pods Resources */,
+				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
+				DF65BE642DFFE6F200AE54CA /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				DFE43C212DE6EA1E0096DDCC /* PBXTargetDependency */,
+				DF65BE632DFFE6F200AE54CA /* PBXTargetDependency */,
+				DF65BE662DFFE6FA00AE54CA /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
@@ -506,6 +548,7 @@
 			);
 			name = "Thin Binary";
 			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(EXECUTABLE_PATH)",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -597,9 +640,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF65BE602DFFDD1000AE54CA /* native.cpp in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
-				DFE43BFA2DE694F90096DDCC /* native.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,6 +674,16 @@
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
+		};
+		DF65BE632DFFE6F200AE54CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DFE43BFE2DE6EA1B0096DDCC /* watch_ios Watch App */;
+			targetProxy = DF65BE622DFFE6F200AE54CA /* PBXContainerItemProxy */;
+		};
+		DF65BE662DFFE6FA00AE54CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DFE43BFE2DE6EA1B0096DDCC /* watch_ios Watch App */;
+			targetProxy = DF65BE652DFFE6FA00AE54CA /* PBXContainerItemProxy */;
 		};
 		DFE43C102DE6EA1E0096DDCC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -715,6 +768,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SUPPORTED_PLATFORMS = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -727,7 +781,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 33;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = AH88P8729J;
 				ENABLE_BITCODE = NO;
@@ -777,7 +831,7 @@
 					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
 					"$(inherited)",
 					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
-					"$(SRCROOT)/ios/Classes",
+					"$(SRCROOT)/Runner/Classes/**",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
@@ -790,6 +844,7 @@
 				MARKETING_VERSION = 1.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oneidlab.Momo.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -902,6 +957,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -952,6 +1008,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -966,7 +1023,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 33;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = AH88P8729J;
 				ENABLE_BITCODE = NO;
@@ -1016,7 +1073,7 @@
 					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
 					"$(inherited)",
 					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
-					"$(SRCROOT)/ios/Classes",
+					"$(SRCROOT)/Runner/Classes/**",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
@@ -1029,6 +1086,7 @@
 				MARKETING_VERSION = 1.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oneidlab.Momo.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1042,7 +1100,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 33;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = AH88P8729J;
 				ENABLE_BITCODE = NO;
@@ -1092,7 +1150,7 @@
 					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
 					"$(inherited)",
 					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
-					"$(SRCROOT)/ios/Classes",
+					"$(SRCROOT)/Runner/Classes/**",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
@@ -1105,6 +1163,7 @@
 				MARKETING_VERSION = 1.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oneidlab.Momo.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1131,9 +1190,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/ios/watch_ios Watch App/Classes/native.h\"";
-				INFOPLIST_FILE = "watch-ios-Watch-App-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/watch_ios Watch App/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음악을 인식하기 위해 마이크 권한을 허용해주세요.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -1152,6 +1211,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "watch_ios Watch App/Classes/watch_ios Watch App-Bridging-Header.h";
@@ -1182,9 +1242,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/ios/watch_ios Watch App/Classes/native.h\"";
-				INFOPLIST_FILE = "watch-ios-Watch-App-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/watch_ios Watch App/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음악을 인식하기 위해 마이크 권한을 허용해주세요.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -1202,6 +1262,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "watch_ios Watch App/Classes/watch_ios Watch App-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1230,9 +1291,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/ios/watch_ios Watch App/Classes/native.h\"";
-				INFOPLIST_FILE = "watch-ios-Watch-App-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/watch_ios Watch App/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Momo;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음성 분석을 위해 마이크 접근이 필요합니다.\n음악을 인식하기 위해 마이크 권한을 허용해주세요.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -1250,6 +1311,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "watch_ios Watch App/Classes/watch_ios Watch App-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

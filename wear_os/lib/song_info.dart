@@ -21,8 +21,6 @@ class _SongInfoState extends State<SongInfo> {
   List<Color> gradientColors = [
     Color.fromRGBO(62, 195, 255, 1.0), // 위쪽 색
     Color.fromRGBO(194, 40, 222, 1.0), // 아래쪽 색
-    // Color.fromRGBO(0, 0, 0, 1.0),
-    // Color.fromRGBO(158, 158, 158, 1.0)
   ];
 
   bool showIcon = false;
@@ -42,22 +40,22 @@ class _SongInfoState extends State<SongInfo> {
         });
       },
       child: Scaffold(
-        // backgroundColor: const Color.fromRGBO(62, 195, 255, 1.0),
-          backgroundColor: Colors.black,
-          body: ListView(
-          children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Stack (
-                  children: [
-
-                    Padding(
-                      padding: const EdgeInsets.all(30.0),
-                      child: ExtendedImage.network(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: SizedBox(
+                    height: mediaHeight * 0.6,
+                    child: AspectRatio(
+                    aspectRatio: 1,
+                    child:
+                      ExtendedImage.network(
                         widget.song['IMAGE'] ?? '',
-                        fit: BoxFit.contain,
+                        // fit: BoxFit.cover,
 
                         loadStateChanged: (state) {
                           switch (state.extendedImageLoadState) {
@@ -65,20 +63,10 @@ class _SongInfoState extends State<SongInfo> {
                             // 로딩 중일 때 보여줄 커스텀 위젯
                               return Container(
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: gradientColors
-                                  )
+                                  color: Colors.black
                                 ),
                                 alignment: Alignment.center,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(width: mediaWidth * 0.5, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
-                                    Text("로딩 중...", style: TextStyle(color: Colors.white, fontFamily: 'NotoSansKR-Regular',)),
-                                  ],
-                                ),
+                                child: Text("로딩 중...", style: TextStyle(color: Colors.white, fontFamily: 'NotoSansKR-Regular',)),
                               );
 
                             case LoadState.completed:
@@ -99,100 +87,42 @@ class _SongInfoState extends State<SongInfo> {
                         },
                       ),
                     ),
-                    if (imageLoaded)
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: mediaHeight * 0.5, // 원하는 높이만큼
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.transparent,
-                                Colors.black.withValues(alpha: 1.0),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                  ),
+                ),
+          if (imageLoaded)
+            SizedBox(
+              width: mediaWidth * 0.6,
+              child: Text(
+                widget.song['TITLE'] ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.sp,
+                ),
+              ),
+            ),
 
-                    if (imageLoaded)
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: 30,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Center(
-                              child: SizedBox(
-                                width: mediaWidth * 0.8,
-                                child: Text(
-                                  widget.song['TITLE'] ?? '',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16.sp,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Center(
-                              child: SizedBox(
-                                width: mediaWidth * 0.6,
-                                child: Text(
-                                  widget.song['ARTIST'] ?? '',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white60,
-                                    fontSize: 12.sp,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-
-                    if (showIcon)
-                      Positioned(
-                        top: mediaHeight / 2  - mediaHeight / 4 - 30,
-                        right: mediaWidth / 2 - 15,
-                        child: Container(
-                          width: 30,
-                          decoration: BoxDecoration(
-                            color: Colors.white60,
-                            shape: BoxShape.circle
-                          ),
-                          child: IconButton(
-                            padding: EdgeInsets.all(2),
-                            constraints: BoxConstraints(),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: Icon(
-                              Icons.close_rounded,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                )
+          if (imageLoaded)
+            SizedBox(
+              width: mediaWidth * 0.4,
+              child: Text(
+                widget.song['ARTIST'] ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white60,
+                  fontSize: 12.sp,
+                ),
               ),
             ),
           ],
-        ),
+        )
       ),
-    );;
+    )
+    );
   }
 }

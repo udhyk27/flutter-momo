@@ -247,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                         left: 0,
                         right: 0,
                         child: Text(
-                          "곡을 찾으려면 모모를 눌러주세요",
+                          "모모를 눌러주세요",
                           style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
                           textAlign: TextAlign.center,
                         ),
