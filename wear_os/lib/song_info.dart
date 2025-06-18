@@ -54,7 +54,7 @@ class _SongInfoState extends State<SongInfo> {
                     aspectRatio: 1,
                     child:
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(15),
                         child: ExtendedImage.network(
                           widget.song['IMAGE'] ?? '',
                           fit: BoxFit.cover,

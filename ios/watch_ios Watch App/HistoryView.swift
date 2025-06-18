@@ -1,5 +1,4 @@
 import SwiftUI
-import Kingfisher
 
 struct HistoryItem: Decodable, Identifiable {
     let id = UUID() // 고유 ID 부여
@@ -28,23 +27,12 @@ struct HistoryRowView: View {
                     .clipped()
                     .cornerRadius(12)
             } else {
-                KFImage(URL(string: item.image))
-                    .placeholder {
-                        ProgressView()
-                            .frame(height: 120)
-                            .frame(maxWidth: .infinity)
-                            .background(Color.gray.opacity(0.3))
-                            .cornerRadius(12)
-                    }
-                    .onFailure { error in
-                        print("이미지 로딩 실패: \(error)")
-                        loadFailed = true
-                    }
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 120)
-                    .clipped()
-                    .cornerRadius(12)
+                AsyncImageView(url: URL(string: item.image)) {
+                    loadFailed = true
+                }
+                .frame(height: 120)
+                .clipped()
+                .cornerRadius(12)
             }
             
             VStack(alignment: .leading, spacing: 2) {
@@ -71,6 +59,73 @@ struct HistoryRowView: View {
         .frame(height: 120)
         .clipped()
         .cornerRadius(12)
+    }
+}
+
+struct AsyncImageView: View {
+    let url: URL?
+    var onFail: (() -> Void)? = nil
+    
+    @State private var image: Image?
+    @State private var isLoading = false
+    
+    var body: some View {
+        Group {
+            if let image = image {
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } else if isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.gray.opacity(0.3))
+            } else {
+                Color.gray.opacity(0.3)
+                    .onAppear { loadImage() }
+            }
+        }
+    }
+    
+    func loadImage() {
+        guard let url = url else {
+            onFail?()
+            return
+        }
+        
+        isLoading = true
+        
+        if let cached = ImageCache.shared.get(forKey: url.absoluteString) {
+            self.image = Image(uiImage: cached)
+            return
+        }
+        
+        let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 10)
+        URLSession.shared.dataTask(with: request) { data, _, _ in
+            DispatchQueue.main.async {
+                if let data = data, let uiImage = UIImage(data: data) {
+                    ImageCache.shared.set(forKey: url.absoluteString, image: uiImage)
+                    self.image = Image(uiImage: uiImage)
+                } else {
+                    onFail?()
+                }
+                isLoading = false
+            }
+        }.resume()
+    }
+    
+    class ImageCache {
+        static let shared = ImageCache()
+        private init() {}
+
+        private var cache = NSCache<NSString, UIImage>()
+
+        func get(forKey key: String) -> UIImage? {
+            return cache.object(forKey: NSString(string: key))
+        }
+
+        func set(forKey key: String, image: UIImage) {
+            cache.setObject(image, forKey: NSString(string: key))
+        }
     }
 }
 
@@ -148,6 +203,13 @@ struct HistoryView: View {
         }
         
     }
+    
+    
+
+        
+    
+    
+
 
     func fetchHistory() {
         guard let uid = uuid,
