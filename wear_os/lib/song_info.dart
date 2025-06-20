@@ -23,7 +23,7 @@ class _SongInfoState extends State<SongInfo> {
     Color.fromRGBO(194, 40, 222, 1.0), // 아래쪽 색
   ];
 
-  bool showIcon = false;
+  // bool showIcon = false;
   bool imageLoaded = false;
 
   @override
@@ -36,7 +36,7 @@ class _SongInfoState extends State<SongInfo> {
       behavior: HitTestBehavior.opaque, // 전체 화면 터치 감지
       onTap: () {
         setState(() {
-          showIcon = !showIcon;
+          // showIcon = !showIcon;
         });
       },
       child: Scaffold(
@@ -93,35 +93,35 @@ class _SongInfoState extends State<SongInfo> {
                   ),
                 ),
           if (imageLoaded)
-            SizedBox(
-              width: mediaWidth * 0.6,
-              child: Text(
-                widget.song['TITLE'] ?? '',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16.sp,
+              SizedBox(
+                width: mediaWidth * 0.6,
+                child: Text(
+                  widget.song['TITLE'] ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15.sp,
+                  ),
                 ),
               ),
-            ),
 
-          if (imageLoaded)
-            SizedBox(
-              width: mediaWidth * 0.4,
-              child: Text(
-                widget.song['ARTIST'] ?? '',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white60,
-                  fontSize: 12.sp,
+            if (imageLoaded)
+              SizedBox(
+                width: mediaWidth * 0.4,
+                child: Text(
+                  widget.song['ARTIST'] ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white60,
+                    fontSize: 12.sp,
+                  ),
                 ),
-              ),
-            ),
+              )
           ],
         )
       ),

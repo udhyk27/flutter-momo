@@ -1,0 +1,3 @@
+// Release-watchOS.xcconfig
+
+#include "Release.xcconfig"   // iOS 공통 Release 설정 포함

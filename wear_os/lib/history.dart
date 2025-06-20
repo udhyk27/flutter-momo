@@ -102,8 +102,6 @@ class _HistoryState extends State<History> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -181,6 +179,7 @@ class _HistoryState extends State<History> {
 
                 child: ListView.builder(
                   padding: EdgeInsets.only(bottom: 10.0),
+                  controller: _scrollController,
                   itemCount: totalCount,
                   itemBuilder: (context, index) {
                     if (index == 0) {
@@ -189,7 +188,7 @@ class _HistoryState extends State<History> {
                         child: Center(
                           child: Text(
                             '히스토리',
-                            style: TextStyle(fontSize: 15.sp, color: Colors.white, fontWeight: FontWeight.w500),
+                            style: TextStyle(fontSize: 15.sp, color: Colors.white, fontWeight: FontWeight.w600),
                           ),
                         ),
                       );
