@@ -1,13 +1,13 @@
 //
-//  watchOS_Watch_AppUITestsLaunchTests.swift
-//  watchOS Watch AppUITests
+//  watchkitapp_Watch_AppUITestsLaunchTests.swift
+//  watchkitapp Watch AppUITests
 //
-//  Created by 방경식 on 6/18/25.
+//  Created by 방경식 on 6/24/25.
 //
 
 import XCTest
 
-final class watchOS_Watch_AppUITestsLaunchTests: XCTestCase {
+final class watchkitapp_Watch_AppUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

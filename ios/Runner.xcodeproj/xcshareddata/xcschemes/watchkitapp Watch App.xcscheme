@@ -15,9 +15,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DF10F8482E027EA400534244"
-               BuildableName = "watchOS Watch App.app"
-               BlueprintName = "watchOS Watch App"
+               BlueprintIdentifier = "DF4661DF2E0A6DDE00981289"
+               BuildableName = "watchkitapp Watch App.app"
+               BlueprintName = "watchkitapp Watch App"
+               ReferencedContainer = "container:Runner.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "97C146ED1CF9000F007C117D"
+               BuildableName = "Runner.app"
+               BlueprintName = "Runner"
                ReferencedContainer = "container:Runner.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -35,9 +49,9 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DF10F8572E027EA600534244"
-               BuildableName = "watchOS Watch AppTests.xctest"
-               BlueprintName = "watchOS Watch AppTests"
+               BlueprintIdentifier = "DF4661EE2E0A6DE000981289"
+               BuildableName = "watchkitapp Watch AppTests.xctest"
+               BlueprintName = "watchkitapp Watch AppTests"
                ReferencedContainer = "container:Runner.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -46,9 +60,9 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DF10F8612E027EA600534244"
-               BuildableName = "watchOS Watch AppUITests.xctest"
-               BlueprintName = "watchOS Watch AppUITests"
+               BlueprintIdentifier = "DF4661F82E0A6DE000981289"
+               BuildableName = "watchkitapp Watch AppUITests.xctest"
+               BlueprintName = "watchkitapp Watch AppUITests"
                ReferencedContainer = "container:Runner.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -68,9 +82,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DF10F8482E027EA400534244"
-            BuildableName = "watchOS Watch App.app"
-            BlueprintName = "watchOS Watch App"
+            BlueprintIdentifier = "DF4661DF2E0A6DDE00981289"
+            BuildableName = "watchkitapp Watch App.app"
+            BlueprintName = "watchkitapp Watch App"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -85,9 +99,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DF10F8482E027EA400534244"
-            BuildableName = "watchOS Watch App.app"
-            BlueprintName = "watchOS Watch App"
+            BlueprintIdentifier = "DF4661DF2E0A6DDE00981289"
+            BuildableName = "watchkitapp Watch App.app"
+            BlueprintName = "watchkitapp Watch App"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

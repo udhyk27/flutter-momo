@@ -90,7 +90,5 @@
 	<array>
 		<string>watch-connectivity</string>
 	</array>
-	<key>WKCompanionAppBundleIdentifier</key>
-	<string>com.oneidlab.Momo.iOS.watchkitapp</string>
 </dict>
 </plist>
