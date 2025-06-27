@@ -15,13 +15,13 @@
 	<key>CFBundleName</key>
 	<string>watchOS</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
+	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>WatchOS</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>음악을 인식하기 위해 마이크 권한을 허용해주세요.</string>
 	<key>WKApplication</key>
@@ -32,5 +32,7 @@
 	<array>
 		<integer>4</integer>
 	</array>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
 </dict>
 </plist>
