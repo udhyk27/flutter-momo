@@ -26,11 +26,13 @@ struct ContentView: View {
                 VStack {
                     Spacer()
                     
-                    Text("모모를 눌러주세요")
-                        .foregroundColor(.white)
-                        .font(.headline)
-                        .padding(.bottom, 8)  // 버튼과의 간격
-
+                    if !appState.isRecording {
+                        Text("모모를 눌러주세요")
+                            .foregroundColor(.white)
+                            .font(.headline)
+                            .padding(.bottom, 8)  // 버튼과의 간격
+                    }
+                    
                     
                     Button(action: {
                         if appState.isRecording {
