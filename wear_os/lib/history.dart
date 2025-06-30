@@ -237,33 +237,44 @@ class _HistoryState extends State<History> {
                                       content: SizedBox(
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               "삭제하시겠습니까?",
-                                              style: TextStyle(
-                                                fontSize: 14.sp,
-                                              ),
+                                              style: TextStyle(fontSize: 14.sp),
                                               textAlign: TextAlign.center,
                                             ),
+                                            SizedBox(height: 20),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: TextButton(
+                                                    onPressed: () async {
+                                                      Navigator.of(context).pop();
+                                                      await delHistory();
+                                                    },
+                                                    child: Text(
+                                                      "확인",
+                                                      style: TextStyle(color: Colors.black26, fontSize: 10.sp),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                  child: TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    child: Text(
+                                                      "취소",
+                                                      style: TextStyle(color: Colors.black26, fontSize: 10.sp),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
                                           ],
                                         ),
                                       ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () async {
-                                            Navigator.of(context).pop(); // 알림창 닫기
-                                            await delHistory();
-                                          },
-                                          child: Text("확인", style: TextStyle(color: Colors.black26,fontSize: 10.sp,),),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(); // 취소 시 그냥 닫기
-                                          },
-                                          child: Text("취소", style: TextStyle(color: Colors.black26,fontSize: 10.sp,), ),
-                                        ),
-                                      ],
                                     );
                                   },
                                 );
