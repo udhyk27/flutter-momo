@@ -45,6 +45,7 @@ struct SongInfoView: View {
                                 .foregroundColor(.white)
                                 .lineLimit(1)
                                 .truncationMode(.tail)
+                                .minimumScaleFactor(0.9)
 
                             if showCloseButton {
                                 Button(action: {
@@ -61,10 +62,11 @@ struct SongInfoView: View {
                                     .foregroundColor(.white)
                                     .lineLimit(1)
                                     .truncationMode(.tail)
+                                    .minimumScaleFactor(0.8)
                             }
                         }
                         .padding(.bottom, 20)
-                        .padding(.horizontal, 20),
+                        .padding(.horizontal, 10),
                         alignment: .bottom
                     )
                 }
