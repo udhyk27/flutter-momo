@@ -146,7 +146,7 @@ struct HistoryView: View {
     @State private var showDeleteAlert = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Group {
                 if isLoading {
                     ProgressView("불러오는 중...")
