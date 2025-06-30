@@ -60,6 +60,8 @@ struct ContentView: View {
                     }
                     .buttonStyle(.plain)
                     Spacer()
+                    Spacer()
+                    Spacer()
                 }
                 
                 VStack {
@@ -82,8 +84,6 @@ struct ContentView: View {
                             .buttonStyle(.plain)
                         }
                     }
-
-                    
                     Spacer()
                 }
             

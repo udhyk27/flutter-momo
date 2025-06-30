@@ -142,6 +142,8 @@ struct HistoryView: View {
     @State private var isLoadingMore = false
     
     @State private var uuid: String? = nil
+    
+    @State private var showDeleteAlert = false
 
     var body: some View {
         NavigationView {
@@ -177,7 +179,7 @@ struct HistoryView: View {
                         
                         // 삭제 버튼을 맨 위 셀로
                         Button(action: {
-                            delHistory()
+                            showDeleteAlert = true
                         }) {
                             HStack {
                                 Spacer()
@@ -200,6 +202,16 @@ struct HistoryView: View {
                 }
                 fetchHistory()
             }
+            .alert(isPresented: $showDeleteAlert) {
+                          Alert(
+                              title: Text("정말 삭제하시겠습니까?"),
+                              message: Text("모든 히스토리가 삭제됩니다."),
+                              primaryButton: .destructive(Text("삭제")) {
+                                  delHistory()
+                              },
+                              secondaryButton: .cancel(Text("취소"))
+                          )
+                      }
         }
         
     }
