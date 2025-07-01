@@ -24,7 +24,6 @@ void main() async {
 
   try {
     final networkType = await platform.invokeMethod('getNetworkType');
-    // final networkType = 'bluetooth'; // test
     print('연결된 네트워크: $networkType');
 
     if (networkType != "none") {
