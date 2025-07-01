@@ -293,15 +293,15 @@ class _ChartScreenState extends State<ChartScreen> {
             ),
           ),
 
-          Container(
-            height: 80,
+          SizedBox(
+            height: 60,
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 _currentText,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color.fromRGBO(200, 200, 200, 1.0),
+                  color: Color.fromRGBO(150, 150, 150, 1.0),
                 ),
               ),
             ),

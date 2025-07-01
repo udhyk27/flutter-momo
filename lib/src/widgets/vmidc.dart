@@ -102,7 +102,6 @@ class VMIDC {
     Map m = await sendDnaToServer(_dna.pack());
     // print('API 응답 시간: ${DateTime.now()}');
     print('돌아온 값 :: $m');
-    // print('dna.length: ${_dna.length}, elapsed: ${DateTime.now()}');
 
     // 에러 메시지가 존재할 때
     if (m['err_msg'] != '') {
@@ -128,10 +127,6 @@ class VMIDC {
 
   // HTTP 요청 함수
   Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
-
-    // print(${base64Encode(Uint8List.fromList(dna))}');
-    // print(Uint8List.fromList(dna).length);
-
     final arr = { // 서버로 전송할 값
       'uid' : MyApp.uid,
       'req_times' : num,

@@ -12,8 +12,7 @@ class BluetoothReceiver {
       _channel.setMethodCallHandler((MethodCall call) async {
         if (call.method == "onBluetoothData") {
           String receivedData = call.arguments;
-          print('폰 Flutter에서 수신 !!');
-          print("수신된 데이터: $receivedData");
+          print("폰 Flutter 수신된 데이터: $receivedData");
 
           final headers = {'Content-Type': 'application/json'};
           final response = await http.post(
@@ -26,8 +25,6 @@ class BluetoothReceiver {
           );
 
           final result = jsonDecode(response.body);
-
-
           print("서버와 통신한 값 :: $result");
 
           onDataReceived(result); // 여기서 데이터를 외부로 전달함

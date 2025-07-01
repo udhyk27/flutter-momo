@@ -91,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override // 페이지가 종료될 때에만 리소스 해제
   void dispose()  {
+    controller.changeState(1);
     _vmidc.dispose();
     super.dispose();
   }
@@ -307,22 +308,22 @@ _showDialog(BuildContext context) { // 휴대폰 권한설정으로 이동
                         TextSpan(
                             text: '음악 인식을 위해 마이크 권한을 ',
                             style: TextStyle(
-                                color: themeValue == 2 ? Colors.white : Colors.black,
-                                fontSize: 17
+                              color: themeValue == 2 ? Colors.white : Colors.black,
+                              fontSize: 17
                             )
                         ),
                         TextSpan(
                             text: '허용',
                             style: TextStyle(
-                                color: themeValue == 2 ? Colors.white : Colors.black,
-                                fontSize: 17
+                              color: themeValue == 2 ? Colors.white : Colors.black,
+                              fontSize: 17
                             )
                         ),
                         TextSpan(
                             text: ' 해주세요',
                             style: TextStyle(
-                                color: themeValue == 2 ? Colors.white : Colors.black,
-                                fontSize: 17
+                              color: themeValue == 2 ? Colors.white : Colors.black,
+                              fontSize: 17
                             )
                         )
                       ]
