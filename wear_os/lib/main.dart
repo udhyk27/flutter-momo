@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       if (Get.find<RecController>().networkType.value == 'bluetooth') {
         try {
           print('bluetooth인데 앱 종료됨 !!');
-          final result = await platform.invokeMethod('endSession'); // 블루투스 연결 및 소켓 닫기 // # 수정 예정
+          final result = await platform.invokeMethod('endSession'); // 블루투스 연결 및 소켓 닫기
           print('앱종료 $result');
         } catch (e) {
           print("블루투스 세션 닫기 에러 :: $e");
@@ -228,7 +228,6 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(width: MediaQuery.of(context).size.width * 0.5, child: Image.asset('assets/loading2_blue.gif', fit: BoxFit.contain,)),
-                      // SizedBox(child: CircularProgressIndicator(strokeWidth: 2.0,color: Colors.white,)),SizedBox(height: 20,),
                       Text(
                         '노래 분석 중',
                         style: TextStyle(

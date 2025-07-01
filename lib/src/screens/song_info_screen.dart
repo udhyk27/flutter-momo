@@ -218,7 +218,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
           IconButton(
             onPressed: () { // 공유
               Share.share(
-                  'Momo\n${ApiService.shareUrl}?f_id=${widget.song.songId}\n\n${ApiService.share_msgUrl}',
+                  '${ApiService.shareUrl}?f_id=${widget.song.songId}',
                   sharePositionOrigin:
                   Rect.fromLTRB(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5)
               );

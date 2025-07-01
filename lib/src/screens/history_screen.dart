@@ -97,7 +97,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void searchSongs(String query) {
     if (query.isNotEmpty) {
       setState(() {
-        searchList = searchList.where((song) {
+        searchList = fullSearchList.where((song) {
           return song.title.toLowerCase().contains(query.toLowerCase()) ||
             song.album.toLowerCase().contains(query.toLowerCase()) ||
             song.artist.toLowerCase().contains(query.toLowerCase());
@@ -170,7 +170,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             Navigator.of(context).pop();
 
                             try {
-                              // http.Response response = await http.get(Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}&id=${songId}&h_id=${index}&proc=del'));
                               http.Response response = await http.get(Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}&id=${songId}&proc=del'));
                               if (response.statusCode == 200) {
                                 setState(() {
@@ -229,8 +228,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
               autofocus: false,
               inputFormatters: [FilteringTextInputFormatter.allow(basicReg)],
 
-              // onFieldSubmitted: (value) {
-              //   searchSongs(value); // 엔터 입력 시 검색
               onChanged: (value) { // 바뀔 때 마다 텍스트 전달
                 searchSongs(value);
                 // searchSongs(_controller.text);
