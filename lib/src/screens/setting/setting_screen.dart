@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/response/response.dart';
-import 'package:momo_final/src/screens/setting/terms_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:pub_semver/pub_semver.dart';
@@ -78,7 +76,7 @@ class SettingScreen extends StatefulWidget {
                 child:
                 ListTile(
                   contentPadding: EdgeInsets.only(left:20, bottom: 10),
-                  title: Text('고객센터', style: TextStyle(fontWeight: FontWeight.w900, color: textColor),),
+                  title: Text('고객센터', style: TextStyle(fontWeight: FontWeight.w600, color: textColor),),
                   leading: Image.asset('assets/momo_assets/setting_icon_headphone.png'),
                 ),
               ),
@@ -87,10 +85,6 @@ class SettingScreen extends StatefulWidget {
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
                   context.read<MyAppState>().setPageIdx(4);
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => TermsScreen(gubun: 4)),
-                  // );
                 },
               ),
               ListTile(
@@ -98,10 +92,6 @@ class SettingScreen extends StatefulWidget {
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
                   context.read<MyAppState>().setPageIdx(5);
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => TermsScreen(gubun: 5)),
-                  // );
                 },
               ),
             ],
@@ -124,12 +114,15 @@ class SettingScreen extends StatefulWidget {
                 ),
                 child: ListTile(
                   contentPadding: EdgeInsets.only(left:20, bottom: 10),
-                  title: Text('앱 설정 및 정보', style: TextStyle(fontWeight: FontWeight.w700, color: textColor),),
+                  title: Text('앱 설정 및 정보', style: TextStyle(fontWeight: FontWeight.w600, color: textColor),),
                   leading: Image.asset('assets/momo_assets/setting_icon_mobile.png'),
                 )
               ),
               ListTile(
-                leading: Text('화면 스타일', style: TextStyle(fontSize: 15.0, color: textColor),),
+                leading: Padding(
+                  padding: EdgeInsets.zero,
+                  child: Text('화면 스타일', style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.normal, color: textColor),),
+                ),
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -260,7 +253,6 @@ class SettingScreen extends StatefulWidget {
 
   // Dialog
   void showConfirm(BuildContext context, String msg) {
-    // context, listen: false는 매개변수로 받은 context를 상태관리용으로 받아왔다는 뜻 실제 사용하는 사용값은 아니라는 처리
     int themeValue = Provider.of<MyAppState>(context, listen: false).selectedValue;
 
     double c_width = MediaQuery.of(context).size.width;
@@ -285,7 +277,7 @@ class SettingScreen extends StatefulWidget {
                   child: Center(
                     child: Text(
                       '$msg을 삭제하시겠습니까?',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromRGBO(151, 151, 151, 1)),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black54),
                     ),
                   ),
                 ),
@@ -305,7 +297,7 @@ class SettingScreen extends StatefulWidget {
                         ),
                         child: TextButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: Text('취소',style: TextStyle(fontSize: 16,color: Color.fromRGBO(151, 151, 151, 1)),),
+                          child: Text('취소',style: TextStyle(fontSize: 15, color: Color.fromRGBO(151, 151, 151, 1)),),
                         ),
                       ),
                     ),
@@ -331,7 +323,7 @@ class SettingScreen extends StatefulWidget {
                           );
                           Navigator.of(context).pop();
                         },
-                        child: Text('삭제',style: TextStyle(fontSize: 16,color: Color.fromRGBO(64, 220, 196, 1)),),
+                        child: Text('삭제',style: TextStyle(fontSize: 15, color: Colors.deepOrange),),
                       ),
                     ),
                   ],

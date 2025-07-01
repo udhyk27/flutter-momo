@@ -16,7 +16,7 @@ class ThemeScreen extends StatelessWidget {
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
         height: 160,
-        padding: EdgeInsets.only(left: 20, right: 20),
+        padding: EdgeInsets.only(left: 5),
         decoration: BoxDecoration(
             color: themeValue == 2 ? Color.fromRGBO(90, 90, 90, 1.0) : Colors.white,
             borderRadius: BorderRadius.circular(30)
@@ -26,55 +26,43 @@ class ThemeScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  child: Text('스트로베리'),
-                ),
-                Container(
-                  child: Radio(
-                    activeColor: Colors.blue,
-                    value: 0,
-                    groupValue: appState.selectedValue,
-                    onChanged: ((value) {
-                      appState.setTheme(value as int);
-                    }),
-                  ),
-                )
-              ],
-            ),
-
-            Row(
-              children: [
-                Container(
-                  child: Text('오션블루'),
-                ),
-                Container(
-                  child: Radio(
-                    activeColor: Colors.blue,
-                    value: 1,
-                    groupValue: appState.selectedValue,
-                    onChanged: ((value) {
-                      appState.setTheme(value as int);
-                    }),
-                  ),
-                )
-              ],
-            ),
-
-            Row(
-              children: [
-                Container(
-                  child: Text('다크모드'),
-                ),
-                Container(
-                  child: Radio(
-                    activeColor: Colors.blue,
-                    value: 2,
-                    groupValue: appState.selectedValue,
-                    onChanged: ((value) {
+                Radio(
+                  activeColor: Colors.blue,
+                  value: 0,
+                  groupValue: appState.selectedValue,
+                  onChanged: ((value) {
                     appState.setTheme(value as int);
-                    }),
-                  )
-                )
+                  }),
+                ),
+                Text('스트로베리'),
+              ],
+            ),
+
+            Row(
+              children: [
+                Radio(
+                  activeColor: Colors.blue,
+                  value: 1,
+                  groupValue: appState.selectedValue,
+                  onChanged: ((value) {
+                    appState.setTheme(value as int);
+                  }),
+                ),
+                Text('오션블루'),
+              ],
+            ),
+
+            Row(
+              children: [
+                Radio(
+                  activeColor: Colors.blue,
+                  value: 2,
+                  groupValue: appState.selectedValue,
+                  onChanged: ((value) {
+                  appState.setTheme(value as int);
+                  }),
+                ),
+                Text('다크모드'),
               ],
             ),
 

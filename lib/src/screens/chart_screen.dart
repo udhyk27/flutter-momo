@@ -329,89 +329,94 @@ class _ChartScreenState extends State<ChartScreen> {
                       color: Colors.black,
                       backgroundColor: Colors.white,
                       onRefresh: fetchChart,
-                      child: ListView.builder(
-                          controller: _scrollController, // 컨트롤러 연결
-                          itemCount: momo_sch_list.length,
-                          itemBuilder: (context, index) {
+                      child: Scrollbar(
+                        controller: _scrollController,
+                        thumbVisibility: false,
 
-                            if (index == momo_sch_list.length) {
-                              return isChartLoading
-                                ? Center(child: CircularProgressIndicator())
-                                : SizedBox.shrink(); // 로딩 끝나면 빈 아이템 반환
-                            }
+                        child: ListView.builder(
+                            controller: _scrollController, // 컨트롤러 연결
+                            itemCount: momo_sch_list.length + 1,
 
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailScreen(
-                                title: momo_sch_list[index].title,
-                                artist: momo_sch_list[index].artist,
-                                album: momo_sch_list[index].album,
-                                image: momo_sch_list[index].image,
-                                songId: momo_sch_list[index].songId,
-                                deviceId: _uid.toString()
-                              ),
-                            ),
-                          );
-                        },
+                            itemBuilder: (context, index) {
+                              if (index == momo_sch_list.length) {
+                                return isChartLoading
+                                  ? Center(child: CircularProgressIndicator())
+                                  : SizedBox.shrink(); // 로딩 끝나면 빈 아이템 반환
+                              }
 
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 5),
-                          height: 120,
-                          padding: EdgeInsets.all(10),
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: ExtendedImage.network(
-                                  momo_sch_list[index].image,
-                                  width: 100,
-                                  height: 100,
-                                  loadStateChanged: (state) {
-                                    if (state.extendedImageLoadState == LoadState.failed) {
-                                      return SizedBox(width: 100, height: 100, child: Image.asset('assets/no_image.png'),);
-                                    }
-                                    return null;
-                                  },
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailScreen(
+                                  title: momo_sch_list[index].title,
+                                  artist: momo_sch_list[index].artist,
+                                  album: momo_sch_list[index].album,
+                                  image: momo_sch_list[index].image,
+                                  songId: momo_sch_list[index].songId,
+                                  deviceId: _uid.toString()
                                 ),
                               ),
-                              SizedBox(width: 10,),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center, // 수직 정렬
-                                  crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
-                                  children: [
-                                    Text(
-                                      momo_sch_list[index].title,
-                                      overflow:
-                                      TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                                    ),
-                                    Text(
-                                      momo_sch_list[index].artist,
-                                      overflow:
-                                      TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                                    ),
-                                    Text(
-                                      momo_sch_list[index].album,
-                                      overflow:
-                                      TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyle(fontSize: 13, color: Colors.grey),
-                                    ),
-                                  ],
-                                )
-                              ),
-                            ],
+                            );
+                          },
+
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 5),
+                            height: 120,
+                            padding: EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: ExtendedImage.network(
+                                    momo_sch_list[index].image,
+                                    width: 100,
+                                    height: 100,
+                                    loadStateChanged: (state) {
+                                      if (state.extendedImageLoadState == LoadState.failed) {
+                                        return SizedBox(width: 100, height: 100, child: Image.asset('assets/no_image.png'),);
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                SizedBox(width: 10,),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center, // 수직 정렬
+                                    crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
+                                    children: [
+                                      Text(
+                                        momo_sch_list[index].title,
+                                        overflow:
+                                        TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                                      ),
+                                      Text(
+                                        momo_sch_list[index].artist,
+                                        overflow:
+                                        TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
+                                      ),
+                                      Text(
+                                        momo_sch_list[index].album,
+                                        overflow:
+                                        TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                                      ),
+                                    ],
+                                  )
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
 
@@ -425,85 +430,90 @@ class _ChartScreenState extends State<ChartScreen> {
                   color: Colors.black,
                   backgroundColor: Colors.white,
                   onRefresh: fetchAirChart,
-                  child: ListView.builder(
-                    controller: _scrollController2, // 컨트롤러 연결
-                    itemCount: air_chart.length,
-                    itemBuilder: (context, index) {
+                  child: Scrollbar(
+                    controller: _scrollController,
+                    thumbVisibility: false,
 
-                      if (index == air_chart.length) { // 맨 마지막 item
-                        return isAirChartLoading
-                            ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,))
-                            : SizedBox.shrink(); // 로딩 끝나면 빈 아이템 반환
-                      }
+                    child: ListView.builder(
+                      controller: _scrollController2, // 컨트롤러 연결
+                      itemCount: air_chart.length + 1,
+                      itemBuilder: (context, index) {
 
-                      return Container(
-                        margin: EdgeInsets.only(bottom: 5),
-                        height: 120,
-                        padding: EdgeInsets.all(10),
-                        child: Row(
-                          children: [
+                        if (index == air_chart.length) { // 맨 마지막 item
+                          return isAirChartLoading
+                              ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,))
+                              : SizedBox.shrink(); // 로딩 끝나면 빈 아이템 반환
+                        }
 
-                            Container(
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 5),
+                          height: 120,
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            children: [
 
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10)
-                              ),
+                              Container(
 
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: ExtendedImage.network(
-                                  air_chart[index].fLogo,
-                                  width: 100,
-                                  height: 100,
-                                  loadStateChanged: (state) {
-                                    if (state.extendedImageLoadState == LoadState.failed) {
-                                      return SizedBox(width: 100, height: 100, child: Image.asset('assets/no_image.png'),);
-                                    }
-                                    return null;
-                                  },
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)
+                                ),
+
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: ExtendedImage.network(
+                                    air_chart[index].fLogo,
+                                    width: 100,
+                                    height: 100,
+                                    loadStateChanged: (state) {
+                                      if (state.extendedImageLoadState == LoadState.failed) {
+                                        return SizedBox(width: 100, height: 100, child: Image.asset('assets/no_image.png'),);
+                                      }
+                                      return null;
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 10,),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center, // 수직 정렬
-                                crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
-                                children: [
+                              SizedBox(width: 10,),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center, // 수직 정렬
+                                  crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
+                                  children: [
 
-                                  ExtendedImage.asset(
-                                    air_chart[index].fType == 'TV' ? 'assets/momo_assets/icon_tv.png' : 'assets/momo_assets/icon_radio.png',
-                                    scale: 4.5,
-                                  ),
+                                    ExtendedImage.asset(
+                                      air_chart[index].fType == 'TV' ? 'assets/momo_assets/icon_tv.png' : 'assets/momo_assets/icon_radio.png',
+                                      scale: 4.5,
+                                    ),
 
-                                  Text(
-                                    air_chart[index].fName,
-                                    overflow:
-                                    TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-                                  ),
-                                  Text(
-                                    air_chart[index].sTitle,
-                                    overflow:
-                                    TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-                                  ),Text(
-                                    air_chart[index].sArtist,
-                                    overflow:
-                                    TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                                  )
-                                ],
-                              )
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                                    Text(
+                                      air_chart[index].fName,
+                                      overflow:
+                                      TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                                    ),
+                                    Text(
+                                      air_chart[index].sTitle,
+                                      overflow:
+                                      TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
+                                    ),Text(
+                                      air_chart[index].sArtist,
+                                      overflow:
+                                      TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                                    )
+                                  ],
+                                )
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],

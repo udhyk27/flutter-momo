@@ -294,12 +294,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ? Center(
                       child: Text(
                         '검색 결과가 없습니다.',
-                        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w700),
+                        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w600),
                         ),
                       )
                     :
                   ListView.builder(
-
                     physics: NeverScrollableScrollPhysics(),
 
                     shrinkWrap: true, // 높이를 결과 개수만큼만 설정
@@ -386,7 +385,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     },
                   ),
 
-
                   SizedBox(height: 20),
                     searchList.isNotEmpty
                     ?
@@ -394,7 +392,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     :
                   Text(
                     '추천 음악',
-                    style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w900),
+                    style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w600),
                   ),
 
                   SizedBox(height: 10),
@@ -425,7 +423,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 }
 // ------------------------------------------------------------------------------------------------------------------
-
 
 // 곡 리스트 위젯
 class RecommendList extends StatelessWidget {
