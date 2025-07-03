@@ -40,7 +40,6 @@ class SettingScreen extends StatefulWidget {
     Color textColor = themeValue == 2 ? Colors.white : Colors.black;
 
     Future<bool> launchPlayStore() async {
-
       final Uri url = Uri.parse(ApiService.storeUrl);
 
       // 버전 비교
@@ -208,7 +207,6 @@ class SettingScreen extends StatefulWidget {
                   height: 30,
                   child: TextButton(
                     onPressed: () async {
-
                       if (await launchPlayStore()) {
                         updateMsg = '최신버전입니다.';
                       } else {
