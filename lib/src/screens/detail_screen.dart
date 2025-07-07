@@ -84,8 +84,8 @@ class _DetailScreenState extends State<DetailScreen> {
         backgroundColor: themeValue == 2 ? Colors.black : Colors.grey[100],
         title: Text('모모 방송 재생 정보',
           style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontSize: 23,
+            fontWeight: FontWeight.w500,
             color: themeValue == 2 ? Colors.white : Colors.black
           ),
         ),
