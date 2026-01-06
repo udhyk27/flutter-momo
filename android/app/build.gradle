@@ -6,13 +6,11 @@ buildscript {
     }
     dependencies {
         // Android Gradle Plugin
-        classpath 'com.android.tools.build:gradle:8.13.0'  // AGP 버전
-
+        classpath 'com.android.tools.build:gradle:8.6.1'  // AGP 버전
         // Kotlin Gradle Plugin을 최신 버전으로 설정
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"  // Kotlin 플러그인
-
         // Firebase 의존성 추가
-        classpath 'com.google.gms:google-services:4.3.15'  // Google services 플러그인
+        classpath 'com.google.gms:google-services:4.4.4'  // Google services 플러그인
     }
 }
 
@@ -113,18 +111,13 @@ android {
 
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:33.9.0') // Firebase BOM 사용
-
     // Firebase 라이브러리 의존성
     implementation 'com.google.firebase:firebase-config-ktx' // 버전 관리가 BOM에 의해 자동으로 관리됨
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-dynamic-links'
-
     // 기타 의존성
     implementation 'androidx.multidex:multidex:2.0.1'
-
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-//    implementation project(':wear_os')
-
 }
 
 flutter {

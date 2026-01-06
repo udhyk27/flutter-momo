@@ -11,7 +11,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
-import 'package:momo_final/src/screens/song_info_screen.dart';
+import 'package:momo/src/screens/song_info_screen.dart';
 
 import '../../main.dart';
 import '../controller/home_controller.dart';
