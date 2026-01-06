@@ -54,7 +54,7 @@ class RecController extends GetxController {
             };
           }).toList();
           historyLoading.value = false;
-          print(historyList);
+          // print(historyList);
         }
 
       } else {

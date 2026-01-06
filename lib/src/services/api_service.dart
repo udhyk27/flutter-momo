@@ -53,8 +53,16 @@ class ApiService {
     try {
       await getRemoteConfig(); // Remote Config에서 mainURL 가져오기
 
-      http.Response response = await http.get(Uri.parse(config['mainURL'] ?? '')); // API DATA 받아오기
-      final apiData = jsonDecode(response.body); // json 형태로 가공
+      final mainURL = config['mainURL'];
+      if (mainURL == null || mainURL.trim().isEmpty) throw Exception('mainURL is null or empty');
+
+      final uri = Uri.tryParse(mainURL);
+      if (uri == null || uri.host.isEmpty) throw Exception('Invalid mainURL: $mainURL');
+
+      final response = await http.get(uri);
+      if (response.statusCode != 200) throw Exception('HTTP ERROR STATUS : ${response.statusCode}');
+
+      final apiData = jsonDecode(response.body);
 
       // print('API DATA :::::: $apiData');
 

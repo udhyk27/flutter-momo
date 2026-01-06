@@ -1,30 +1,17 @@
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'src/controller/home_controller.dart';
 import 'src/screens/main_page.dart';
 import 'package:get/get.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'src/services/api_service.dart';
 
-/**
- * 스토어 기준 소스
- *
- * 앱 시작 시
- * API 데이터 요청
- */
-
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized(); // 플러그인 사용
-
-  await Firebase.initializeApp();  // Firebase 초기화
+  await Firebase.initializeApp();
 
   ApiService apiService = ApiService();
   await apiService.getApiData();

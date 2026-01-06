@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import '../widgets/vmidc.dart';
 
 class BluetoothReceiver {
   static const MethodChannel _channel = MethodChannel('com.example.clone_momo_app/bluetooth');
