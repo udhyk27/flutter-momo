@@ -1,16 +1,16 @@
-# momo
+# Music Search Mobile Application
 
-A new Flutter project.
+## Overview
+음악을 쉽고 빠르게 검색할 수 있는 모바일 애플리케이션을 주제로 한 프로젝트입니다.  
+사용자가 원하는 음악을 직관적으로 탐색할 수 있도록  
+검색 흐름과 화면 구성을 중심으로 설계했습니다.
 
-## Getting Started
+기능의 완성도보다는  
+모바일 환경에서의 사용성과 화면 전환 흐름을 이해하는 데 목적을 두었습니다.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Focus
+- 검색 중심의 간단한 화면 구성
+- 모바일 환경을 고려한 사용자 흐름 설계
+- 음악 탐색 서비스의 기본 구조 이해
