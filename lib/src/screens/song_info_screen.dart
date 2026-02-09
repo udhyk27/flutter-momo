@@ -87,8 +87,9 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       count = detailList['count'] ?? 0;
       song_cnts = detailList['song_cnts'] ?? [];
 
-      // print('총 횟수 ::: ${count}');
-      // print('song_cnts :::: ${song_cnts}');
+      print('총 횟수 ::: ${count}');
+      print('song_cnts :::: ${song_cnts}');
+      print(Uri.parse('${ApiService.detailUrl}/json?id=${widget.song.songId}&uid=${MyApp.uid}&genre=${widget.song.genre}'));
 
       setState(() {
         isLoading = false;
@@ -325,7 +326,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         Container(
                           margin: const EdgeInsets.only(top: 25),
                           child: Text(
-                            '모모 차트',
+                            '주간 방송 차트',
                             style: TextStyle(
                               color: themeValue == 2
                               ? Colors.white
