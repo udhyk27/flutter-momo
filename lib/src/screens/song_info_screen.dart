@@ -152,10 +152,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     final isExist = programs.length == 0;
     final isExist2 = song_recommends.length == 0;
 
-
-    final isCNTS = broad_weeks_chart.length > 3;
-    // final isCNTS = song_cnts.length > 3;
-
     var deviceWidth = MediaQuery.of(context).size.width;
     var deviceHeight = MediaQuery.of(context).size.height;
 
@@ -295,38 +291,28 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
                         isLoading
                           ? CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,)
-                          : isCNTS
-                            ? ChartContainer(
-                                color: themeValue == 2 ? Colors.black : Colors.white,
-                                chart: Center(
-                                  child: FractionallySizedBox(
-                                    widthFactor: 0.9,
-                                    child: line_chart(broad_weeks_chart),
-                                  ),
-                                ),
-                              )
-                            : const SizedBox(
-                              height: 200,
-                              child: Center(
-                                child: Text('차트 정보가 없습니다.',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20
-                                  )
-                                )
-                              )
-                            )
+                          : Container(
+                          width: deviceWidth,
+                          height: 200, // 최소 높이 지정
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: themeValue == 2 ? Colors.black : Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: FractionallySizedBox(
+                              widthFactor: 0.85,  // 가로 길이
+                              heightFactor: 0.85, // 세로 높이
+                              child: line_chart(broad_weeks_chart),
+                            ),
+                          ),
+                        )
                       ],
                     ),
 
+                    SizedBox(height: 20,),
+
                     Container(
-                      decoration: BoxDecoration(
-                        // color: themeValue == 2
-                        //   ? const Color.fromRGBO(42, 42, 42, 1)
-                        //   : const Color.fromRGBO(250, 250, 250, 1),
-                        borderRadius: BorderRadius.circular(5)
-                      ),
-                      height: 50,
                       width: deviceWidth * 0.9,
                       child: Row(
                         children: [
@@ -376,8 +362,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                     Row(
                       children: [
                         Container(
-                          padding:
-                          const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                           child: Text('최신 방송 재생 정보',
                             style: TextStyle(
                               color: themeValue == 2
@@ -725,7 +710,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
   // 최신 방송 재생 정보 리스트
   Widget _listView(programs) {
-
     int themeValue = context.watch<MyAppState>().selectedValue;
     var deviceWidth = MediaQuery.of(context).size.width;
 

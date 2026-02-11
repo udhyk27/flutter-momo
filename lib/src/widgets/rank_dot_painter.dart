@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 // 곡 상세화면 - 주간 방송 차트 - 순위 상시 표시
 class RankDotPainter extends FlDotPainter {
+
   final int rank;
   final Color color;
 
