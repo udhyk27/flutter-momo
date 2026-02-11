@@ -129,7 +129,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
         final item = broad_weeks_chart[i] as Map<String, dynamic>;
 
         intX = int.parse(broad_weeks_chart[i]['MONTH'].toString().substring(4, 6)); //#mod
-        print(intX); // 월 데이터
+        // print(intX); // 월 데이터
         // intY = int.parse(song_cnts[i]['CTN']); // ##
         final ranking = item['RANK']; //#mod
         print(ranking); // 랭킹
@@ -248,6 +248,9 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     final isCNTS = broad_weeks_chart.length > 3;
     // final isCNTS = song_cnts.length > 3;
 
+    var deviceWidth = MediaQuery.of(context).size.width;
+    var deviceHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: themeValue == 2 ? Colors.black : Colors.grey[100],
       appBar: AppBar(
@@ -265,7 +268,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
               Share.share(
                   '${ApiService.shareUrl}?f_id=${widget.song.songId}',
                   sharePositionOrigin:
-                  Rect.fromLTRB(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5)
+                  Rect.fromLTRB(0, 0, deviceWidth, deviceHeight * 0.5)
               );
             },
             icon: Icon(Icons.share, color: themeValue == 2 ? Colors.white : Colors.black,),
@@ -412,29 +415,53 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
                     Container(
                       decoration: BoxDecoration(
-                        color: themeValue == 2
-                          ? const Color.fromRGBO(42, 42, 42, 1)
-                          : const Color.fromRGBO(250, 250, 250, 1),
+                        // color: themeValue == 2
+                        //   ? const Color.fromRGBO(42, 42, 42, 1)
+                        //   : const Color.fromRGBO(250, 250, 250, 1),
                         borderRadius: BorderRadius.circular(5)
                       ),
-                      height: 40,
-                      width: 200,
+                      height: 50,
+                      width: deviceWidth * 0.9,
                       child: Row(
                         children: [
-                          Spacer(),
-                          Image.asset('assets/result_search.png', width: 20),
-                          Container(
-                            margin: const EdgeInsets.only(left: 10, right: 10),
-                            child: Text('총 검색 : ${count}회',
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: themeValue == 2
-                                  ? Colors.white
-                                  : Colors.black
+                          // Spacer(),
+                          Image.asset('assets/result_search.png', width: 18),
+
+                          // Container(
+                          //   margin: const EdgeInsets.only(left: 10, right: 10),
+                          //   child:
+                          //     // Text('총 검색 : ${count}회',
+                          //     Text('방송차트: 지상파(TV, RADIO) 집계기준',
+                          //     style: TextStyle(
+                          //       fontSize: 13,
+                          //       color: themeValue == 2
+                          //         ? Colors.white
+                          //         : Colors.black
+                          //     )
+                          //   ),
+                          // ),
+
+                          Column(
+                            children: [
+                              Text('방송차트: 지상파(TV, RADIO) 집계기준',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: themeValue == 2
+                                    ? Colors.white
+                                    : Colors.black
+                                )
+                              ),
+                              SizedBox(height: 5,),
+                              Text('방송차트 자료는 에어모니터에서 제공받았습니다.',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.red
+                                )
                               )
-                            ),
+                            ],
                           ),
-                          Spacer(),
+
+                          // Spacer(),
                         ],
                       ),
                     ),
@@ -458,10 +485,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                           child: Text('최신 방송 재생 정보',
                             style: TextStyle(
                               color: themeValue == 2
-                              ?
-                                Colors.white
-                              :
-                                Color.fromRGBO(36, 36, 36, 1),
+                              ? Colors.white
+                              : Color.fromRGBO(36, 36, 36, 1),
                               fontWeight: FontWeight.bold,
                               fontSize: 20
                             )
@@ -731,9 +756,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
               showTitles: true,
               reservedSize: 30,
               interval: 1,
-
               getTitlesWidget: bottomTitleWidgets
-
             )
           ),
         ),
@@ -763,8 +786,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
       for (int i = 0; i < broad_weeks_chart.length; i++) {
         final item = broad_weeks_chart[i] as Map<String, dynamic>;
-        final month = int.parse(item['MONTH'].substring(4, 6));
-        final week = item['WEEK'];
+        var month = int.parse(item['MONTH'].substring(4, 6));
+        var week = item['WEEK'];
 
         dateList.add('${month}월 ${week}주차');
       }
@@ -825,6 +848,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
   Widget _listView(programs) {
 
     int themeValue = context.watch<MyAppState>().selectedValue;
+    var deviceWidth = MediaQuery.of(context).size.width;
 
     return Expanded(
       child: PageView.builder(
@@ -893,7 +917,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                             : Image.asset('assets/momo_assets/icon_radio.png', scale: 4),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.5,
+                          width: deviceWidth * 0.5,
                           child: Text(program['CL_NM'],
                             style: TextStyle(
                               fontSize: 14,
@@ -907,7 +931,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         ),
                         Container(
                           width:
-                          MediaQuery.of(context).size.width * 0.5,
+                          deviceWidth * 0.5,
                           margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                           child: Column(
                             crossAxisAlignment:
@@ -949,6 +973,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
   Widget _listView2(song_recommends) {
 
     int themeValue = context.watch<MyAppState>().selectedValue;
+    var deviceWidth = MediaQuery.of(context).size.width;
 
     return Expanded(
         child: PageView.builder(
@@ -1005,13 +1030,13 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                       },
                                     ),
                                   ),
-                                )),
+                                )
+                            ),
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    width: MediaQuery.of(context).size.width *
-                                      0.5,
+                                    width: deviceWidth * 0.5,
                                     child: Text(song_recommend['TITLE'] ?? "",
                                       style: TextStyle(
                                         fontSize: 14,
@@ -1021,8 +1046,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                           ? Colors.white
                                           : Colors.black))),
                                   Container(
-                                    width:
-                                    MediaQuery.of(context).size.width * 0.5,
+                                    width: deviceWidth * 0.5,
                                     margin:
                                     const EdgeInsets.fromLTRB(0, 0, 0, 10),
                                     child: Column(
