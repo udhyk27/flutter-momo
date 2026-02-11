@@ -176,28 +176,26 @@ class _DetailScreenState extends State<DetailScreen> {
                 ],
               ),
             ),
-            Divider(color: themeValue == 2 ? Colors.white : Colors.black, thickness: 1.0),
-
-            SizedBox(height: 10.0),
 
             Expanded(
-              child:
-              ListView.builder(
+              child: ListView.builder(
                 itemCount: detailProgram.length + 1,
                 itemBuilder: (context, index) {
 
                   if (index == 0) {
                     return Column(
                       children: [
+                        Divider(color: themeValue == 2 ? Colors.white : Colors.black, thickness: 1.0),
+                        SizedBox(height: 10.0),
                         Container(
                           margin: EdgeInsets.only(left: 5.0),
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             '최신 방송내역',
                             style: TextStyle(
-                                fontSize: 18.0,
-                                fontFamily: 'NotoSansKR-Black',
-                                color: textColor
+                              fontSize: 18.0,
+                              fontFamily: 'NotoSansKR-Bold',
+                              color: textColor
                             ),
                           ),
                         ),
