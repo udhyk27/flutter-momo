@@ -18,7 +18,6 @@ class CustomBtAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final themeValue = context.watch<MyAppState>().selectedValue;
-
     List<BottomNavigationBarItem> _getBottomNavItems() { // 바텀바 가져오는 리스트 형식의 함수
 
       if(themeValue == 2) { // 다크모드
@@ -85,6 +84,7 @@ class CustomBtAppBar extends StatelessWidget {
           BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             backgroundColor: themeValue == 2 ? Colors.black : Colors.white,
+
             selectedLabelStyle: TextStyle(fontSize: 12),
             unselectedLabelStyle: TextStyle(fontSize: 12),
 

@@ -180,347 +180,338 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
         ],
       ),
 
-      /////////////////////////////////// 곡 정보 ///////////////////////////////////
-      body: SingleChildScrollView(
-            child: Container(
-              width: double.infinity,
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: themeValue == 2 ? Color.fromRGBO(90, 90, 90, 1.0) : Colors.white,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: themeValue == 2 ? Colors.black : Colors.grey[100],
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        width: 1,
-                        color: themeValue == 2 ? Color.fromRGBO(50, 50, 50, 1):Color.fromRGBO(219, 219, 219, 1),
-                      )
-                    ),
-
-                    // 선택한 곡 정보
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20)
-                          ),
-
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: ExtendedImage.network(
-                                '${image}',
-                                fit: BoxFit.cover,
-                                loadStateChanged: (state) {
-                                  if (state.extendedImageLoadState == LoadState.failed) {
-                                    return SizedBox(child: Image.asset('assets/no_image.png', fit: BoxFit.cover,),);
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // 텍스트 컨테이너
-                        Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.only(top: 20, bottom: 20, left: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                title,
-                                style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'NotoSansKR-Medium',
-                                    color: textColor
-                                ),
-                              ),
-                              Text(
-                                artist,
-                                style: TextStyle(color: textColor, fontSize: 20),
-                              ),
-                              Text(
-                                album,
-                                style: TextStyle(color: textColor),
-                              ),
-
-                              Text(
-                                date_,
-                                style: TextStyle(color: textColor),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-              SizedBox(height: 20),
-
-              Container(
-                margin: EdgeInsets.all(20),
+      /**
+       * 곡 정보
+       */
+      body: SafeArea(
+        child: SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                // margin: EdgeInsets.symmetric(horizontal: 10),
+                margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                decoration: BoxDecoration(
+                  color: themeValue == 2 ? Color.fromRGBO(90, 90, 90, 1.0) : Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          // margin: const EdgeInsets.only(top: 25),
-                          child: Text(
-                            '주간 방송 차트',
-                            style: TextStyle(
-                              color: themeValue == 2
-                              ? Colors.white
-                              : Color.fromRGBO(36, 36, 36, 1),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
-                          )
-                        ),
-
-                        SizedBox(height: 10,),
-
-                        isLoading
-                          ? CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,)
-                          : Container(
-                            width: deviceWidth,
-                            height: 200, // 최소 높이 지정
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: themeValue == 2 ? Colors.black : Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: FractionallySizedBox(
-                                widthFactor: 0.85,  // 가로 길이
-                                heightFactor: 0.85, // 세로 높이
-                                child: line_chart(broad_weeks_chart),
-                              ),
-                            ),
-                          )
-                      ],
-                    ),
-
                     Container(
-                      width: deviceWidth * 0.9,
-                      child: Row(
+                      decoration: BoxDecoration(
+                        color: themeValue == 2 ? Colors.black : Colors.grey[100],
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          width: 1,
+                          color: themeValue == 2 ? Color.fromRGBO(50, 50, 50, 1):Color.fromRGBO(219, 219, 219, 1),
+                        )
+                      ),
+
+                      // 선택한 곡 정보
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Image.asset('assets/result_search.png', width: 18),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10.0,),
-                                child: Text('방송차트: 지상파(TV, RADIO) 집계기준',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: themeValue == 2
-                                      ? Colors.white
-                                      : Colors.black
-                                  )
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20)
+                            ),
+
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: ExtendedImage.network(
+                                  '${image}',
+                                  fit: BoxFit.cover,
+                                  loadStateChanged: (state) {
+                                    if (state.extendedImageLoadState == LoadState.failed) {
+                                      return SizedBox(child: Image.asset('assets/no_image.png', fit: BoxFit.cover,),);
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
-                              SizedBox(height: 5,),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: Text('방송차트 자료는 에어모니터에서 제공받았습니다.',
+                            ),
+                          ),
+
+                          // 텍스트 컨테이너
+                          Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.only(top: 20, bottom: 20, left: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  title,
                                   style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.red
-                                  )
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'NotoSansKR-Medium',
+                                      color: textColor
+                                  ),
                                 ),
-                              )
-                            ],
+                                Text(
+                                  artist,
+                                  style: TextStyle(color: textColor, fontSize: 20),
+                                ),
+                                Text(
+                                  album,
+                                  style: TextStyle(color: textColor),
+                                ),
+
+                                Text(
+                                  date_,
+                                  style: TextStyle(color: textColor),
+                                )
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
 
+                SizedBox(height: 20),
 
-              // 방송 재생 정보 리스트
-              Container(
-                margin: const EdgeInsets.only(right: 20, left: 20),
-                child: Column(
-                  mainAxisAlignment:
-                  MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                          child: Text('최신 방송 재생 정보',
-                            style: TextStyle(
-                              color: themeValue == 2
-                              ? Colors.white
-                              : Color.fromRGBO(36, 36, 36, 1),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20
+                Container(
+                  margin: EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            // margin: const EdgeInsets.only(top: 25),
+                            child: Text(
+                              '주간 방송 차트',
+                              style: TextStyle(
+                                color: themeValue == 2
+                                ? Colors.white
+                                : Color.fromRGBO(36, 36, 36, 1),
+                                fontFamily: 'NotoSansKR-Bold',
+                                fontSize: 18),
                             )
                           ),
-                        ),
-                        Spacer(),
-                        Padding(
-                          padding:
-                          EdgeInsets.only(top: 40),
-                          child: GestureDetector(
-                            onTap: () => {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                    DetailScreen(
-                                      deviceId: "",
-                                      title: title,
-                                      image: image,
-                                      artist: artist,
-                                      songId: widget.song.songId,
-                                      album: album,
-                                    )
-                                )
-                              )
-                            },
-                            child: Container(
-                              width: 50,
-                              height: 30,
-                              child: Text("더보기 >", style: TextStyle(fontSize: 15),
+
+                          SizedBox(height: 10,),
+
+                          isLoading
+                            ? CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,)
+                            : Container(
+                              width: deviceWidth,
+                              height: 200, // 최소 높이 지정
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: themeValue == 2 ? Colors.black : Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: FractionallySizedBox(
+                                  widthFactor: 0.85,  // 가로 길이
+                                  heightFactor: 0.85, // 세로 높이
+                                  child: line_chart(broad_weeks_chart),
+                                ),
                               ),
                             )
-                          ),
-                        )
-                      ],
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      height: 440,
-                      child:
-                        programLoading
-                          ?
-                        Center(
-                          child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,), // 로딩 인디케이터
-                        )
-                            :
-                          isExist
-                            ?
-                          Center(
-                            child: Text(
-                              '최신 방송 재생정보가 없습니다.',
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColorLight,
-                                fontSize: 20
-                              )
-                            )
-                          )
-                            :
-                          Row(
-                            children: [
-                              _listView(programs)
-                            ],
-                          )
-                    ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(
-                          0, 0, 0, 40),
-                      child: Center(
-                        child: SmoothPageIndicator(
-                          controller: pageController,
-                          count: (programs.length / 4).ceil(),
-                          effect: const WormEffect(
-                            activeDotColor:
-                            Color.fromRGBO(254, 36, 61, 1),
-                            dotHeight: 7,
-                            dotWidth: 7,
-                            type: WormType.thinUnderground,
-                          ),
-                        ),
+                        ],
                       ),
-                    ),
-                  ],
-                )
-              ),
 
-              // 추천 음악 리스트
-              Container(
-                margin: const EdgeInsets.only(right: 20, left: 20),
-                child: Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                      child: Text('추천 음악',
-                        style: TextStyle(
-                          color: themeValue == 2
-                            ?
-                          Colors.white
-                            :
-                          Color.fromRGBO(36, 36, 36, 1),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20
-                        )
-                      ),
-                    ),
-                    SizedBox(
-                      height: 450,
-                      child: Container(
-                        child:
-                          isLoading
-                            ?
-                          Center(
-                            child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,), // 로딩 인디케이터
-                          )
-                            :
-                        isExist2
-                          ?
-                        Center(
-                          child: Text('추천 음악이 없습니다.',
-                            style: TextStyle(
-                              color: themeValue == 2 ? Colors.white : Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20
-                            )
-                          )
-                        )
-                          :
-                        Row(
+                      Container(
+                        width: deviceWidth * 0.9,
+                        child: Row(
                           children: [
-                            _listView2(song_recommends)
+                            Image.asset('assets/result_search.png', width: 18),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0,),
+                                  child: Text('방송차트: 지상파(TV, RADIO) 집계기준',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: themeValue == 2
+                                        ? Colors.white
+                                        : Colors.black
+                                    )
+                                  ),
+                                ),
+                                SizedBox(height: 5,),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: Text('방송차트 자료는 에어모니터에서 제공받았습니다.',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.red
+                                    )
+                                  ),
+                                )
+                              ],
+                            ),
                           ],
-                        )
-                      )
-                    ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
-                    // 스와이프 페이징
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 10, 10, 40),
-                      child: Center(
-                        child: SmoothPageIndicator(
-                          controller: pageController2,
-                          count: (song_recommends.length/ 4).ceil(),
-                          effect: const WormEffect(
-                            activeDotColor: Color.fromRGBO(254, 36, 61, 1),
-                            dotHeight: 7,
-                            dotWidth: 7,
-                            type: WormType.thinUnderground,
+
+                // 방송 재생 정보 리스트
+                Container(
+                  margin: const EdgeInsets.only(right: 20, left: 20),
+                  child: Column(
+                    mainAxisAlignment:
+                    MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                            child: Text('최신 방송 재생 정보',
+                              style: TextStyle(
+                                color: themeValue == 2
+                                ? Colors.white
+                                : Color.fromRGBO(36, 36, 36, 1),
+                                fontFamily: 'NotoSansKR-Bold',
+                                fontSize: 18
+                              )
+                            ),
+                          ),
+                          Spacer(),
+                          Padding(
+                            padding:
+                            EdgeInsets.only(top: 40),
+                            child: GestureDetector(
+                              onTap: () => {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                      DetailScreen(
+                                        deviceId: "",
+                                        title: title,
+                                        image: image,
+                                        artist: artist,
+                                        songId: widget.song.songId,
+                                        album: album,
+                                      )
+                                  )
+                                )
+                              },
+                              child: Container(
+                                width: 50,
+                                height: 30,
+                                child: Text("더보기 >", style: TextStyle(fontSize: 13, color: Colors.grey),
+                                ),
+                              )
+                            ),
+                          )
+                        ],
+                      ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        height: 430,
+                        child: programLoading
+                          ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,),) // 로딩 인디케이터
+                          : isExist
+                            ?
+                              Center(
+                                child: Text(
+                                  '최신 방송 재생정보가 없습니다.',
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontSize: 20
+                                  )
+                                )
+                              )
+                            :
+                              Row(
+                                children: [
+                                  _listView(programs)
+                                ],
+                              )
+                      ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 40),
+                        child: Center(
+                          child: SmoothPageIndicator(
+                            controller: pageController,
+                            count: (programs.length / 4).ceil(),
+                            effect: const WormEffect(
+                              activeDotColor:
+                              Color.fromRGBO(254, 36, 61, 1),
+                              dotHeight: 7,
+                              dotWidth: 7,
+                              type: WormType.thinUnderground,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  )
+                ),
+
+                // 추천 음악 리스트
+                Container(
+                  margin: const EdgeInsets.only(right: 20, left: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        child: Text('추천 음악',
+                          style: TextStyle(
+                            color: themeValue == 2
+                              ? Colors.white
+                              : Color.fromRGBO(36, 36, 36, 1),
+                              fontFamily: 'NotoSansKR-Bold',
+                            fontSize: 18
+                          )
+                        ),
+                      ),
+                      SizedBox(
+                        height: 430,
+                        child: Container(
+                          child: isLoading
+                            ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,),) // 로딩 인디케이터
+                            : isExist2
+                                ?
+                              Center(
+                                child: Text('추천 음악이 없습니다.',
+                                  style: TextStyle(
+                                    color: themeValue == 2 ? Colors.white : Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20
+                                  )
+                                )
+                              )
+                                :
+                              Row(
+                                children: [
+                                  _listView2(song_recommends)
+                                ],
+                              )
+                        )
+                      ),
+
+                      // 스와이프 페이징
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 10, 40),
+                        child: Center(
+                          child: SmoothPageIndicator(
+                            controller: pageController2,
+                            count: (song_recommends.length/ 4).ceil(),
+                            effect: const WormEffect(
+                              activeDotColor: Color.fromRGBO(254, 36, 61, 1),
+                              dotHeight: 7,
+                              dotWidth: 7,
+                              type: WormType.thinUnderground,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 )
-              )
-            ],
+              ],
+            ),
           ),
         ),
       ),
