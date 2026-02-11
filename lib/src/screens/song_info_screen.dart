@@ -40,6 +40,7 @@ var avgY;
 var track_no;
 List programs = [];
 List song_cnts = [];
+List broad_weeks_chart = [];
 final pageController = PageController();
 final pageController2 = PageController();
 var image;
@@ -86,10 +87,15 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
       count = detailList['count'] ?? 0;
       song_cnts = detailList['song_cnts'] ?? [];
+      broad_weeks_chart = detailList['broad_weeks_chart'] ?? [];
 
-      print('총 횟수 ::: ${count}');
-      print('song_cnts :::: ${song_cnts}');
-      print(Uri.parse('${ApiService.detailUrl}/json?id=${widget.song.songId}&uid=${MyApp.uid}&genre=${widget.song.genre}'));
+      // print('총 횟수 ::: ${count}');
+      // print('song_cnts :::: ${song_cnts}');
+      // print(Uri.parse('${ApiService.detailUrl}/json?id=${widget.song.songId}&uid=${MyApp.uid}&genre=${widget.song.genre}'));
+
+      print('@@ 주간 방송 차트 @@');
+      print(detailList['broad_weeks_chart']);
+      // print(detailList);
 
       setState(() {
         isLoading = false;
@@ -118,24 +124,48 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     try {
       List _contain = [];  // 실데이타 파싱
       sum = 0;
-      for (int i = 0; i <= song_cnts.length - 1; i++) {
-        final item = song_cnts[i] as Map<String, dynamic>;
 
-        intX = int.parse(song_cnts[i]['F_MONTH'].toString().substring(4, 6));
+      for (int i = 0; i <= broad_weeks_chart.length - 1; i++) {
+        final item = broad_weeks_chart[i] as Map<String, dynamic>;
+
+        intX = int.parse(broad_weeks_chart[i]['MONTH'].toString().substring(4, 6)); //#mod
+        print(intX); // 월 데이터
         // intY = int.parse(song_cnts[i]['CTN']); // ##
-        final ctnValue = item['CTN'];
-        final intY = int.tryParse(ctnValue.toString()) ?? 0;
+        final ranking = item['RANK']; //#mod
+        print(ranking); // 랭킹
+
+        final intY = int.tryParse(ranking.toString()) ?? 0;
 
         listX.add(intX);
         listY.add(intY);
 
         listX.sort();
         listY.sort();
-        _contain.add(song_cnts[i]['F_MONTH'].toString());
+        _contain.add(broad_weeks_chart[i]['MONTH'].toString());
         for (var y = 0; y < listY.length; y++) {
           sum += listY[y];
         }
       }
+      // for (int i = 0; i <= song_cnts.length - 1; i++) {
+      //   final item = song_cnts[i] as Map<String, dynamic>;
+      //
+      //   intX = int.parse(song_cnts[i]['F_MONTH'].toString().substring(4, 6));
+      //   // intY = int.parse(song_cnts[i]['CTN']); // ##
+      //   final ctnValue = item['CTN'];
+      //   final intY = int.tryParse(ctnValue.toString()) ?? 0;
+      //
+      //   listX.add(intX);
+      //   listY.add(intY);
+      //
+      //   listX.sort();
+      //   listY.sort();
+      //   _contain.add(song_cnts[i]['F_MONTH'].toString());
+      //   for (var y = 0; y < listY.length; y++) {
+      //     sum += listY[y];
+      //   }
+      // }
+
+
       avgY = sum / listY.length;
 
       List _dateList = [];
@@ -143,31 +173,42 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       var _month;
       var _year;
 
-      // 차트 x 축 기준 만들기
-      for (var i = 0; i < 12; i++) {
-        _dateTime = DateTime(now.year, now.month - i, 1);
-        _month = DateFormat('MM').format(_dateTime);
-        _year = DateFormat('yyyy').format(_dateTime);
-        _dateList.add(_year + _month);
-      }
+      // 차트 x 축 기준 만들기 mod
+      // for (var i = 0; i < 12; i++) {
+      //   _dateTime = DateTime(now.year, now.month - i, 1);
+      //   _month = DateFormat('MM').format(_dateTime);
+      //   _year = DateFormat('yyyy').format(_dateTime);
+      //   _dateList.add(_year + _month);
+      // }
+        // print(_dateTime);
+      // print(_dateList);
+      // print('@@#');
       List _reverse = List.from(_dateList.reversed);
 
       // 현재월
       // 차트 실데이터 파싱
       FlSpotDataAll.clear(); // 데이터 초기화
       for (int j = 0; j < _reverse.length; j++) {
-
         // 없는 월 제외
         double mon = double.parse(j.toString()) + 1;
-
         FlSpotDataAll.insert(j, FlSpot(mon, 0));
-        for (int jj = 0; jj < song_cnts.length; jj++) {
-          if (song_cnts[jj]['F_MONTH'].toString() == _reverse[j]) {
-            cnt = double.parse(song_cnts[jj]['CTN']);
+
+        for (int jj = 0; jj < broad_weeks_chart.length; jj++) {
+          if (broad_weeks_chart[jj]['MONTH'].toString() == _reverse[j]) {
+            cnt = double.parse(broad_weeks_chart[jj]['RANK']);
             FlSpotDataAll.removeAt(j);
             FlSpotDataAll.insert(j, FlSpot(mon, cnt));
           }
         }
+        // for (int jj = 0; jj < song_cnts.length; jj++) {
+        //   if (song_cnts[jj]['F_MONTH'].toString() == _reverse[j]) {
+        //     cnt = double.parse(song_cnts[jj]['CTN']);
+        //     FlSpotDataAll.removeAt(j);
+        //     FlSpotDataAll.insert(j, FlSpot(mon, cnt));
+        //   }
+        // }
+
+
       }
       FlSpotDataAll.removeWhere((items) => items.y == 0.0);
     } catch (e) {
@@ -202,7 +243,10 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
     final isExist = programs.length == 0;
     final isExist2 = song_recommends.length == 0;
-    final isCNTS = song_cnts.length > 3;
+
+
+    final isCNTS = broad_weeks_chart.length > 3;
+    // final isCNTS = song_cnts.length > 3;
 
     return Scaffold(
       backgroundColor: themeValue == 2 ? Colors.black : Colors.grey[100],
@@ -348,7 +392,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                             color: themeValue == 2
                             ? Colors.black
                             : Colors.white,
-                            chart: line_chart(song_cnts),
+                            // chart: line_chart(song_cnts),
+                            chart: line_chart(broad_weeks_chart),
                           )
                             :
                           const SizedBox(
@@ -581,7 +626,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
   }
 
   // 차트
-  Widget line_chart(song_cnts) {
+  // Widget line_chart(song_cnts) {
+  Widget line_chart(broad_weeks_chart) {
     int themeValue = context.watch<MyAppState>().selectedValue;
     List<FlSpot> FlSpotData = [];
     FlSpotData.addAll(FlSpotDataAll);
@@ -616,7 +662,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
         ),
         minX: 1, // 최소 1월
         minY: 0, // 최소 횟수 0
-        maxX: 12, // 최대 12월
+        // maxX: 12, // 최대 12월
+        maxX: 4, // #mod
         // maxY: double.parse((listY.isNotEmpty ? listY.last : 100).toString()), // 최대 횟수 마지막 요소 + 100
         maxY: listY.isNotEmpty
             ? listY.reduce(max).toDouble() + 20
@@ -702,15 +749,24 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     text = '';
 
     try {
-      int i = 0;
+      // int i = 0;
       dateList = [];
-      for (i; i < 12; i++) {
-        dateTime = DateTime(now.year, now.month - i, 1);
-        date = DateFormat('MM').format(dateTime);
-        year = DateFormat('yy').format(now);
-      // print(dateTime);
 
-        dateList.add(date);
+      // for (i; i < 12; i++) {
+      //   dateTime = DateTime(now.year, now.month - i, 1);
+      //   date = DateFormat('MM').format(dateTime);
+      //   year = DateFormat('yy').format(now);
+      // // print(dateTime);
+      //
+      //   dateList.add(date);
+      // }
+
+      for (int i = 0; i < broad_weeks_chart.length; i++) {
+        final item = broad_weeks_chart[i] as Map<String, dynamic>;
+        final month = int.parse(item['MONTH'].substring(4, 6));
+        final week = item['WEEK'];
+
+        dateList.add('${month}월 ${week}주차');
       }
     } catch (e) {
       print('bottom title : $e');
@@ -718,8 +774,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
     reversedDate = [];
     reversedDate = List.from(dateList.reversed);
-
-    // print(reversedDate);
 
     switch (value.toInt()) {
       case 1:
@@ -734,30 +788,30 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       case 4:
         text = reversedDate[3];
         break;
-      case 5:
-        text = reversedDate[4];
-        break;
-      case 6:
-        text = reversedDate[5];
-        break;
-      case 7:
-        text = reversedDate[6];
-        break;
-      case 8:
-        text = reversedDate[7];
-        break;
-      case 9:
-        text = reversedDate[8];
-        break;
-      case 10:
-        text = reversedDate[9];
-        break;
-      case 11:
-        text = reversedDate[10];
-        break;
-      default:
-        text = reversedDate[11];
-        break;
+      // case 5:
+      //   text = reversedDate[4];
+      //   break;
+      // case 6:
+      //   text = reversedDate[5];
+      //   break;
+      // case 7:
+      //   text = reversedDate[6];
+      //   break;
+      // case 8:
+      //   text = reversedDate[7];
+      //   break;
+      // case 9:
+      //   text = reversedDate[8];
+      //   break;
+      // case 10:
+      //   text = reversedDate[9];
+      //   break;
+      // case 11:
+      //   text = reversedDate[10];
+      //   break;
+      // default:
+      //   text = reversedDate[11];
+      //   break;
     }
     return SideTitleWidget(
       child: Text(text),
