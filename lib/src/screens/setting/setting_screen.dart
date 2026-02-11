@@ -157,14 +157,7 @@ class SettingScreen extends StatefulWidget {
                   height: 30,
                   child: TextButton(
                     onPressed: () async { // 검색목록 전체 삭제
-                      try {
-                        http.Response response = await http.get(Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}&proc=del'));
-                        if (response.statusCode == 200) {
-                          showConfirm(context, "검색내역", 0);
-                        }
-                      } catch (e) {
-                        print('searched song delete all error');
-                      }
+                      showConfirm(context, 0);
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
@@ -186,7 +179,7 @@ class SettingScreen extends StatefulWidget {
                   height: 30,
                   child: TextButton(
                     onPressed: () {
-                      showConfirm(context, "임시파일", 0);
+                      showConfirm(context, 1);
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
@@ -251,7 +244,10 @@ class SettingScreen extends StatefulWidget {
   }
 
     // Dialog
-    void showConfirm(BuildContext context, String msg, int index) {
+    void showConfirm(BuildContext context, int index) {
+
+      String msg = index == 0 ? '검색내역' : '임시파일';
+
       showConfirmDialog(
         context,
         title: '$msg을 삭제하시겠습니까?',
@@ -259,11 +255,12 @@ class SettingScreen extends StatefulWidget {
         confirmText: '삭제',
         onConfirm: () async {
           try {
-            http.Response response = await http.get(
-              Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}&proc=del'),
-            );
+            http.Response? response;
+            if (index == 0) { // 검색내역 삭제
+              response = await http.get(Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}&proc=del'),);
+            }
 
-            if (response.statusCode == 200) {
+            if (response != null && response.statusCode == 200) {
               // 삭제 완료 SnackBar
               final c_width = MediaQuery.of(context).size.width;
               final c_height = MediaQuery.of(context).size.height;

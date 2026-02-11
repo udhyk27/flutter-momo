@@ -292,37 +292,34 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         isLoading
                           ? CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,)
                           : Container(
-                          width: deviceWidth,
-                          height: 200, // 최소 높이 지정
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: themeValue == 2 ? Colors.black : Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Center(
-                            child: FractionallySizedBox(
-                              widthFactor: 0.85,  // 가로 길이
-                              heightFactor: 0.85, // 세로 높이
-                              child: line_chart(broad_weeks_chart),
+                            width: deviceWidth,
+                            height: 200, // 최소 높이 지정
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: themeValue == 2 ? Colors.black : Colors.white,
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          ),
-                        )
+                            child: Center(
+                              child: FractionallySizedBox(
+                                widthFactor: 0.85,  // 가로 길이
+                                heightFactor: 0.85, // 세로 높이
+                                child: line_chart(broad_weeks_chart),
+                              ),
+                            ),
+                          )
                       ],
                     ),
-
-                    SizedBox(height: 20,),
 
                     Container(
                       width: deviceWidth * 0.9,
                       child: Row(
                         children: [
-                          // Spacer(),
                           Image.asset('assets/result_search.png', width: 18),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: const EdgeInsets.only(left: 10.0,),
                                 child: Text('방송차트: 지상파(TV, RADIO) 집계기준',
                                   style: TextStyle(
                                     fontSize: 13,
@@ -582,6 +579,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
       if (y > 0) showingIndicators.add(i); // 상시 tooltip 표시
     }
+    // print('spots.length: ${spots.length}, dateList.length: ${dateList.length}');
 
     // ===== 차트 =====
     return LineChart(
@@ -685,11 +683,10 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     );
   }
 
-
-
-
   late String text;
-
+  List<String> dateList = broad_weeks_chart
+      .map((e) => '${int.parse(e['MONTH'].toString().substring(4, 6))}월 ${e['WEEK']}주차')
+      .toList();
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     final index = value.toInt();
 
