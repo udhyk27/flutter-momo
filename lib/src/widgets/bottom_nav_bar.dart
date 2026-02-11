@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../main.dart';
-
 import 'package:provider/provider.dart';
 
 // bottom bar
@@ -11,91 +10,87 @@ class CustomBtAppBar extends StatelessWidget {
   const CustomBtAppBar({
     required this.currentIndex,
     required this.onTabChange,
-    super.key
+    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-
     final themeValue = context.watch<MyAppState>().selectedValue;
-    List<BottomNavigationBarItem> _getBottomNavItems() { // 바텀바 가져오는 리스트 형식의 함수
 
-      if(themeValue == 2) { // 다크모드
-        switch(currentIndex) {
-          case 0: // history page
-            return [
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_folder_on_reverse.png', width: 25, height: 25,), label: '히스토리'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_momosearch.png', width: 30, height: 30,), label: '음악검색'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_chart.png', width: 25, height: 25,), label: '검색차트'),
-            ];
-          case 1: // search page
-            return [
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_folder.png', width: 25, height: 25,), label: '히스토리'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_momosearch_on_reverse.png', width: 30, height: 30,), label: '음악검색'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_chart.png', width: 25, height: 25,), label: '검색차트'),
-            ];
-          case 2: // chart page
-            return [
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_folder.png', width: 25, height: 25,), label: '히스토리'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_momosearch.png', width: 30, height: 30,), label: '음악검색'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_chart_on_reverse.png', width: 25, height: 25,), label: '검색차트'),
-            ];
-          default: // search page
-            return [
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_folder.png', width: 25, height: 25,), label: '히스토리'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_momosearch_on_reverse.png', width: 30, height: 30,), label: '음악검색'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_chart.png', width: 25, height: 25,), label: '검색차트'),
-            ];
-        }
-      } else {
-        switch(currentIndex) {
-          case 0: // history page
-            return [
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_folder_on.png', width: 25, height: 25,), label: '히스토리'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_momosearch.png', width: 30, height: 30,), label: '음악검색'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_chart.png', width: 25, height: 25,), label: '검색차트'),
-            ];
-          case 1: // search page
-            return [
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_folder.png', width: 25, height: 25,), label: '히스토리'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_momosearch_on.png', width: 30, height: 30,), label: '음악검색'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_chart.png', width: 25, height: 25,), label: '검색차트'),
-            ];
-          case 2: // chart page
-            return [
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_folder.png', width: 25, height: 25,), label: '히스토리'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_momosearch.png', width: 30, height: 30,), label: '음악검색'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_chart_on.png', width: 25, height: 25,), label: '검색차트'),
-            ];
-          default: // search page
-            return [
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_folder.png', width: 25, height: 25,), label: '히스토리'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_momosearch_on.png', width: 30, height: 30,), label: '음악검색'),
-              BottomNavigationBarItem(icon: Image.asset('assets/momo_assets/icon_chart.png', width: 25, height: 25,), label: '검색차트'),
-            ];
-        }
-      }
+    // 항상 3개 아이템 반환, 선택 아이콘만 currentIndex에 따라 변경
+    List<BottomNavigationBarItem> _getBottomNavItems() {
+      return [
+        BottomNavigationBarItem(
+          icon: Image.asset(
+            themeValue == 2
+                ? (currentIndex == 0
+                ? 'assets/momo_assets/icon_folder_on_reverse.png'
+                : 'assets/momo_assets/icon_folder.png')
+                : (currentIndex == 0
+                ? 'assets/momo_assets/icon_folder_on.png'
+                : 'assets/momo_assets/icon_folder.png'),
+            width: 25,
+            height: 25,
+          ),
+          label: '히스토리',
+        ),
+        BottomNavigationBarItem(
+          icon: Image.asset(
+            themeValue == 2
+                ? (currentIndex == 1
+                ? 'assets/momo_assets/icon_momosearch_on_reverse.png'
+                : 'assets/momo_assets/icon_momosearch.png')
+                : (currentIndex == 1
+                ? 'assets/momo_assets/icon_momosearch_on.png'
+                : 'assets/momo_assets/icon_momosearch.png'),
+            width: 30,
+            height: 30,
+          ),
+          label: '음악검색',
+        ),
+        BottomNavigationBarItem(
+          icon: Image.asset(
+            themeValue == 2
+                ? (currentIndex == 2
+                ? 'assets/momo_assets/icon_chart_on_reverse.png'
+                : 'assets/momo_assets/icon_chart.png')
+                : (currentIndex == 2
+                ? 'assets/momo_assets/icon_chart_on.png'
+                : 'assets/momo_assets/icon_chart.png'),
+            width: 25,
+            height: 25,
+          ),
+          label: '검색차트',
+        ),
+      ];
     }
 
+    // currentIndex 안전 처리
+    final safeIndex = currentIndex.clamp(0, 2);
+
     return SafeArea(
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,      // 클릭 물결 제거
+          highlightColor: Colors.transparent,   // 클릭 하이라이트 제거
+        ),
         child: Container(
           height: 65,
-          child: currentIndex < 3 ?
-          BottomNavigationBar(
+          child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             backgroundColor: themeValue == 2 ? Colors.black : Colors.white,
-
+            elevation: 0,
             selectedLabelStyle: TextStyle(fontSize: 12),
             unselectedLabelStyle: TextStyle(fontSize: 12),
-
             selectedItemColor: themeValue == 2 ? Colors.white : Colors.black,
-            unselectedItemColor: themeValue == 2 ? Colors.white : Colors.black,
-
+            unselectedItemColor: themeValue == 2 ? Colors.white54 : Colors.black54,
             items: _getBottomNavItems(),
-            currentIndex: currentIndex,
+            currentIndex: safeIndex,
             onTap: onTabChange,
-          ): SizedBox.shrink(),
-        )
+          ),
+        ),
+      ),
     );
+
   }
 }
