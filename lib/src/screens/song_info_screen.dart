@@ -540,11 +540,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
   Widget line_chart(broad_weeks_chart) {
     int themeValue = context.watch<MyAppState>().selectedValue;
 
-    // ===== FlSpot 데이터 =====
-    final List<FlSpot> spots = [];
-    final List<int> showingIndicators = [];
-
-    // MONTH, WEEK 기준 정렬 (한 번만)
+    // ===== 정렬 (MONTH → WEEK) =====
     broad_weeks_chart.sort((a, b) {
       final int aMonth = int.parse(a['MONTH'].toString());
       final int bMonth = int.parse(b['MONTH'].toString());
@@ -557,58 +553,62 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       return aMonth.compareTo(bMonth);
     });
 
+    // ===== 1~100위 중 최악 순위 =====
+    final ranksIn100 = broad_weeks_chart
+        .map((e) => int.tryParse(e['RANK'].toString()) ?? 0)
+        .where((r) => r > 0 && r <= 100)
+        .toList();
+
+    final int worstRank =
+    ranksIn100.isNotEmpty ? ranksIn100.reduce((a, b) => a > b ? a : b) : 0;
+
+    // ===== FlSpot 생성 =====
+    final List<FlSpot> spots = [];
+
     for (int i = 0; i < broad_weeks_chart.length; i++) {
       final int rank =
           int.tryParse(broad_weeks_chart[i]['RANK'].toString()) ?? 0;
 
-      // 1~100위만 표시, 그 외는 0
-      final double y =
-      (rank > 0 && rank <= 100) ? (101 - rank).toDouble() : 0.0;
+      double y = 0;
+
+      // ⭐ 핵심 변환
+      if (rank > 0 && rank <= 100 && worstRank > 0) {
+        // 최악순위 → 1
+        y = (worstRank - rank + 1).toDouble();
+      }
 
       spots.add(FlSpot(i.toDouble(), y));
-
-      if (y != 0) {
-        showingIndicators.add(i); // 상시 tooltip 표시
-      }
     }
 
-    // 전부 100위 밖이면 안내 문구
+    // ===== 전부 100위 밖 =====
     if (spots.every((e) => e.y == 0)) {
       return Center(
-        child: Container(
-          // width: deviceWidth * 0.9,
-          decoration: BoxDecoration(
-            color: Colors.grey
-              // color: themeValue == 2
-          // ? Colors.white
-          //     : Colors.black
-          ),
-          child: Text(
-            '주간 방송 차트 순위는 TOP 100만 제공됩니다.',
-            style: TextStyle(
-              fontSize: 13,
-                color: themeValue == 2 ? Colors.white : Colors.black
-            ),
+        child: Text(
+          '주간 방송 차트 순위는 TOP 100만 제공됩니다.',
+          style: TextStyle(
+            fontSize: 13,
+            color: themeValue == 2 ? Colors.white : Colors.black,
           ),
         ),
       );
     }
 
-
-    
+    // ===== 차트 =====
     return LineChart(
       LineChartData(
         minX: 0,
         maxX: spots.length - 1,
         minY: 0,
-        maxY: 100,
+        maxY: worstRank.toDouble(),
         baselineY: 0,
+
         borderData: FlBorderData(show: false),
 
+        // ===== 눈금선 (1 ~ 최악순위) =====
         gridData: FlGridData(
+          show: true,
           drawVerticalLine: false,
-          drawHorizontalLine: true,
-          horizontalInterval: 20,
+          horizontalInterval: 1,
           getDrawingHorizontalLine: (value) => FlLine(
             strokeWidth: 1,
             color: themeValue == 2
@@ -616,44 +616,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                 : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
-
-        extraLinesData: ExtraLinesData(
-          horizontalLines: [
-            HorizontalLine(
-              y: 0,
-              color: themeValue == 2
-                  ? Colors.grey.withValues(alpha: 0.6)
-                  : Colors.grey.withValues(alpha: 0.3),
-            ),
-          ],
-        ),
-
-        lineBarsData: [
-          LineChartBarData(
-            spots: spots,
-            isCurved: true,
-            curveSmoothness: 0.15,
-            barWidth: 3,
-            color: const Color.fromRGBO(51, 211, 180, 1),
-            belowBarData: BarAreaData(show: false),
-
-            dotData: FlDotData(
-              show: true,
-              checkToShowDot: (spot, barData) => spot.y != 0,
-              getDotPainter: (spot, percent, barData, index) {
-                final rank = 101 - spot.y.toInt(); // 🔥 y 뒤집기 기준
-
-                return RankDotPainter(
-                  rank: rank,
-                  color: const Color.fromRGBO(51, 211, 180, 1),
-                );
-              },
-            ),
-
-
-            showingIndicators: showingIndicators,
-          ),
-        ],
 
         titlesData: FlTitlesData(
           topTitles: AxisTitles(
@@ -670,47 +632,46 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
               showTitles: true,
               interval: 1,
               reservedSize: 30,
-              getTitlesWidget: bottomTitleWidgets, // 네 기존 함수 사용
+              getTitlesWidget: bottomTitleWidgets,
             ),
           ),
         ),
 
-        // 👉 상시 순위 텍스트 표시
-        lineTouchData: LineTouchData(
-          enabled: true,
-          handleBuiltInTouches: true, // ⭐ 필수
-          touchSpotThreshold: 1,
+        lineBarsData: [
+          LineChartBarData(
+            spots: spots,
+            isCurved: true,
+            curveSmoothness: 0.15,
+            barWidth: 3,
+            color: const Color.fromRGBO(51, 211, 180, 1),
+            belowBarData: BarAreaData(show: false),
 
-          getTouchedSpotIndicator: (barData, spotIndexes) {
-            return spotIndexes.map((index) {
-              return TouchedSpotIndicatorData(
-                FlLine(color: Colors.transparent), // 세로줄 제거
-                FlDotData(show: false),
-              );
-            }).toList();
-          },
+            // ===== 순위 상시 표시 =====
+            dotData: FlDotData(
+              show: true,
+              checkToShowDot: (spot, _) => spot.y > 0,
+              getDotPainter: (spot, percent, barData, index) {
+                final int originalRank =
+                    int.tryParse(broad_weeks_chart[index]['RANK'].toString()) ?? 0;
 
-          touchTooltipData: LineTouchTooltipData(
-            tooltipPadding: EdgeInsets.zero,
-            tooltipMargin: 6,
-            getTooltipItems: (touchedSpots) {
-              return touchedSpots.map((spot) {
-                final rank = 101 - spot.y.toInt();
-                return LineTooltipItem(
-                  '$rank위',
-                  const TextStyle(
-                    color: Colors.green,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
+                return RankDotPainter(
+                  rank: originalRank,
+                  color: const Color.fromRGBO(51, 211, 180, 1),
                 );
-              }).toList();
-            },
+              },
+            ),
           ),
+        ],
+
+        // ===== 터치로 생기는 세로줄 완전 제거 =====
+        lineTouchData: LineTouchData(
+          enabled: false,
         ),
       ),
     );
   }
+
+
 
 
   late String text;
