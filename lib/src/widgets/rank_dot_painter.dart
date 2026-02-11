@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+// 곡 상세화면 - 주간 방송 차트 - 순위 상시 표시
 class RankDotPainter extends FlDotPainter {
   final int rank;
   final Color color;
@@ -11,15 +12,12 @@ class RankDotPainter extends FlDotPainter {
     required this.color,
   });
 
-  // 🔹 필수
   @override
   Color get mainColor => color;
 
-  // 🔹 필수
   @override
   List<Object?> get props => [rank, color];
 
-  // 🔹 필수
   @override
   FlDotPainter lerp(
       FlDotPainter a,
@@ -40,7 +38,6 @@ class RankDotPainter extends FlDotPainter {
     return const Size(40, 28); // 점 + 텍스트 영역
   }
 
-  // ✅ 최신 fl_chart draw 시그니처
   @override
   void draw(
       Canvas canvas,

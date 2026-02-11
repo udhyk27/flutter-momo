@@ -8,6 +8,7 @@ import '/main.dart';
 import '../model/api_recommend.dart';
 import 'package:http/http.dart' as http;
 import '../services/api_service.dart';
+import 'common/custom_dialog.dart';
 import 'song_info_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -111,88 +112,33 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
   }
 
-  // 리스트 삭제 버튼
-  void showDeleteDialog(context, songId, index) {
-
-    int themeValue = Provider.of<MyAppState>(context, listen: false).selectedValue;
-
-    double c_width = MediaQuery.of(context).size.width;
-    double c_height = MediaQuery.of(context).size.height;
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), // 모서리 둥글게
-          backgroundColor: themeValue == 2 ? Color.fromRGBO(66, 66, 66, 1) : Colors.white,
-          child: Container(
-            width: c_width * 0.75,
-            height: c_height * 0.22,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 제목 영역
-                SizedBox(
-                  height: c_height * 0.13,
-                  child: Center(
-                    child: Text(
-                      '이 항목을 삭제하시겠습니까?',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromRGBO(151, 151, 151, 1)),
-                    ),
-                  ),
-                ),
-
-                // 구분선 추가
-                Divider(thickness: 1, height: 1, color: Colors.grey),
-
-                // 버튼 영역
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            right: BorderSide(color: Colors.grey, width: 1)
-                          )
-                        ),
-                        child: TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('아니오',style: TextStyle(fontSize: 16,color: Color.fromRGBO(151, 151, 151, 1)),),
-                        ),
-                      ),
-                    ),
-
-                    Expanded(
-                      child: Container(
-                        child: TextButton(
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-
-                            try {
-                              http.Response response = await http.get(Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}&id=${songId}&proc=del'));
-                              if (response.statusCode == 200) {
-                                setState(() {
-                                  searchList.removeAt(index);  // 리스트에서 해당 항목 제거
-                                });
-                              }
-                            } catch (e) {
-                              print('searched song delete error');
-                            }
-                          },
-                          child: Text('예',style: TextStyle(fontSize: 16,color: Color.fromRGBO(64, 220, 196, 1)),),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+  // 리스트 삭제 Dialog
+  void showDeleteDialog(BuildContext context, songId, index) {
+    showConfirmDialog(
+      context,
+      title: '이 항목을 삭제하시겠습니까?',
+      cancelText: '아니오',
+      confirmText: '예',
+      onConfirm: () async {
+        try {
+          http.Response response = await http.get(
+            Uri.parse(
+              '${ApiService.historyUrl}/json?uid=${MyApp.uid}&id=${songId}&proc=del',
             ),
-          ),
-        );
-      }
+          );
+
+          if (response.statusCode == 200) {
+            setState(() {
+              searchList.removeAt(index);
+            });
+          }
+        } catch (e) {
+          print('searched song delete error');
+        }
+      },
     );
   }
+
   // --------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {

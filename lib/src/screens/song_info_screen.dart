@@ -279,7 +279,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          margin: const EdgeInsets.only(top: 25),
+                          // margin: const EdgeInsets.only(top: 25),
                           child: Text(
                             '주간 방송 차트',
                             style: TextStyle(
@@ -297,11 +297,14 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                           ? CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,)
                           : isCNTS
                             ? ChartContainer(
-                              color: themeValue == 2
-                              ? Colors.black
-                              : Colors.white,
-                              chart: line_chart(broad_weeks_chart),
-                            )
+                                color: themeValue == 2 ? Colors.black : Colors.white,
+                                chart: Center(
+                                  child: FractionallySizedBox(
+                                    widthFactor: 0.9,
+                                    child: line_chart(broad_weeks_chart),
+                                  ),
+                                ),
+                              )
                             : const SizedBox(
                               height: 200,
                               child: Center(
@@ -330,21 +333,28 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                           // Spacer(),
                           Image.asset('assets/result_search.png', width: 18),
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('방송차트: 지상파(TV, RADIO) 집계기준',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: themeValue == 2
-                                    ? Colors.white
-                                    : Colors.black
-                                )
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text('방송차트: 지상파(TV, RADIO) 집계기준',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: themeValue == 2
+                                      ? Colors.white
+                                      : Colors.black
+                                  )
+                                ),
                               ),
                               SizedBox(height: 5,),
-                              Text('방송차트 자료는 에어모니터에서 제공받았습니다.',
-                                style: TextStyle(
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text('방송차트 자료는 에어모니터에서 제공받았습니다.',
+                                  style: TextStyle(
                                     fontSize: 11,
                                     color: Colors.red
-                                )
+                                  )
+                                ),
                               )
                             ],
                           ),
@@ -525,7 +535,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         ),
                       ),
                     ),
-
                   ],
                 )
               )
@@ -544,44 +553,19 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     broad_weeks_chart.sort((a, b) {
       final int aMonth = int.parse(a['MONTH'].toString());
       final int bMonth = int.parse(b['MONTH'].toString());
-      final int aWeek  = int.parse(a['WEEK'].toString());
-      final int bWeek  = int.parse(b['WEEK'].toString());
-
-      if (aMonth == bMonth) {
-        return aWeek.compareTo(bWeek);
-      }
+      final int aWeek = int.parse(a['WEEK'].toString());
+      final int bWeek = int.parse(b['WEEK'].toString());
+      if (aMonth == bMonth) return aWeek.compareTo(bWeek);
       return aMonth.compareTo(bMonth);
     });
 
-    // ===== 1~100위 중 최악 순위 =====
+    // ===== 유효 순위만 필터 (1~100) =====
     final ranksIn100 = broad_weeks_chart
         .map((e) => int.tryParse(e['RANK'].toString()) ?? 0)
         .where((r) => r > 0 && r <= 100)
         .toList();
 
-    final int worstRank =
-    ranksIn100.isNotEmpty ? ranksIn100.reduce((a, b) => a > b ? a : b) : 0;
-
-    // ===== FlSpot 생성 =====
-    final List<FlSpot> spots = [];
-
-    for (int i = 0; i < broad_weeks_chart.length; i++) {
-      final int rank =
-          int.tryParse(broad_weeks_chart[i]['RANK'].toString()) ?? 0;
-
-      double y = 0;
-
-      // ⭐ 핵심 변환
-      if (rank > 0 && rank <= 100 && worstRank > 0) {
-        // 최악순위 → 1
-        y = (worstRank - rank + 1).toDouble();
-      }
-
-      spots.add(FlSpot(i.toDouble(), y));
-    }
-
-    // ===== 전부 100위 밖 =====
-    if (spots.every((e) => e.y == 0)) {
+    if (ranksIn100.isEmpty) {
       return Center(
         child: Text(
           '주간 방송 차트 순위는 TOP 100만 제공됩니다.',
@@ -593,40 +577,54 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       );
     }
 
+    // ===== 최고/최악 순위 계산 =====
+    final int minRank = ranksIn100.reduce((a, b) => a < b ? a : b); // 가장 높은 순위
+    final int maxRank = ranksIn100.reduce((a, b) => a > b ? a : b); // 가장 낮은 순위
+
+    // ===== FlSpot 생성 =====
+    final List<FlSpot> spots = [];
+    final List<int> showingIndicators = [];
+
+    for (int i = 0; i < broad_weeks_chart.length; i++) {
+      final int rank = int.tryParse(broad_weeks_chart[i]['RANK'].toString()) ?? 0;
+      double y = 0;
+
+      if (rank > 0) {
+        y = (maxRank - rank + 1).toDouble(); // 최고 순위가 차트 맨 위
+      }
+
+      spots.add(FlSpot(i.toDouble(), y));
+
+      if (y > 0) showingIndicators.add(i); // 상시 tooltip 표시
+    }
+
     // ===== 차트 =====
     return LineChart(
       LineChartData(
         minX: 0,
         maxX: spots.length - 1,
         minY: 0,
-        maxY: worstRank.toDouble(),
+        maxY: (maxRank - minRank + 1).toDouble(), // 최고순위가 맨 위
         baselineY: 0,
-
         borderData: FlBorderData(show: false),
 
-        // ===== 눈금선 (1 ~ 최악순위) =====
+        // ===== 눈금선 =====
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
-          horizontalInterval: 1,
+          horizontalInterval: 5, // 눈금 간격
           getDrawingHorizontalLine: (value) => FlLine(
             strokeWidth: 1,
             color: themeValue == 2
-                ? Colors.grey.withValues(alpha: 0.6)
-                : Colors.grey.withValues(alpha: 0.3),
+                ? Colors.grey.withOpacity(0.6)
+                : Colors.grey.withOpacity(0.3),
           ),
         ),
 
         titlesData: FlTitlesData(
-          topTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          rightTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
@@ -660,12 +658,43 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                 );
               },
             ),
+            showingIndicators: showingIndicators,
           ),
         ],
 
-        // ===== 터치로 생기는 세로줄 완전 제거 =====
+        // ===== 터치 세로줄 제거 =====
         lineTouchData: LineTouchData(
-          enabled: false,
+          enabled: true,
+          handleBuiltInTouches: true,
+          getTouchedSpotIndicator: (barData, spotIndexes) {
+            // 세로 라인 제거, dot도 안 보이게
+            return spotIndexes.map((index) {
+              return TouchedSpotIndicatorData(
+                FlLine(
+                  color: Colors.transparent, // 세로선 없앰
+                  strokeWidth: 0,
+                ),
+                FlDotData(show: false),
+              );
+            }).toList();
+          },
+          touchTooltipData: LineTouchTooltipData(
+            tooltipPadding: EdgeInsets.zero,
+            tooltipMargin: 6,
+            getTooltipItems: (touchedSpots) {
+              return touchedSpots.map((spot) {
+                final int realRank = maxRank - spot.y.toInt() + 1;
+                return LineTooltipItem(
+                  '$realRank위',
+                  const TextStyle(
+                    color: Colors.green,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              }).toList();
+            },
+          ),
         ),
       ),
     );
@@ -743,7 +772,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         borderRadius: BorderRadius.circular(8),
                         child: SizedBox.fromSize(
                           child: ExtendedImage.network(
-                            // program['F_IMAGE'],
                             program['F_LOGO'],
                             width: 80,
                             height: 80,

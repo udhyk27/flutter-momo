@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import '../../services/api_service.dart';
+import '../common/custom_dialog.dart';
 import '/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -159,7 +160,7 @@ class SettingScreen extends StatefulWidget {
                       try {
                         http.Response response = await http.get(Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}&proc=del'));
                         if (response.statusCode == 200) {
-                          showConfirm(context, "검색내역");
+                          showConfirm(context, "검색내역", 0);
                         }
                       } catch (e) {
                         print('searched song delete all error');
@@ -185,7 +186,7 @@ class SettingScreen extends StatefulWidget {
                   height: 30,
                   child: TextButton(
                     onPressed: () {
-                      showConfirm(context, "임시파일");
+                      showConfirm(context, "임시파일", 0);
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
@@ -249,91 +250,49 @@ class SettingScreen extends StatefulWidget {
     );
   }
 
-  // Dialog
-  void showConfirm(BuildContext context, String msg) {
-    int themeValue = Provider.of<MyAppState>(context, listen: false).selectedValue;
+    // Dialog
+    void showConfirm(BuildContext context, String msg, int index) {
+      showConfirmDialog(
+        context,
+        title: '$msg을 삭제하시겠습니까?',
+        cancelText: '취소',
+        confirmText: '삭제',
+        onConfirm: () async {
+          try {
+            http.Response response = await http.get(
+              Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}&proc=del'),
+            );
 
-    double c_width = MediaQuery.of(context).size.width;
-    double c_height = MediaQuery.of(context).size.height;
+            if (response.statusCode == 200) {
+              // 삭제 완료 SnackBar
+              final c_width = MediaQuery.of(context).size.width;
+              final c_height = MediaQuery.of(context).size.height;
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), // 모서리 둥글게
-          backgroundColor: themeValue == 2 ? Color.fromRGBO(66, 66, 66, 1) : Colors.white,
-          child: SizedBox(
-            width: c_width * 0.75,
-            height: c_height * 0.22,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 제목 영역
-                SizedBox(
-                  height: c_height * 0.13,
-                  child: Center(
-                    child: Text(
-                      '$msg을 삭제하시겠습니까?',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black54),
-                    ),
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    '$msg 삭제 완료',
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                  duration: const Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                  margin: EdgeInsets.only(
+                    bottom: c_height * 0.5,
+                    left: c_width / 4,
+                    right: c_width / 4,
                   ),
                 ),
+              );
+            }
+          } catch (e) {
+            print('delete error: $e');
+          }
+        },
+      );
+    }
 
-                // 구분선 추가
-                Divider(thickness: 1, height: 1, color: Colors.grey),
-
-                // 버튼 영역
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            right: BorderSide(color: Colors.grey, width: 1)
-                          )
-                        ),
-                        child: TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('취소',style: TextStyle(fontSize: 15, color: Color.fromRGBO(151, 151, 151, 1)),),
-                        ),
-                      ),
-                    ),
-
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${msg} 삭제 완료',
-                                style: TextStyle(color: Colors.white, fontSize: 12),
-                                textAlign: TextAlign.center,
-                              ),
-                              duration: Duration(seconds: 2), // 문구 뜨는 시간
-                              behavior: SnackBarBehavior.floating, // 떠 있는 효과
-                              margin: EdgeInsets.only( // 화면 가운데로 설정
-                                bottom: c_height * 0.5,
-                                left: c_width / 4,
-                                right: c_width / 4,
-                              ),
-                            ),
-                          );
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('삭제',style: TextStyle(fontSize: 15, color: Colors.deepOrange),),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-    );
 
 
   }
-}
 
