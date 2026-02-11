@@ -246,11 +246,11 @@ class _DetailScreenState extends State<DetailScreen> {
                                     ),
                                     Text(
                                       detailProgram[index - 1].channelName,
-                                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor, overflow: TextOverflow.ellipsis),
+                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: textColor, overflow: TextOverflow.ellipsis),
                                     ),
                                     Text(
                                       detailProgram[index - 1].name,
-                                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: textColor, overflow: TextOverflow.ellipsis),
+                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: textColor, overflow: TextOverflow.ellipsis),
                                     ),
                                     Text(
                                       detailProgram[index - 1].date,

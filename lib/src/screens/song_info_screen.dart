@@ -242,10 +242,9 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                 Text(
                                   title,
                                   style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'NotoSansKR-Medium',
-                                      color: textColor
+                                    fontSize: 25,
+                                    fontFamily: 'NotoSansKR-Medium',
+                                    color: textColor
                                   ),
                                 ),
                                 Text(
@@ -286,8 +285,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                 color: themeValue == 2
                                 ? Colors.white
                                 : Color.fromRGBO(36, 36, 36, 1),
-                                fontFamily: 'NotoSansKR-Bold',
-                                fontSize: 18),
+                                  fontFamily: 'NotoSansKR-Bold',
+                                  fontSize: 18),
                             )
                           ),
 
@@ -352,7 +351,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                   ),
                 ),
 
-
                 // 방송 재생 정보 리스트
                 Container(
                   margin: const EdgeInsets.only(right: 20, left: 20),
@@ -369,8 +367,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                 color: themeValue == 2
                                 ? Colors.white
                                 : Color.fromRGBO(36, 36, 36, 1),
-                                fontFamily: 'NotoSansKR-Bold',
-                                fontSize: 18
+                                  fontFamily: 'NotoSansKR-Bold',
+                                  fontSize: 18
                               )
                             ),
                           ),
@@ -417,7 +415,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                   '최신 방송 재생정보가 없습니다.',
                                   style: TextStyle(
                                     color: Theme.of(context).primaryColorLight,
-                                    fontSize: 20
+                                    fontSize: 18
                                   )
                                 )
                               )
@@ -461,8 +459,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                             color: themeValue == 2
                               ? Colors.white
                               : Color.fromRGBO(36, 36, 36, 1),
-                              fontFamily: 'NotoSansKR-Bold',
-                            fontSize: 18
+                                fontFamily: 'NotoSansKR-Bold',
+                                fontSize: 18
                           )
                         ),
                       ),
@@ -477,8 +475,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                 child: Text('추천 음악이 없습니다.',
                                   style: TextStyle(
                                     color: themeValue == 2 ? Colors.white : Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20
+                                      fontFamily: 'NotoSansKR-Bold',
+                                      fontSize: 18
                                   )
                                 )
                               )
@@ -497,7 +495,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         child: Center(
                           child: SmoothPageIndicator(
                             controller: pageController2,
-                            count: (song_recommends.length/ 4).ceil(),
+                            count: (song_recommends.length / 4).ceil(),
                             effect: const WormEffect(
                               activeDotColor: Color.fromRGBO(254, 36, 61, 1),
                               dotHeight: 7,
@@ -663,7 +661,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                   const TextStyle(
                     color: Colors.green,
                     fontSize: 11,
-                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NotoSansKR-Bold',
                   ),
                 );
               }).toList();
@@ -674,12 +672,12 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     );
   }
 
-  late String text;
-  List<String> dateList = broad_weeks_chart
-      .map((e) => '${int.parse(e['MONTH'].toString().substring(4, 6))}월 ${e['WEEK']}주차')
-      .toList();
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     final index = value.toInt();
+    // build 시점에 리스트 재생성
+    final dateList = broad_weeks_chart
+        .map((e) => '${int.parse(e['MONTH'].toString().substring(4, 6))}월 ${e['WEEK']}주차')
+        .toList();
 
     if (index < 0 || index >= dateList.length) {
       return const SizedBox.shrink();
@@ -694,7 +692,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       ),
     );
   }
-
 
   // 최신 방송 재생 정보 리스트
   Widget _listView(programs) {
@@ -770,9 +767,9 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                           width: deviceWidth * 0.5,
                           child: Text(program['CL_NM'],
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 12,
                               overflow: TextOverflow.ellipsis,
-                              fontWeight: FontWeight.bold,
+                              fontFamily: 'NotoSansKR-Bold',
                               color: themeValue == 2
                                 ? Colors.white
                                 : Colors.black
@@ -793,8 +790,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                 child: Text(program['F_NAME'],
                                   style: const TextStyle(
                                     overflow: TextOverflow.ellipsis,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14)
+                                    fontFamily: 'NotoSansKR-Bold',
+                                    fontSize: 12)
                                 ),
                               ),
                               Text(parseProgramDate,
@@ -819,9 +816,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     );
   }
 
-
   Widget _listView2(song_recommends) {
-
     int themeValue = context.watch<MyAppState>().selectedValue;
     var deviceWidth = MediaQuery.of(context).size.width;
 
@@ -836,14 +831,12 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: song_recommends == null
-                      ? 0
-                      : min(4, song_recommends.length - pageIndex * 4),
+                    ? 0
+                    : min(4, song_recommends.length - pageIndex * 4),
                   itemBuilder: (context, index) {
                     final song_recommend = pageIndex == 0
-                        ? song_recommends[index]
-                        : song_recommends[index + (pageIndex * 4)];
-
-                    // final isDarkMode = MyApp.selectedTheme == 'dark';
+                      ? song_recommends[index]
+                      : song_recommends[index + (pageIndex * 4)];
                     return Column(
                       children: [
                         Row(
@@ -889,9 +882,9 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                     width: deviceWidth * 0.5,
                                     child: Text(song_recommend['TITLE'] ?? "",
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         overflow: TextOverflow.ellipsis,
-                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'NotoSansKR-Bold',
                                         color: themeValue == 2
                                           ? Colors.white
                                           : Colors.black))),
@@ -910,8 +903,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                               style: const TextStyle(
                                                   overflow:
                                                   TextOverflow.ellipsis,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14)),
+                                                  fontFamily: 'NotoSansKR-Bold',
+                                                  fontSize: 12)),
                                         ),
                                         Container(
                                           margin:
@@ -920,8 +913,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                               style: const TextStyle(
                                                   overflow:
                                                   TextOverflow.ellipsis,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14)),
+                                                  fontFamily: 'NotoSansKR-Bold',
+                                                  fontSize: 12)),
                                         ),
                                       ],
                                     ),

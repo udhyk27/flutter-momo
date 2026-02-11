@@ -76,19 +76,19 @@ class SettingScreen extends StatefulWidget {
                 child:
                 ListTile(
                   contentPadding: EdgeInsets.only(left:20, bottom: 10),
-                  title: Text('고객센터', style: TextStyle(fontWeight: FontWeight.w600, color: textColor),),
+                  title: Text('고객센터', style: TextStyle(fontFamily: 'NotoSansKR-Medium', color: textColor),),
                   leading: Image.asset('assets/momo_assets/setting_icon_headphone.png'),
                 ),
               ),
               ListTile(
-                title: Text('이용약관', style: TextStyle(fontSize: 15.0, color: textColor),),
+                title: Text('이용약관', style: TextStyle(fontFamily: 'NotoSansKR-Regular', fontSize: 14.0, color: textColor),),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
                   context.read<MyAppState>().setPageIdx(4);
                 },
               ),
               ListTile(
-                title: Text('개인정보 처리방침', style: TextStyle(fontSize: 15.0, color: textColor),),
+                title: Text('개인정보 처리방침', style: TextStyle(fontFamily: 'NotoSansKR-Regular', fontSize: 14.0, color: textColor),),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
                   context.read<MyAppState>().setPageIdx(5);
@@ -114,14 +114,14 @@ class SettingScreen extends StatefulWidget {
                 ),
                 child: ListTile(
                   contentPadding: EdgeInsets.only(left:20, bottom: 10),
-                  title: Text('앱 설정 및 정보', style: TextStyle(fontWeight: FontWeight.w600, color: textColor),),
+                  title: Text('앱 설정 및 정보', style: TextStyle(fontFamily: 'NotoSansKR-Medium', color: textColor),),
                   leading: Image.asset('assets/momo_assets/setting_icon_mobile.png'),
                 )
               ),
               ListTile(
                 leading: Padding(
                   padding: EdgeInsets.zero,
-                  child: Text('화면 스타일', style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.normal, color: textColor),),
+                  child: Text('화면 스타일', style: TextStyle(fontSize: 14.0, fontFamily: 'NotoSansKR-Regular', color: textColor),),
                 ),
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -138,7 +138,7 @@ class SettingScreen extends StatefulWidget {
                 },
               ),
               ListTile(
-                title: Text('앱 실행 시 바로 검색', style: TextStyle(fontSize: 15.0, color: textColor),),
+                title: Text('앱 실행 시 바로 검색', style: TextStyle(fontFamily: 'NotoSansKR-Regular', fontSize: 14.0, color: textColor),),
                 trailing: Switch.adaptive( // adaptive => android ios 에 맞는 스타일로 알아서 디자인됨
                   value: context.watch<MyAppState>().isChecked, // 상태 읽기
                   onChanged: (value) {
@@ -151,7 +151,7 @@ class SettingScreen extends StatefulWidget {
                 ),
               ),
               ListTile(
-                title: Text('검색내역 삭제', style: TextStyle(fontSize: 15.0, color: textColor),),
+                title: Text('검색내역 삭제', style: TextStyle(fontFamily: 'NotoSansKR-Regular', fontSize: 14.0, color: textColor),),
                 trailing: SizedBox(
                   width: 90,
                   height: 30,
@@ -173,7 +173,7 @@ class SettingScreen extends StatefulWidget {
                 ),
               ),
               ListTile(
-                title: Text('임시파일 삭제', style: TextStyle(fontSize: 15.0, color: textColor),),
+                title: Text('임시파일 삭제', style: TextStyle(fontFamily: 'NotoSansKR-Regular', fontSize: 14.0, color: textColor),),
                 trailing: SizedBox(
                   width: 90,
                   height: 30,
@@ -195,7 +195,7 @@ class SettingScreen extends StatefulWidget {
                 ),
               ),
               ListTile(
-                title: Text('현재버전 $currentVersion', style: TextStyle(fontSize: 15.0, color: textColor),),
+                title: Text('현재버전 $currentVersion', style: TextStyle(fontFamily: 'NotoSansKR-Regular', fontSize: 14.0, color: textColor),),
                 trailing: SizedBox(
                   width: 90,
                   height: 30,
@@ -288,8 +288,5 @@ class SettingScreen extends StatefulWidget {
         },
       );
     }
-
-
-
   }
 

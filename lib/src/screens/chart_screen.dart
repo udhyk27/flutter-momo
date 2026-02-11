@@ -551,7 +551,6 @@ class _ChartScreenState extends State<ChartScreen> {
               ],
             ),
           ),
-
         ],
       ),
     );
