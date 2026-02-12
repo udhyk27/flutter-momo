@@ -176,7 +176,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   ],
                 ),
               ),
-
+              Divider(color: themeValue == 2 ? Colors.white : Colors.black, thickness: 1.0),
               Expanded(
                 child: ListView.builder(
                   itemCount: detailProgram.length + 1,
@@ -185,16 +185,14 @@ class _DetailScreenState extends State<DetailScreen> {
                     if (index == 0) {
                       return Column(
                         children: [
-                          Divider(color: themeValue == 2 ? Colors.white : Colors.black, thickness: 1.0),
                           SizedBox(height: 10.0),
                           Container(
-                            margin: EdgeInsets.only(left: 5.0),
                             alignment: Alignment.bottomLeft,
                             child: Text(
                               '최신 방송내역',
                               style: TextStyle(
                                 fontSize: 18.0,
-                                fontFamily: 'NotoSansKR-Bold',
+                                fontFamily: 'NotoSansKR-Medium',
                                 color: textColor
                               ),
                             ),
@@ -204,10 +202,9 @@ class _DetailScreenState extends State<DetailScreen> {
                       );
                     } else {
                       return Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
+                        margin: EdgeInsets.symmetric(vertical: 5),
                         child: Row(
                           children: [
-
                             Container(
                               decoration: BoxDecoration(
                                 border:Border.all(
@@ -217,7 +214,6 @@ class _DetailScreenState extends State<DetailScreen> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: ClipRRect(
-
                                 borderRadius: BorderRadius.circular(8),
                                 child: ExtendedImage.network(
                                   detailProgram[index - 1].logo,
