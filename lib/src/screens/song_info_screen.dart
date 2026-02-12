@@ -833,112 +833,117 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     var deviceWidth = MediaQuery.of(context).size.width;
 
     return Expanded(
-        child: PageView.builder(
-            itemCount: (song_recommends.length / 4).ceil(),
-            controller: pageController2,
-            itemBuilder: (BuildContext context, int pageIndex) {
-              return ListView.builder(
-                  padding: EdgeInsets.zero,
-                  physics: NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: song_recommends == null
-                    ? 0
-                    : min(4, song_recommends.length - pageIndex * 4),
-                  itemBuilder: (context, index) {
-                    final song_recommend = pageIndex == 0
-                      ? song_recommends[index]
-                      : song_recommends[index + (pageIndex * 4)];
-                    return Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                                padding: const EdgeInsets.all(1),
-                                margin:
-                                const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    width: 1,
-                                    color: themeValue == 2
-                                        ? const Color.fromRGBO(189, 189, 189, 1)
-                                    // : const Color.fromRGBO(228, 228, 228, 1),
-                                        : Colors.black.withValues(alpha: 0.3),
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: SizedBox.fromSize(
-                                    child: ExtendedImage.network(
-                                      // program['F_IMAGE'],
-                                      song_recommend['IMAGE'] ?? "",
-                                      width: 80,
-                                      height: 80,
-                                      loadStateChanged: (state) {
-                                        if (state.extendedImageLoadState == LoadState.failed) {
-                                          return SizedBox(width: 80, height: 80, child: Image.asset('assets/no_image.png'),);
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                )
-                            ),
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: deviceWidth * 0.5,
-                                    child: Text(song_recommend['TITLE'] ?? "",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        overflow: TextOverflow.ellipsis,
-                                        fontFamily: 'NotoSansKR-Bold',
-                                        color: themeValue == 2
-                                          ? Colors.white
-                                          : Colors.black))),
-                                  Container(
-                                    width: deviceWidth * 0.5,
-                                    margin:
-                                    const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin:
-                                          const EdgeInsets.only(bottom: 3),
-                                          child: Text(song_recommend['ARTIST'] ?? "",
-                                              style: const TextStyle(
-                                                  overflow:
-                                                  TextOverflow.ellipsis,
-                                                  fontFamily: 'NotoSansKR-Bold',
-                                                  fontSize: 12)),
-                                        ),
-                                        Container(
-                                          margin:
-                                          const EdgeInsets.only(bottom: 3),
-                                          child: Text(song_recommend['ALBUM'] ?? "",
-                                              style: const TextStyle(
-                                                  overflow:
-                                                  TextOverflow.ellipsis,
-                                                  fontFamily: 'NotoSansKR-Bold',
-                                                  fontSize: 12)),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ])
-                          ],
+      child: PageView.builder(
+      itemCount: (song_recommends.length / 4).ceil(),
+      controller: pageController2,
+      itemBuilder: (BuildContext context, int pageIndex) {
+        return ListView.builder(
+          padding: EdgeInsets.zero,
+          physics: NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: song_recommends == null
+            ? 0
+            : min(4, song_recommends.length - pageIndex * 4),
+          itemBuilder: (context, index) {
+            final song_recommend = pageIndex == 0
+              ? song_recommends[index]
+              : song_recommends[index + (pageIndex * 4)];
+            return Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        padding: const EdgeInsets.all(1),
+                        margin:
+                        const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                            width: 1,
+                            color: themeValue == 2
+                                ? const Color.fromRGBO(189, 189, 189, 1)
+                                : Colors.black.withValues(alpha: 0.3),
+                          ),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ],
-                    );
-                  });
-            }
-            )
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: SizedBox.fromSize(
+                            child: ExtendedImage.network(
+                              song_recommend['IMAGE'] ?? "",
+                              width: 80,
+                              height: 80,
+                              loadStateChanged: (state) {
+                                if (state.extendedImageLoadState == LoadState.failed) {
+                                  return SizedBox(width: 80, height: 80, child: Image.asset('assets/no_image.png'),);
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        )
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: deviceWidth * 0.5,
+                          child: Text(song_recommend['TITLE'] ?? "",
+                            style: TextStyle(
+                              fontSize: 12,
+                              overflow: TextOverflow.ellipsis,
+                              fontFamily: 'NotoSansKR-Bold',
+                              color: themeValue == 2
+                                ? Colors.white
+                                : Colors.black)
+                          )
+                        ),
+                        Container(
+                          width: deviceWidth * 0.5,
+                          margin:
+                          const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                          child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin:
+                                const EdgeInsets.only(bottom: 3),
+                                child: Text(song_recommend['ARTIST'] ?? "",
+                                    style: const TextStyle(
+                                        overflow:
+                                        TextOverflow.ellipsis,
+                                        fontFamily: 'NotoSansKR-Bold',
+                                        fontSize: 12
+                                    )
+                                ),
+                              ),
+                              Container(
+                                margin:
+                                const EdgeInsets.only(bottom: 3),
+                                child: Text(song_recommend['ALBUM'] ?? "",
+                                  style: const TextStyle(
+                                      overflow:
+                                      TextOverflow.ellipsis,
+                                      fontFamily: 'NotoSansKR-Bold',
+                                      fontSize: 12
+                                  )
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ]
+                    )
+                  ],
+                ),
+              ],
+            );
+          });
+        }
+      )
     );
   }
 }

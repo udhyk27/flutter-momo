@@ -457,6 +457,10 @@ class _ChartScreenState extends State<ChartScreen> {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
+                                      border:Border.all(
+                                          width: 1,
+                                          color: themeValue == 2 ? Color.fromRGBO(189,189,189,1.0) : Colors.black.withValues(alpha:0.3)
+                                      ),
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
                                     ),

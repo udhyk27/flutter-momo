@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../../main.dart';
 import 'package:provider/provider.dart';
@@ -23,10 +25,10 @@ class CustomBtAppBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Image.asset(
             themeValue == 2
-                ? (currentIndex == 0
+              ? (currentIndex == 0
                 ? 'assets/momo_assets/icon_folder_on_reverse.png'
                 : 'assets/momo_assets/icon_folder.png')
-                : (currentIndex == 0
+              : (currentIndex == 0
                 ? 'assets/momo_assets/icon_folder_on.png'
                 : 'assets/momo_assets/icon_folder.png'),
             width: 25,
@@ -37,10 +39,10 @@ class CustomBtAppBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Image.asset(
             themeValue == 2
-                ? (currentIndex == 1
+              ? (currentIndex == 1
                 ? 'assets/momo_assets/icon_momosearch_on_reverse.png'
                 : 'assets/momo_assets/icon_momosearch.png')
-                : (currentIndex == 1
+              : (currentIndex == 1
                 ? 'assets/momo_assets/icon_momosearch_on.png'
                 : 'assets/momo_assets/icon_momosearch.png'),
             width: 30,
@@ -51,10 +53,10 @@ class CustomBtAppBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Image.asset(
             themeValue == 2
-                ? (currentIndex == 2
+              ? (currentIndex == 2
                 ? 'assets/momo_assets/icon_chart_on_reverse.png'
                 : 'assets/momo_assets/icon_chart.png')
-                : (currentIndex == 2
+              : (currentIndex == 2
                 ? 'assets/momo_assets/icon_chart_on.png'
                 : 'assets/momo_assets/icon_chart.png'),
             width: 25,
@@ -69,28 +71,32 @@ class CustomBtAppBar extends StatelessWidget {
     final safeIndex = currentIndex.clamp(0, 2);
 
     return SafeArea(
+      top: false,
+      left: false,
+      right: false,
+      bottom: Platform.isAndroid,
       child: Theme(
         data: Theme.of(context).copyWith(
-          splashColor: Colors.transparent,      // 클릭 물결 제거
-          highlightColor: Colors.transparent,   // 클릭 하이라이트 제거
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
         ),
-        child: Container(
-          height: 65,
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: themeValue == 2 ? Colors.black : Colors.white,
-            elevation: 0,
-            selectedLabelStyle: TextStyle(fontSize: 12),
-            unselectedLabelStyle: TextStyle(fontSize: 12),
-            selectedItemColor: themeValue == 2 ? Colors.white : Colors.black,
-            unselectedItemColor: themeValue == 2 ? Colors.white54 : Colors.black54,
-            items: _getBottomNavItems(),
-            currentIndex: safeIndex,
-            onTap: onTabChange,
-          ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: themeValue == 2 ? Colors.black : Colors.white,
+          elevation: 0,
+          selectedFontSize: 12,
+          unselectedFontSize: 12,
+          selectedItemColor: themeValue == 2 ? Colors.white : Colors.black,
+          unselectedItemColor:
+          themeValue == 2 ? Colors.white54 : Colors.black54,
+          items: _getBottomNavItems(),
+          currentIndex: safeIndex,
+          onTap: onTabChange,
         ),
       ),
     );
+
+
 
   }
 }
