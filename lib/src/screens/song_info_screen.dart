@@ -304,8 +304,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                               ),
                               child: Center(
                                 child: FractionallySizedBox(
-                                  widthFactor: 0.85,  // 가로 길이
-                                  heightFactor: 0.85, // 세로 높이
+                                  widthFactor: 0.9,  // 가로 길이
+                                  heightFactor: 0.9, // 세로 높이
                                   child: line_chart(broad_weeks_chart),
                                 ),
                               ),
@@ -538,15 +538,27 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
     if (ranksIn100.isEmpty) {
       return Center(
-        child: Text(
-          '주간 방송 차트 순위는 TOP 100만 제공됩니다.',
-          style: TextStyle(
-            fontSize: 13,
-            color: themeValue == 2 ? Colors.white : Colors.black,
+        child: SizedBox(
+          height: 50,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(5.0)
+            ),
+            child: Center(
+              child: Text(
+                '주간 방송 차트 순위는 TOP 100만 제공됩니다.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: themeValue == 2 ? Colors.white : Colors.black,
+                ),
+              ),
+            ),
           ),
         ),
       );
     }
+
 
     // ===== 최고/최악 순위 계산 =====
     final int minRank = ranksIn100.reduce((a, b) => a < b ? a : b); // 가장 높은 순위

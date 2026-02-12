@@ -17,7 +17,9 @@ import '../services/api_service.dart';
 import '../model/api_mmchart.dart';
 import '../model/api_programs.dart';
 
-
+/***
+ * 검색차트 스크린
+ */
 class ChartScreen extends StatefulWidget {
   const ChartScreen({super.key});
 
@@ -32,23 +34,23 @@ class _ChartScreenState extends State<ChartScreen> {
   bool isChartLoading = false;
   bool isAirChartLoading = false;
 
-  ScrollController _scrollController = ScrollController(); // ScrollController
-  ScrollController _scrollController2 = ScrollController(); // Air Chart
+  ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController2 = ScrollController();
 
-  // API 요청 - 모모 검색 차트
+  /// API 요청 - 모모 검색 차트
   Future<void> fetchChart() async {
 
-    if (isChartLoading || !hasMoreData) return; // 로딩중 일때는 X
+    if (isChartLoading || !hasMoreData) return; /// 로딩중 일때는 X
 
     setState(() {
       isChartLoading = true;
     });
 
     try {
-      // 현재 스크롤 위치 저장
+      /// 현재 스크롤 위치 저장
       double currentScrollPosition = _scrollController.hasClients ? _scrollController.position.pixels : 0;
 
-      // 페이지 요청
+      /// 페이지 요청
       http.Response response = await http.get(Uri.parse('${ApiService.mmchartUrl}?page=$page'));
 
       if (response.statusCode != 200) {
@@ -57,19 +59,18 @@ class _ChartScreenState extends State<ChartScreen> {
 
       String jsonData = response.body;
       List<dynamic> map = jsonDecode(jsonData);
-      // print('모모 검색 차트 ::::::::::::::::::::::: $map');
 
       if (mounted) {
         if (map.isNotEmpty) {
           setState(() {
             momo_sch_list.addAll(map
-                .map((item) => ApiMmChart.fromJson(item as Map<String, dynamic>))
-                .toList());
+              .map((item) => ApiMmChart.fromJson(item as Map<String, dynamic>))
+              .toList());
           });
           page++;
         } else {
           print('데이터 끝');
-          hasMoreData = false; // 더 이상 데이터가 없음을 표시
+          hasMoreData = false; /// 더 이상 데이터가 없음을 표시
         }
 
         setState(() {
@@ -78,7 +79,7 @@ class _ChartScreenState extends State<ChartScreen> {
       }
 
 
-      // 기존 스크롤 위치 유지하기
+      /// 기존 스크롤 위치 유지하기
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients) {
           _scrollController.jumpTo(currentScrollPosition);
@@ -96,7 +97,7 @@ class _ChartScreenState extends State<ChartScreen> {
   }
 
   Future<void> fetchAirChart() async {
-    if (isAirChartLoading || !hasMoreData) return; // 로딩중 일때, 데이터 없을 때 X
+    if (isAirChartLoading || !hasMoreData) return; /// 로딩중 일때, 데이터 없을 때 X
 
     setState(() {
       isAirChartLoading = true;
@@ -113,8 +114,6 @@ class _ChartScreenState extends State<ChartScreen> {
 
       String jsonData = response.body;
       List<dynamic> map = jsonDecode(jsonData);
-      // print('에어차트 :::::::::::::::::::::::::: $map');
-
       if (mounted) {
         if (map.isNotEmpty) {
           setState(() {
@@ -122,30 +121,26 @@ class _ChartScreenState extends State<ChartScreen> {
                 .map((item) => ApiPrograms.fromJson(item as Map<String, dynamic>))
                 .toList());
           });
-
           page2++;
         } else {
           print('에어차트 데이터 끝');
           setState(() {
-            hasMoreData = false; // 데이터 없음
+            hasMoreData = false; /// 데이터 없음
           });
         }
-
         setState(() {
             isAirChartLoading = false;
         });
       }
 
-      // 기존 스크롤 위치 유지하기
+      /// 기존 스크롤 위치 유지하기
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController2.hasClients) {
           _scrollController2.jumpTo(currentScrollPosition);
         }
       });
-
     } catch (e) {
       print('에어차트 API 오류 : $e');
-
       if (mounted) {
         setState(() {
           isAirChartLoading = false;
@@ -154,23 +149,18 @@ class _ChartScreenState extends State<ChartScreen> {
     }
   }
 
-  // 디바이스 ID
   String? _uid;
-
-  // DEVICE ID
+  /// DEVICE ID 가져오기
   Future<void> getDeviceId() async {
-    // DEVICE ID 가져오기
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
     try {
       if (Platform.isAndroid) {
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        _uid = androidInfo.id;  // 안드로이드 디바이스 ID
+        _uid = androidInfo.id;  /// 안드로이드 디바이스 ID
       } else if (Platform.isIOS) {
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        _uid = iosInfo.identifierForVendor;  // iOS 디바이스 ID
+        _uid = iosInfo.identifierForVendor;  /// iOS 디바이스 ID
       }
-      // print('device uid ::::::::::::::::::::::: $_uid');
     } catch (e) {
       _uid = 'Failed to get id';
     }
@@ -178,11 +168,11 @@ class _ChartScreenState extends State<ChartScreen> {
 
   PageController _pageController = PageController();
 
-  // 리스트 초기화
+  /// 리스트 초기화
   List<ApiMmChart> momo_sch_list = [];
   List<ApiPrograms> air_chart = [];
 
-  // 페이지 전환시 현재 페이지 인덱스
+  /// 페이지 전환시 현재 페이지 인덱스
   int _currentIndex = 0;
   double _barPosition = 0;
   String _currentText = '모모에서 가장 많이 검색된 음원입니다.';
@@ -193,21 +183,21 @@ class _ChartScreenState extends State<ChartScreen> {
   void initState() {
     super.initState();
 
-    fetchChart(); // 모모 차트
-    fetchAirChart(); // 에어 차트
-    getDeviceId(); // device id
+    fetchChart(); /// 모모 차트
+    fetchAirChart(); /// 에어 차트
+    getDeviceId(); /// device id
 
-    // 모모 차트 스크롤 감지
+    /// 모모 차트 스크롤 감지
     _scrollController.addListener(() {
       if (hasMoreData && (_scrollController.position.pixels == _scrollController.position.maxScrollExtent)) {
-        fetchChart(); // 스크롤이 맨 끝에 도달하면 데이터 로드
+        fetchChart(); /// 스크롤이 맨 끝에 도달하면 데이터 로드
       }
     });
 
-    // 에어 차트 스크롤
+    /// 에어 차트 스크롤
     _scrollController2.addListener(() {
       if (hasMoreData && (_scrollController2.position.pixels == _scrollController2.position.maxScrollExtent)) {
-        fetchAirChart(); // 스크롤이 맨 끝에 도달하면 데이터 로드
+        fetchAirChart(); /// 스크롤이 맨 끝에 도달하면 데이터 로드
       }
     });
   }
@@ -223,10 +213,10 @@ class _ChartScreenState extends State<ChartScreen> {
   Widget build(BuildContext context) {
     int themeValue = context.watch<MyAppState>().selectedValue;
 
-    // 화면 너비
+    /// 화면 너비
     double screenWidth = MediaQuery.of(context).size.width - 50;
 
-    // 버튼 클릭 시 막대바 위치 변경 & 페이지 전환
+    /// 버튼 클릭 시 막대바 위치 변경 & 페이지 전환
     void _onButtonClick(int index) {
       setState(() {
         _currentIndex = index;
@@ -237,7 +227,7 @@ class _ChartScreenState extends State<ChartScreen> {
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10),
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
       decoration: BoxDecoration(
           color: themeValue == 2 ? Color.fromRGBO(90, 90, 90, 1.0) : Colors.white,
           borderRadius: BorderRadius.only(
@@ -249,7 +239,7 @@ class _ChartScreenState extends State<ChartScreen> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [ // 버튼을 눌러서 페이지 전환
+            children: [ /// 버튼을 눌러서 페이지 전환
               TextButton(
                 onPressed: () {
                   _pageController.animateToPage(0,
@@ -286,7 +276,7 @@ class _ChartScreenState extends State<ChartScreen> {
             ],
           ),
 
-          // 막대바
+          /// 막대바
           Align(
             alignment: Alignment.topLeft,
             child: AnimatedContainer(
@@ -299,7 +289,7 @@ class _ChartScreenState extends State<ChartScreen> {
             ),
           ),
 
-          // 전환되는 리스트
+          /// 전환되는 리스트
           Expanded(
             child: PageView(
               controller: _pageController,
@@ -308,10 +298,10 @@ class _ChartScreenState extends State<ChartScreen> {
                   _currentIndex = index;
                 });
               },
-              physics: NeverScrollableScrollPhysics(), // 스와이프 탭 이동 막기
+              physics: NeverScrollableScrollPhysics(), /// 스와이프 탭 이동 막기
               children: [
 
-                /// ======================== 모모 검색 차트 ========================
+                //// ======================== 모모 검색 차트 ========================
                 Stack(
                   children: [
                     RefreshIndicator(
@@ -323,7 +313,7 @@ class _ChartScreenState extends State<ChartScreen> {
                         thumbVisibility: false,
                         child: ListView.builder(
                           controller: _scrollController,
-                          itemCount: momo_sch_list.length + 1, // +1: _currentText
+                          itemCount: momo_sch_list.length + 1, /// +1: _currentText
                           itemBuilder: (context, index) {
                             if (index == 0) {
                               return Padding(
@@ -358,9 +348,7 @@ class _ChartScreenState extends State<ChartScreen> {
                                 );
                               },
                               child: Container(
-                                margin: EdgeInsets.only(bottom: 5),
-                                height: 120,
-                                padding: EdgeInsets.all(10),
+                                height: 110,
                                 child: Row(
                                   children: [
                                     ClipRRect(
@@ -420,7 +408,7 @@ class _ChartScreenState extends State<ChartScreen> {
                       ),
                     ),
 
-                    // 로딩 표시 (Stack 아래쪽)
+                    /// 로딩 표시 (Stack 아래쪽)
                     if (isChartLoading)
                       Positioned(
                         bottom: 16,
@@ -433,7 +421,7 @@ class _ChartScreenState extends State<ChartScreen> {
                   ],
                 ),
 
-                /// ======================== 에어 차트 ========================
+                //// ======================== 에어 차트 ========================
                 Stack(
                   children: [
                     RefreshIndicator(
@@ -445,7 +433,7 @@ class _ChartScreenState extends State<ChartScreen> {
                         thumbVisibility: false,
                         child: ListView.builder(
                           controller: _scrollController2,
-                          itemCount: air_chart.length + 1, // +1: _currentText
+                          itemCount: air_chart.length + 1, /// +1: _currentText
                           itemBuilder: (context, index) {
                             if (index == 0) {
                               return Padding(
@@ -464,9 +452,7 @@ class _ChartScreenState extends State<ChartScreen> {
                             final item = air_chart[dataIndex];
 
                             return Container(
-                              margin: EdgeInsets.only(bottom: 5),
-                              height: 120,
-                              padding: EdgeInsets.all(10),
+                              height: 110,
                               child: Row(
                                 children: [
                                   Container(
@@ -536,7 +522,7 @@ class _ChartScreenState extends State<ChartScreen> {
                       ),
                     ),
 
-                    // 로딩 표시 (Stack 아래쪽)
+                    /// 로딩 표시 (Stack 아래쪽)
                     if (isAirChartLoading)
                       Positioned(
                         bottom: 16,
