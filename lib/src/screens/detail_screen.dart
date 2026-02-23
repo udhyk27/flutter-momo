@@ -112,8 +112,7 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.all(20),
-
+                margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
                 // 선택한 곡 정보
                 child: Row(
                   children: [

@@ -300,7 +300,6 @@ class _ChartScreenState extends State<ChartScreen> {
               },
               physics: NeverScrollableScrollPhysics(), /// 스와이프 탭 이동 막기
               children: [
-
                 //// ======================== 모모 검색 차트 ========================
                 Stack(
                   children: [
@@ -317,7 +316,7 @@ class _ChartScreenState extends State<ChartScreen> {
                           itemBuilder: (context, index) {
                             if (index == 0) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                                padding: const EdgeInsets.symmetric(vertical: 10),
                                 child: Text(
                                   _currentText,
                                   style: TextStyle(
@@ -437,7 +436,7 @@ class _ChartScreenState extends State<ChartScreen> {
                           itemBuilder: (context, index) {
                             if (index == 0) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                                padding: const EdgeInsets.symmetric(vertical: 10),
                                 child: Text(
                                   _currentText,
                                   style: TextStyle(

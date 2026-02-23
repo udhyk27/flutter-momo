@@ -187,7 +187,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
         child: SingleChildScrollView(
               child: Container(
                 width: double.infinity,
-                // margin: EdgeInsets.symmetric(horizontal: 10),
                 margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
                 decoration: BoxDecoration(
                   color: themeValue == 2 ? Color.fromRGBO(90, 90, 90, 1.0) : Colors.white,
@@ -197,7 +196,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: themeValue == 2 ? Colors.black : Colors.grey[100],
+                        color: themeValue == 2 ? Colors.black54 : Colors.grey[100],
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           width: 1,
@@ -267,10 +266,8 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                       ),
                     ),
 
-                SizedBox(height: 20),
-
                 Container(
-                  margin: EdgeInsets.all(20),
+                  margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -299,7 +296,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                               height: 200, // 최소 높이 지정
                               padding: EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: themeValue == 2 ? Colors.black : Colors.white,
+                                color: themeValue == 2 ? Colors.grey.shade800 : Colors.white,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Center(
@@ -393,10 +390,11 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                   )
                                 )
                               },
-                              child: Container(
+                              child: isExist ? Container() :
+                              Container(
                                 width: 50,
                                 height: 30,
-                                child: Text("더보기 >", style: TextStyle(fontSize: 13, color: Colors.grey),
+                                child: Text("더보기", style: TextStyle(fontSize: 13, color: Colors.grey, fontFamily: 'NotoSansKR-Regular',),
                                 ),
                               )
                             ),
@@ -405,7 +403,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                       ),
                       Container(
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        height: 430,
+                        height: isExist ? 100 : 430,
                         child: programLoading
                           ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,),) // 로딩 인디케이터
                           : isExist
@@ -414,8 +412,9 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                 child: Text(
                                   '최신 방송 재생정보가 없습니다.',
                                   style: TextStyle(
-                                    color: Theme.of(context).primaryColorLight,
-                                    fontSize: 18
+                                    color: themeValue == 2 ? Colors.white : Colors.black,
+                                    fontFamily: 'NotoSansKR-Medium',
+                                    fontSize: 16
                                   )
                                 )
                               )
@@ -426,15 +425,16 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                 ],
                               )
                       ),
-                      Container(
+                      isExist
+                          ? const SizedBox.shrink()
+                          : Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 40),
                         child: Center(
                           child: SmoothPageIndicator(
                             controller: pageController,
-                            count: (programs.length / 4).ceil(),
+                            count: programs.isEmpty ? 1 : (programs.length / 4).ceil(),
                             effect: const WormEffect(
-                              activeDotColor:
-                              Color.fromRGBO(254, 36, 61, 1),
+                              activeDotColor: Color.fromRGBO(254, 36, 61, 1),
                               dotHeight: 7,
                               dotWidth: 7,
                               type: WormType.thinUnderground,
@@ -465,7 +465,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: isExist2 ? 50 : 430,
+                        height: isExist2 ? 100 : 430,
                         child: Container(
                           child: isLoading
                             ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,),) // 로딩 인디케이터
@@ -475,7 +475,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                 child: Text('추천 음악이 없습니다.',
                                   style: TextStyle(
                                     color: themeValue == 2 ? Colors.white : Colors.black,
-                                      fontFamily: 'NotoSansKR-Bold',
+                                      fontFamily: 'NotoSansKR-Medium',
                                       fontSize: 16
                                   )
                                 )
@@ -490,7 +490,9 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                       ),
 
                       // 스와이프 페이징
-                      Container(
+                      isExist2
+                          ? const SizedBox.shrink()
+                          : Container(
                         margin: const EdgeInsets.fromLTRB(0, 10, 10, 40),
                         child: Center(
                           child: SmoothPageIndicator(
@@ -542,7 +544,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
           height: 50,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.grey.shade200,
+              color: Colors.grey.shade400,
               borderRadius: BorderRadius.circular(5.0)
             ),
             child: Center(
@@ -558,7 +560,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
         ),
       );
     }
-
 
     // ===== 최고/최악 순위 계산 =====
     final int minRank = ranksIn100.reduce((a, b) => a < b ? a : b); // 가장 높은 순위
