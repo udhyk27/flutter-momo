@@ -465,7 +465,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 430,
+                        height: isExist2 ? 50 : 430,
                         child: Container(
                           child: isLoading
                             ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,),) // 로딩 인디케이터
@@ -476,7 +476,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                   style: TextStyle(
                                     color: themeValue == 2 ? Colors.white : Colors.black,
                                       fontFamily: 'NotoSansKR-Bold',
-                                      fontSize: 18
+                                      fontSize: 16
                                   )
                                 )
                               )
@@ -550,7 +550,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                 '주간 방송 차트 순위는 TOP 100만 제공됩니다.',
                 style: TextStyle(
                   fontSize: 12,
-                  color: themeValue == 2 ? Colors.white : Colors.black,
+                  color: Colors.black,
                 ),
               ),
             ),
