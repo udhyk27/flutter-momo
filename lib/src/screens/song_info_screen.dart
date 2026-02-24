@@ -82,7 +82,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-          '${ApiService.detailUrl}/json'
+          '${ApiService().detailUrl}/json'
               '?id=${widget.song.songId}'
               '&uid=${MyApp.uid}'
               '&genre=${widget.song.genre}',
@@ -108,7 +108,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     try {
       final programsResponse = await http.get(
         Uri.parse(
-          '${ApiService.programsUrl}/json?id=${widget.song.songId}',
+          '${ApiService().programsUrl}/json?id=${widget.song.songId}',
         ),
       );
 
@@ -170,9 +170,9 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
           IconButton(
             onPressed: () { // 공유
               Share.share(
-                  '${ApiService.shareUrl}?f_id=${widget.song.songId}',
-                  sharePositionOrigin:
-                  Rect.fromLTRB(0, 0, deviceWidth, deviceHeight * 0.5)
+                '${ApiService().shareUrl}?f_id=${widget.song.songId}',
+                sharePositionOrigin:
+                Rect.fromLTRB(0, 0, deviceWidth, deviceHeight * 0.5)
               );
             },
             icon: Icon(Icons.share, color: themeValue == 2 ? Colors.white : Colors.black,),

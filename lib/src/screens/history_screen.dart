@@ -31,7 +31,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Future<void> fetchApiData() async {
     /// 검색 목록
     try {
-      http.Response response = await http.get(Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}'));
+      http.Response response = await http.get(Uri.parse('${ApiService().historyUrl}/json?uid=${MyApp.uid}'));
 
       if (response.statusCode == 200) {
         String jsonData = response.body;
@@ -55,7 +55,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     /// 추천 음악 리스트
     try {
-      http.Response response = await http.get(Uri.parse('${ApiService.recommendUrl}/json?uid=${MyApp.uid}'));
+      http.Response response = await http.get(Uri.parse('${ApiService().recommendUrl}/json?uid=${MyApp.uid}'));
       String jsonData = response.body;
       List<dynamic> apiRecommend = jsonDecode(jsonData);
       if (mounted) {
@@ -196,118 +196,112 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   isLoading
                     ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,)) /// 로딩 중
                     : searchList.isEmpty
-                    ? Center(
-                      child: Container(
-                        height: 100,
-                        alignment: Alignment.center,
-                        child: Text(
-                          '검색 결과가 없습니다.',
-                          style: TextStyle(
-                            fontSize: 17.0,
-                            fontWeight: FontWeight.w600,
+                      ? Center(
+                        child: Container(
+                          height: 100,
+                          alignment: Alignment.center,
+                          child: Text(
+                            '검색 결과가 없습니다.',
+                            style: TextStyle(
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                      ),
-                    )
+                      )
+                      : ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
 
-    :
-                  ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true, /// 높이를 결과 개수만큼만 설정
+                        itemCount: searchList.length,
+                        itemBuilder: (context, index) {
 
-                    shrinkWrap: true, /// 높이를 결과 개수만큼만 설정
-                    itemCount: searchList.length,
-                    itemBuilder: (context, index) {
-
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SongInfoScreen(song: searchList[index]),),
-                          );
-                        },
-                        child: Container(
-                          height: 110,
-                          child: Stack(
-                            children: [
-                              Row(
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => SongInfoScreen(song: searchList[index]),),
+                              );
+                            },
+                            child: Container(
+                              height: 110,
+                              child: Stack(
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: ExtendedImage.network(
-                                      searchList[index].image,
-                                      width: 100,
-                                      height: 100,
-                                      loadStateChanged: (state) {
-                                        if (state.extendedImageLoadState == LoadState.failed) {
-                                          return SizedBox(width: 100, height: 100, child: Image.asset('assets/no_image.png'),);
-                                        }
-                                        return null;
-                                      },
+                                  Row(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: ExtendedImage.network(
+                                          searchList[index].image,
+                                          width: 100,
+                                          height: 100,
+                                          loadStateChanged: (state) {
+                                            if (state.extendedImageLoadState == LoadState.failed) {
+                                              return SizedBox(width: 100, height: 100, child: Image.asset('assets/no_image.png'),);
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              searchList[index].title,
+                                              overflow:
+                                              TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                                            ),
+                                            Text(
+                                              searchList[index].artist,
+                                              overflow:
+                                              TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                                            ),
+                                            Text(
+                                              searchList[index].album,
+                                              overflow:
+                                              TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: TextStyle(fontSize: 13, color: Colors.grey),
+                                            ),
+                                          ],
+                                        )
+                                      ),
+                                    ],
+                                  ),
+                                  Positioned(
+                                    top: -10,
+                                    right: 0,
+                                    child: IconButton(
+                                      onPressed: () => showDeleteDialog(context, searchList[index].songId, index),
+                                      icon: Icon(
+                                        Icons.close,
+                                        size: 15,
+                                        color:
+                                        themeValue == 2 ? Colors.white : Colors.black,
+                                      ),
                                     ),
                                   ),
-                                  SizedBox(width: 10,),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          searchList[index].title,
-                                          overflow:
-                                          TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                                        ),
-                                        Text(
-                                          searchList[index].artist,
-                                          overflow:
-                                          TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                                        ),
-                                        Text(
-                                          searchList[index].album,
-                                          overflow:
-                                          TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(fontSize: 13, color: Colors.grey),
-                                        ),
-                                      ],
-                                    )
-                                  ),
-                                ],
+                                ]
                               ),
-                              Positioned(
-                                top: -10,
-                                right: 0,
-                                child: IconButton(
-                                  onPressed: () => showDeleteDialog(context, searchList[index].songId, index),
-                                  icon: Icon(
-                                    Icons.close,
-                                    size: 15,
-                                    color:
-                                    themeValue == 2 ? Colors.white : Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ]
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-
-                    searchList.isNotEmpty
-                    ? Container()
-                    : Text('추천 음악',
-                        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w600),
+                            ),
+                          );
+                        },
                       ),
 
                   searchList.isNotEmpty
+                  ? Container()
+                  : Text('추천 음악', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w600),),
+
+                  searchList.isNotEmpty
                     ? Container()
-                    : isLoading
-                      ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,)) /// 로딩 중일 때
-                      : ListView.builder(
+                    : ListView.builder(
                     shrinkWrap: true, /// 내부 크기 조정
                     physics: NeverScrollableScrollPhysics(), /// 자체 스크롤 방지
                     itemCount: recommendList.length,
@@ -337,7 +331,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         try {
           http.Response response = await http.get(
             Uri.parse(
-              '${ApiService.historyUrl}/json?uid=${MyApp.uid}&id=${songId}&proc=del',
+              '${ApiService().historyUrl}/json?uid=${MyApp.uid}&id=${songId}&proc=del',
             ),
           );
 

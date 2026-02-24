@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, curly_braces_in_flow_control_structures, avoid_single_cascade_in_expression_statements
 import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
@@ -97,11 +96,11 @@ class VMIDC {
 
   // DNA 서버 전송 및 처리 로직
   Future<void> _sendDnaToServerAndProcess() async {
-    print('DNA ${qLen}개 도달: ${DateTime.now()}');
+    // print('DNA ${qLen}개 도달: ${DateTime.now()}');
     // 여기서 HTTP 요청 호출
     Map m = await sendDnaToServer(_dna.pack());
     // print('API 응답 시간: ${DateTime.now()}');
-    print('돌아온 값 :: $m');
+    // print('돌아온 값 :: $m');
 
     // 에러 메시지가 존재할 때
     if (m['err_msg'] != '') {
@@ -110,9 +109,9 @@ class VMIDC {
     }
 
     if (m['data'] != '' && m.containsKey('data')) {
-      print('찾기까지 걸린 종료시간 :: ${DateTime.now()}');
-      print('곡 인식 성공 !!');
-      print('print::${_recorder.isRecording}');
+      // print('찾기까지 걸린 종료시간 :: ${DateTime.now()}');
+      // print('곡 인식 성공 !!');
+      // print('print::${_recorder.isRecording}');
       HapticFeedback.lightImpact();
 
       _ctrl.sink.add(m);
@@ -142,10 +141,10 @@ class VMIDC {
 
     try {
       final response = await http.post(
-        Uri.parse(ApiService.serverUrl),
+        Uri.parse(ApiService().serverUrl),
         headers: headers,
         body: body,
-      ).timeout(Duration(seconds: ApiService.sv_timeOut), // 서버로부터 5초간 응답이 없을 시
+      ).timeout(Duration(seconds: ApiService().sv_timeOut), // 서버로부터 5초간 응답이 없을 시
         onTimeout: () {
           return http.Response(jsonEncode({'err_msg': 'TIME OUT'}), 408); // String, statusCode
         });
@@ -159,7 +158,7 @@ class VMIDC {
 
   // 녹음 시작
   Future<void> start() async {
-    print('찾기까지 걸린 시작시간 :: ${DateTime.now()}');
+    // print('찾기까지 걸린 시작시간 :: ${DateTime.now()}');
     num = 1; // 몇 번째 녹음 데이터 전송인지
 
     if (_recorder.isRecording) {
@@ -176,12 +175,12 @@ class VMIDC {
         sampleRate: srate,
       );
 
-      print('녹음이 정상적으로 시작됨!');
+      // print('녹음이 정상적으로 시작됨!');
 
-      _recordTimer = Timer(Duration(seconds: ApiService.rc_timeOut), () async {
+      _recordTimer = Timer(Duration(seconds: ApiService().rc_timeOut), () async {
         // 곡 인식하거나 서버 연결 실패했는데 녹음만 되고있을 때 방지
         if (_recorder.isRecording) {
-          print('15초 경과 - 녹음 중이므로 자동 종료합니다.');
+          // print('15초 경과 - 녹음 중이므로 자동 종료합니다.');
           await stop();
         }
       });
@@ -192,7 +191,7 @@ class VMIDC {
   }
 
   Future<void> stop() async {
-    print('vmid.stop()');
+    // print('vmid.stop()');
     num = 1;
 
     if (!_recorder.isRecording) return;
@@ -211,7 +210,7 @@ class VMIDC {
   }
 
   Future<void> dispose() async {
-    print('vmidc dispose');
+    // print('vmidc dispose');
 
     if (_recorder.isRecording) {
       print('녹음중이면 stop');

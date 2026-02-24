@@ -51,7 +51,7 @@ class _ChartScreenState extends State<ChartScreen> {
       double currentScrollPosition = _scrollController.hasClients ? _scrollController.position.pixels : 0;
 
       /// 페이지 요청
-      http.Response response = await http.get(Uri.parse('${ApiService.mmchartUrl}?page=$page'));
+      http.Response response = await http.get(Uri.parse('${ApiService().mmchartUrl}?page=$page'));
 
       if (response.statusCode != 200) {
         throw Exception('차트 데이터 로딩 실패 ${response.statusCode}');
@@ -106,7 +106,7 @@ class _ChartScreenState extends State<ChartScreen> {
     try {
       double currentScrollPosition = _scrollController2.hasClients ? _scrollController2.position.pixels : 0;
 
-      http.Response response = await http.get(Uri.parse('${ApiService.airchartUrl}?page=$page2'));
+      http.Response response = await http.get(Uri.parse('${ApiService().airchartUrl}?page=$page2'));
 
       if (response.statusCode != 200) {
         throw Exception('에어차트 데이터 로딩 실패 ${response.statusCode}');

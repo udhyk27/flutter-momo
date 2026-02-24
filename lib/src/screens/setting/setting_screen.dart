@@ -41,11 +41,11 @@ class SettingScreen extends StatefulWidget {
     Color textColor = themeValue == 2 ? Colors.white : Colors.black;
 
     Future<bool> launchPlayStore() async {
-      final Uri url = Uri.parse(ApiService.storeUrl);
+      final Uri url = Uri.parse(ApiService().storeUrl);
 
       // 버전 비교
       if (await canLaunchUrl(url)) {
-        if (Version.parse(currentVersion) < Version.parse(ApiService.appVersion)) {
+        if (Version.parse(currentVersion) < Version.parse(ApiService().appVersion)) {
           await launchUrl(url);
           return false;
         } else {
@@ -257,7 +257,7 @@ class SettingScreen extends StatefulWidget {
           try {
             http.Response? response;
             if (index == 0) { // 검색내역 삭제
-              response = await http.get(Uri.parse('${ApiService.historyUrl}/json?uid=${MyApp.uid}&proc=del'),);
+              response = await http.get(Uri.parse('${ApiService().historyUrl}/json?uid=${MyApp.uid}&proc=del'),);
             }
 
             if (response != null && response.statusCode == 200) {

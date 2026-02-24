@@ -46,7 +46,7 @@ class _DetailScreenState extends State<DetailScreen> {
     print('곡 코드 :::::::::::::::: ${widget.songId}');
 
     try {
-      http.Response programs_response = await http.get(Uri.parse('${ApiService.programsUrl}/json?id=${widget.songId}'));
+      http.Response programs_response = await http.get(Uri.parse('${ApiService().programsUrl}/json?id=${widget.songId}'));
 
       // programs data 파싱
       String programs_json = programs_response.body;

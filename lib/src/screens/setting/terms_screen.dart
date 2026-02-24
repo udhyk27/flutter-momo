@@ -29,7 +29,7 @@ class _TermsScreenState extends State<TermsScreen> {
 
     try {
       http.Response response = await http.get(Uri.parse(
-        widget.gubun == 4 ? ApiService.termsUrl : ApiService.privacyUrl
+        widget.gubun == 4 ? ApiService().termsUrl : ApiService().privacyUrl
       ));
 
       setState(() {
