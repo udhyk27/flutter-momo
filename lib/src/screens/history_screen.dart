@@ -157,7 +157,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     },
                   )
                   : null,
-
                   border: OutlineInputBorder( /// 기본 설정
                   borderRadius: BorderRadius.circular(5.0),
                 ),
