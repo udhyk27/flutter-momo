@@ -379,21 +379,21 @@ class _ChartScreenState extends State<ChartScreen> {
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                             style: TextStyle(
-                                                fontWeight: FontWeight.w600, fontSize: 13),
+                                              fontWeight: FontWeight.w600, fontSize: 13),
                                           ),
                                           Text(
                                             item.artist,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                             style: TextStyle(
-                                                fontWeight: FontWeight.w400, fontSize: 12),
+                                              fontWeight: FontWeight.w400, fontSize: 12),
                                           ),
                                           Text(
                                             item.album,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                             style: TextStyle(
-                                                fontSize: 12, color: Colors.grey),
+                                              fontSize: 12, color: Colors.grey),
                                           ),
                                         ],
                                       ),

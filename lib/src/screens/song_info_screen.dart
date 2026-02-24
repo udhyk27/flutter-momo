@@ -319,7 +319,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 10.0,),
+                                  padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                                   child: Text('방송차트: 지상파(TV, RADIO) 집계기준',
                                     style: TextStyle(
                                       fontSize: 13,
@@ -335,7 +335,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                   child: Text('방송차트 자료는 에어모니터에서 제공받았습니다.',
                                     style: TextStyle(
                                       fontSize: 11,
-                                      color: Colors.red
+                                      color: Colors.red[500]
                                     )
                                   ),
                                 )
@@ -358,7 +358,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                            padding: const EdgeInsets.only(top: 30.0),
                             child: Text('최신 방송 재생 정보',
                               style: TextStyle(
                                 color: themeValue == 2
@@ -581,7 +581,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
       if (y > 0) showingIndicators.add(i); // 상시 tooltip 표시
     }
-    // print('spots.length: ${spots.length}, dateList.length: ${dateList.length}');
 
     // ===== 차트 =====
     return LineChart(
@@ -597,7 +596,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
-          horizontalInterval: 5, // 눈금 간격
+          horizontalInterval: 2, // 눈금 간격
           getDrawingHorizontalLine: (value) => FlLine(
             strokeWidth: 1,
             color: themeValue == 2
@@ -614,7 +613,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
             sideTitles: SideTitles(
               showTitles: true,
               interval: 1,
-              reservedSize: 30,
+              // reservedSize: 30,
               getTitlesWidget: bottomTitleWidgets,
             ),
           ),

@@ -3,8 +3,7 @@ description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 #### 설정 또는 사용할 자원 등록하는 파일
-
-version: 1.2.2+48
+version: 1.2.3+49
 
 environment:
   sdk: ^3.6.0
