@@ -79,8 +79,8 @@ class CustomBtAppBar extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: themeValue == 2
-                  ? Colors.transparent
-                  : Colors.black.withValues(alpha: 0.04),
+                ? Colors.transparent
+                : Colors.black.withValues(alpha: 0.04),
               blurRadius: 10,
               spreadRadius: 0,
               offset: const Offset(0, -4),

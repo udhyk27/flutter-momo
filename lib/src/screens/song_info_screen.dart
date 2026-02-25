@@ -213,7 +213,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20)
                         ),
-
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: ClipRRect(
@@ -235,30 +234,29 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                       // 텍스트 컨테이너
                       Container(
                         width: double.infinity,
-                        margin: EdgeInsets.only(top: 20, bottom: 20, left: 20),
+                        margin: EdgeInsets.only(top: 10, bottom: 15, left: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               title,
                               style: TextStyle(
-                                fontSize: 25,
+                                fontSize: 22.0,
                                 fontFamily: 'NotoSansKR-Medium',
                                 color: textColor
                               ),
                             ),
                             Text(
                               artist,
-                              style: TextStyle(color: textColor, fontSize: 20),
+                              style: TextStyle(color: textColor, fontSize: 16.0, fontFamily: 'NotoSansKR-Regular',),
                             ),
                             Text(
                               album,
-                              style: TextStyle(color: textColor),
+                              style: TextStyle(color: textColor, fontSize: 12.0, fontFamily: 'NotoSansKR-Regular',),
                             ),
-
                             Text(
                               date_,
-                              style: TextStyle(color: textColor),
+                              style: TextStyle(color: textColor, fontSize: 12.0, fontFamily: 'NotoSansKR-Regular',),
                             )
                           ],
                         ),

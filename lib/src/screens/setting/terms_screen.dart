@@ -53,8 +53,6 @@ class _TermsScreenState extends State<TermsScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        padding: EdgeInsets.only(left: 20, right: 20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -63,46 +61,32 @@ class _TermsScreenState extends State<TermsScreen> {
           ),
         ),
         child: Container(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                  color: Color.fromRGBO(245, 245, 245, 1.0), width: 2.0),
-              left: BorderSide(
-                  color: Color.fromRGBO(245, 245, 245, 1.0), width: 2.0),
-              right: BorderSide(
-                  color: Color.fromRGBO(245, 245, 245, 1.0), width: 2.0),
-            ),
           ),
-          child: Scrollbar(
+          child: RawScrollbar(
             controller: _scrollController,
-            thumbVisibility: false,
-            thickness: 5.0, // 스크롤바 두께 설정
-            radius: Radius.circular(10), // 스크롤바 모서리 둥글게
+            thickness: 2.0,
+            radius: const Radius.circular(10),
             child: SingleChildScrollView(
               controller: _scrollController,
-              child:
-              // Text(
-              //   termsContent,
-              //   style: TextStyle(fontSize: 12),
-                Html(data: content,
-                  style: {
-                    "body": Style(
-                      fontSize: FontSize(13.0),  // 기본 글자 크기 설정
-                    ),
-                    "h3": Style(
-                      fontSize: FontSize(14.0),  // h1 태그의 글자 크기
-                    ),
-                  },
-                )
-              // ),
+              child: Html(
+                data: content,
+                style: {
+                  "body": Style(
+                    fontSize: FontSize(13.0),
+                  ),
+                  "h3": Style(
+                    fontSize: FontSize(14.0),
+                  ),
+                },
+              ),
             ),
           ),
         ),
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () {
-          // Navigator.pop(context);
           context.read<MyAppState>().setPageIdx(3);
         },
         child: Container(
