@@ -73,18 +73,32 @@ class CustomBtAppBar extends StatelessWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
       ),
-      child: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: themeValue == 2 ? Colors.black : Colors.white,
-        elevation: 0,
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
-        selectedItemColor: themeValue == 2 ? Colors.white : Colors.black,
-        unselectedItemColor:
-        themeValue == 2 ? Colors.white54 : Colors.black54,
-        items: _getBottomNavItems(),
-        currentIndex: safeIndex,
-        onTap: onTabChange,
+      child: Container(
+        decoration: BoxDecoration(
+          color: themeValue == 2 ? Colors.black : Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: themeValue == 2
+                  ? Colors.transparent
+                  : Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10,
+              spreadRadius: 0,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          selectedFontSize: 12,
+          unselectedFontSize: 12,
+          selectedItemColor: themeValue == 2 ? Colors.white : Colors.black,
+          unselectedItemColor: themeValue == 2 ? Colors.white54 : Colors.black54,
+          items: _getBottomNavItems(),
+          currentIndex: safeIndex,
+          onTap: onTabChange,
+        ),
       ),
     );
   }

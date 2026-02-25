@@ -45,11 +45,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     return AppBar(
+      scrolledUnderElevation: 0.0,
       title: Text(
         appBarTitle,
         style: TextStyle(
-          fontSize: 23,
-          fontWeight: FontWeight.w500,
+          fontSize: 20,
+          fontFamily: 'NotoSansKR-Medium'
         ),
       ),
       centerTitle: true,
@@ -58,14 +59,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () {
             if (currentIndex == 4 || currentIndex == 5) {
               context.read<MyAppState>().setPageIdx(3);
-              // Navigator.pop(context);
             } else {
               context.read<MyAppState>().setPageIdx(1);
-              // Navigator.pushAndRemoveUntil(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => HomeScreen()),
-              //     (route) => false,
-              // );
             }
           },
           icon: Icon(

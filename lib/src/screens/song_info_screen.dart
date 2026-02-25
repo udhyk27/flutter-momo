@@ -155,9 +155,10 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     var deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: themeValue == 2 ? Colors.black : Colors.grey[100],
+      backgroundColor: themeValue == 2 ? Colors.black : Color.fromRGBO(245, 245, 245, 1.0),
       appBar: AppBar(
-        backgroundColor: themeValue == 2 ? Colors.black : Colors.grey[100],
+        scrolledUnderElevation: 0.0,
+        backgroundColor: themeValue == 2 ? Colors.black : Color.fromRGBO(245, 245, 245, 1.0),
         leading: IconButton(
           onPressed: () {
             // 검색 차트로 이동

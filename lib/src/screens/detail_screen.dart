@@ -52,14 +52,10 @@ class _DetailScreenState extends State<DetailScreen> {
         detailProgram = programsList.map((item) => DetailProgram.fromJson(item as Map<String, dynamic>)).toList();
         isLoading = false;
       });
-
-      print(detailProgram);
-
     } catch (e) {
       print('상세화면 API 통신 오류 ################# : $e');
     }
   }
-
 
   @override
   void initState() {
@@ -73,20 +69,20 @@ class _DetailScreenState extends State<DetailScreen> {
     Color textColor = themeValue == 2 ? Colors.white : Colors.black;
 
     return Scaffold(
-      backgroundColor: themeValue == 2 ? Colors.black : Colors.grey[100],
+      backgroundColor: themeValue == 2 ? Colors.black : Color.fromRGBO(245, 245, 245, 1.0),
       appBar: AppBar(
-        backgroundColor: themeValue == 2 ? Colors.black : Colors.grey[100],
+        scrolledUnderElevation: 0.0,
+        backgroundColor: themeValue == 2 ? Colors.black : Color.fromRGBO(245, 245, 245, 1.0),
         title: Text('모모 방송 재생 정보',
           style: TextStyle(
-            fontSize: 23,
-            fontWeight: FontWeight.w500,
+            fontSize: 20,
+            fontFamily: 'NotoSansKR-Medium',
             color: themeValue == 2 ? Colors.white : Colors.black
           ),
         ),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            // 검색 차트로 이동
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back, color: themeValue == 2 ? Colors.white : Colors.black,),
@@ -99,7 +95,7 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Container(
             width: double.infinity,
             margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 5),
             decoration: BoxDecoration(
               color: themeValue == 2 ? Color.fromRGBO(90, 90, 90, 1.0) : Colors.white,
               borderRadius: BorderRadius.circular(30),
@@ -107,7 +103,7 @@ class _DetailScreenState extends State<DetailScreen> {
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  margin: EdgeInsets.fromLTRB(0, 20, 0, 5),
                   // 선택한 곡 정보
                   child: Row(
                     children: [
@@ -177,7 +173,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       if (index == 0) {
                         return Column(
                           children: [
-                            SizedBox(height: 10.0),
+                            SizedBox(height: 5.0),
                             Container(
                               alignment: Alignment.bottomLeft,
                               child: Text(
