@@ -45,8 +45,8 @@ class CustomBtAppBar extends StatelessWidget {
               : (currentIndex == 1
                 ? 'assets/momo_assets/icon_momosearch_on.png'
                 : 'assets/momo_assets/icon_momosearch.png'),
-            width: 30,
-            height: 30,
+            width: 25,
+            height: 25,
           ),
           label: '음악검색',
         ),
@@ -70,33 +70,24 @@ class CustomBtAppBar extends StatelessWidget {
     // currentIndex 안전 처리
     final safeIndex = currentIndex.clamp(0, 2);
 
-    return SafeArea(
-      top: false,
-      left: false,
-      right: false,
-      bottom: Platform.isAndroid,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-        ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: themeValue == 2 ? Colors.black : Colors.white,
-          elevation: 0,
-          selectedFontSize: 12,
-          unselectedFontSize: 12,
-          selectedItemColor: themeValue == 2 ? Colors.white : Colors.black,
-          unselectedItemColor:
-          themeValue == 2 ? Colors.white54 : Colors.black54,
-          items: _getBottomNavItems(),
-          currentIndex: safeIndex,
-          onTap: onTabChange,
-        ),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+      ),
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: themeValue == 2 ? Colors.black : Colors.white,
+        elevation: 0,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        selectedItemColor: themeValue == 2 ? Colors.white : Colors.black,
+        unselectedItemColor:
+        themeValue == 2 ? Colors.white54 : Colors.black54,
+        items: _getBottomNavItems(),
+        currentIndex: safeIndex,
+        onTap: onTabChange,
       ),
     );
-
-
-
   }
 }
