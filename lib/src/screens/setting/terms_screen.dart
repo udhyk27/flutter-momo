@@ -1,8 +1,7 @@
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../main.dart';
-import '../../widgets/app_bar.dart';
 import '../../services/api_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_html/flutter_html.dart';
@@ -26,7 +25,6 @@ class _TermsScreenState extends State<TermsScreen> {
   }
 
   Future<void> _loadTerms() async {
-
     try {
       http.Response response = await http.get(Uri.parse(
         widget.gubun == 4 ? ApiService().termsUrl : ApiService().privacyUrl
@@ -35,15 +33,12 @@ class _TermsScreenState extends State<TermsScreen> {
       setState(() {
         content = response.body;
       });
-
     } catch (e) {
       print('통신 실패');
       setState(() {
         content = '데이터를 불러오지 못했습니다.';
       });
     }
-
-
   }
 
   @override
@@ -54,10 +49,7 @@ class _TermsScreenState extends State<TermsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      // appBar: CustomAppBar(currentIndex: widget.gubun),
-
+    Widget mainContent = Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -114,7 +106,7 @@ class _TermsScreenState extends State<TermsScreen> {
           context.read<MyAppState>().setPageIdx(3);
         },
         child: Container(
-          height: 70,
+          height: 60,
           decoration: BoxDecoration(
             color: Color.fromRGBO(245, 245, 245, 1.0),
             border: Border.all(width: 2.0, color: Colors.grey),
@@ -128,15 +120,21 @@ class _TermsScreenState extends State<TermsScreen> {
             children: [
               Image.asset(
                 'assets/momo_assets/icon_check.png',
-                width: 35,
-                height: 35,
+                width: 20,
+                height: 20,
               ),
-              SizedBox(width: 20),
-              Text('확인', style: TextStyle(fontWeight: FontWeight.w700)),
+              SizedBox(width: 10),
+              Text('확인', style: TextStyle(fontFamily: 'NotoSansKR-Medium', fontSize: 15)),
             ],
           ),
         ),
       ),
     );
+
+    if (Platform.isAndroid) {
+      return SafeArea(child: mainContent);
+    } else {
+      return mainContent;
+    }
   }
 }
