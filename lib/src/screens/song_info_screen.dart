@@ -78,14 +78,13 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
   // API 요청
   // API 요청
   Future<String> fetchData() async {
-    ///// 곡 상세화면 API 요청 & 응답 /////
     try {
       final response = await http.get(
         Uri.parse(
           '${ApiService().detailUrl}/json'
-              '?id=${widget.song.songId}'
-              '&uid=${MyApp.uid}'
-              '&genre=${widget.song.genre}',
+            '?id=${widget.song.songId}'
+            '&uid=${MyApp.uid}'
+            '&genre=${widget.song.genre}',
         ),
       );
 
@@ -180,9 +179,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
         ],
       ),
 
-      /**
-       * 곡 정보
-       */
+      /** 곡 정보 */
       body: SingleChildScrollView(
         child: SafeArea(
           bottom: Platform.isAndroid,
@@ -201,7 +198,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       width: 1,
-                      color: themeValue == 2 ? Color.fromRGBO(50, 50, 50, 1):Color.fromRGBO(219, 219, 219, 1),
+                      color: themeValue == 2 ? Color.fromRGBO(50, 50, 50, 1) : Color.fromRGBO(219, 219, 219, 1),
                     )
                   ),
 

@@ -16,7 +16,6 @@ class CustomBtAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeValue = context.watch<MyAppState>().selectedValue;
-
     // 항상 3개 아이템 반환, 선택 아이콘만 currentIndex에 따라 변경
     List<BottomNavigationBarItem> _getBottomNavItems() {
       return [
