@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:convert';
+import 'package:audio_session/audio_session.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -46,7 +47,30 @@ class VMIDC {
 
   Future<bool> init() async {
     print('vmidc init');
-    await _recorder.openRecorder(); // 오디오 세션 오픈
+
+    // 송출과 찾기를 동시에 하기위한 오디오 세션 설정
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration(
+      // iOS 설정
+      avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
+      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.mixWithOthers | AVAudioSessionCategoryOptions.defaultToSpeaker | AVAudioSessionCategoryOptions.allowBluetooth,
+      avAudioSessionMode: AVAudioSessionMode.defaultMode,
+
+      // Android 설정
+      androidAudioAttributes: AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.music,
+        usage: AndroidAudioUsage.media,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gainTransientMayDuck,
+      androidWillPauseWhenDucked: false, // 다른 앱 오디오 멈추지 않음
+    ));
+
+    await _recorder.openRecorder(); // 세션 설정 후 오픈
+
+    if (Platform.isIOS) { // Native(Swift) 에서 세팅한 오디오 설정을 받아 다시 세팅
+      await const MethodChannel('com.aiid.momo/audio_session')
+          .invokeMethod('reconfigureSession');
+    }
 
     _wbuf.clear();
     _dna.clear();
