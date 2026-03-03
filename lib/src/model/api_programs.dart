@@ -1,5 +1,3 @@
-// api_programs.dart
-
 class ApiPrograms {
   final String fSongId;
   final String fId;
@@ -37,7 +35,6 @@ class ApiPrograms {
     required this.sArtist,
   });
 
-  // fromJson method to parse JSON to ApiPrograms object
   factory ApiPrograms.fromJson(Map<String, dynamic> json) {
     return ApiPrograms(
       fSongId: json['F_SONG_ID'] as String,
@@ -58,6 +55,25 @@ class ApiPrograms {
       sArtist: json['S_ARTIST'] as String,
     );
   }
+
+  factory ApiPrograms.empty() => ApiPrograms(
+    fSongId: '-1',  // 더미 구분용
+    fId: '',
+    prId: '',
+    fDate: '',
+    fName: '',
+    cDate: '',
+    clId: '',
+    fStart: '',
+    fEnd: '',
+    fProgIds: '',
+    fLogo: '',
+    fImage: '',
+    clNm: '',
+    fType: '',
+    sTitle: '',
+    sArtist: '',
+  );
 
   // toJson method to convert ApiPrograms object to JSON
   Map<String, dynamic> toJson() {

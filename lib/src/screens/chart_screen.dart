@@ -4,19 +4,13 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-
 import '/main.dart';
 import 'package:provider/provider.dart';
-
 import 'detail_screen.dart';
-
-
 import 'package:http/http.dart' as http;
 import '../services/api_service.dart';
-
 import '../model/api_mmchart.dart';
 import '../model/api_programs.dart';
-
 /***
  * 검색차트 스크린
  */
@@ -105,7 +99,6 @@ class _ChartScreenState extends State<ChartScreen> {
 
     try {
       double currentScrollPosition = _scrollController2.hasClients ? _scrollController2.position.pixels : 0;
-
       http.Response response = await http.get(Uri.parse('${ApiService().airchartUrl}?page=$page2'));
 
       if (response.statusCode != 200) {
@@ -126,6 +119,9 @@ class _ChartScreenState extends State<ChartScreen> {
           print('에어차트 데이터 끝');
           setState(() {
             hasMoreData = false; /// 데이터 없음
+            if (air_chart.isEmpty) {
+                air_chart.add(ApiPrograms.empty());
+            }
           });
         }
         setState(() {
@@ -449,6 +445,14 @@ class _ChartScreenState extends State<ChartScreen> {
 
                             final dataIndex = index - 1;
                             final item = air_chart[dataIndex];
+
+                            if (item.fSongId == '-1') {
+                              return Center(child: Text('차트를 준비중입니다',
+                                style: TextStyle(
+                                fontSize: 16,
+                                color: Color.fromRGBO(150, 150, 150, 1.0),
+                              ),));
+                            }
 
                             return Container(
                               height: 110,
