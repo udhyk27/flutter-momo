@@ -33,8 +33,7 @@ class _ChartScreenState extends State<ChartScreen> {
 
   /// API 요청 - 모모 검색 차트
   Future<void> fetchChart() async {
-
-    if (isChartLoading || !hasMoreData) return; /// 로딩중 일때는 X
+    if (isChartLoading || !hasMoreMomo) return; /// 로딩중 일때는 X
 
     setState(() {
       isChartLoading = true;
@@ -64,14 +63,12 @@ class _ChartScreenState extends State<ChartScreen> {
           page++;
         } else {
           print('데이터 끝');
-          hasMoreData = false; /// 더 이상 데이터가 없음을 표시
+          hasMoreMomo = false; /// 더 이상 데이터가 없음을 표시
         }
-
         setState(() {
           isChartLoading = false;
         });
       }
-
 
       /// 기존 스크롤 위치 유지하기
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -91,7 +88,7 @@ class _ChartScreenState extends State<ChartScreen> {
   }
 
   Future<void> fetchAirChart() async {
-    if (isAirChartLoading || !hasMoreData) return; /// 로딩중 일때, 데이터 없을 때 X
+    if (isAirChartLoading || !hasMoreAir) return; /// 로딩중 일때, 데이터 없을 때 X
 
     setState(() {
       isAirChartLoading = true;
@@ -116,11 +113,11 @@ class _ChartScreenState extends State<ChartScreen> {
           });
           page2++;
         } else {
-          print('에어차트 데이터 끝');
+          print('에어차트 데이터 X');
           setState(() {
-            hasMoreData = false; /// 데이터 없음
+            hasMoreAir = false; /// 데이터 없음
             if (air_chart.isEmpty) {
-                air_chart.add(ApiPrograms.empty());
+              air_chart.add(ApiPrograms.empty());
             }
           });
         }
@@ -173,7 +170,8 @@ class _ChartScreenState extends State<ChartScreen> {
   double _barPosition = 0;
   String _currentText = '모모에서 가장 많이 검색된 음원입니다.';
 
-  bool hasMoreData = true;
+  bool hasMoreMomo = true; /// 모모 검색 차트 데이터 유무
+  bool hasMoreAir = true; /// 에어 차트 데이터 유무
 
   @override
   void initState() {
@@ -185,14 +183,14 @@ class _ChartScreenState extends State<ChartScreen> {
 
     /// 모모 차트 스크롤 감지
     _scrollController.addListener(() {
-      if (hasMoreData && (_scrollController.position.pixels == _scrollController.position.maxScrollExtent)) {
+      if (hasMoreMomo && (_scrollController.position.pixels == _scrollController.position.maxScrollExtent)) {
         fetchChart(); /// 스크롤이 맨 끝에 도달하면 데이터 로드
       }
     });
 
     /// 에어 차트 스크롤
     _scrollController2.addListener(() {
-      if (hasMoreData && (_scrollController2.position.pixels == _scrollController2.position.maxScrollExtent)) {
+      if (hasMoreAir && (_scrollController2.position.pixels == _scrollController2.position.maxScrollExtent)) {
         fetchAirChart(); /// 스크롤이 맨 끝에 도달하면 데이터 로드
       }
     });
