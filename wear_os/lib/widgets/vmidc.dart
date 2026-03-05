@@ -26,7 +26,6 @@ const qLen = 32;
 
 final RecController recController = Get.find();
 
-
 class VMIDC {
   final FlutterSoundRecorder _recorder = FlutterSoundRecorder(logLevel: Level.error);
   var recCtrl = StreamController<Uint8List>();
@@ -47,7 +46,6 @@ class VMIDC {
   var num = 1;
 
   Future<bool> init() async {
-
     // 네트워크 타입 확인
     // print('네트워크 타입 :: ${recController.networkType.value}');
 
@@ -72,7 +70,7 @@ class VMIDC {
     // 마이크 데이터를 수신할 스트림을 설정
     _audioStream = recCtrl.stream.listen((buffer) async {
       // print('data received at: ${DateTime.now()} - buffer size: ${buffer.length}');
-      //  iOS일때 180ms에 한번씩 들어오는 데이터 청크 3개로 나누어 dna에 각각 담아서 버퍼에 쌓음
+      // iOS일때 180ms에 한번씩 들어오는 데이터 청크 3개로 나누어 dna에 각각 담아서 버퍼에 쌓음
       // iOS는 큰 청크로 들어오므로 작은 청크로 나눔
       if (Platform.isIOS && buffer.length > fftHop * 2) {
         // 큰 버퍼를 작은 청크로 분할하여 처리
@@ -92,7 +90,6 @@ class VMIDC {
         _processBuffer();
       }
     });
-
     return true;
   }
 
@@ -125,7 +122,6 @@ class VMIDC {
       m = await sendDnaToServer(_dna.pack());
     }
 
-
     // 에러 메시지가 존재할 때
     if (m['err_msg'] != '' &&  m.containsKey('err_msg')) {
       print('error msg 1 / 음악 인식 STOP');
@@ -147,7 +143,6 @@ class VMIDC {
         await Get.to(() => SongInfo(song: song));
         await stop();
       }
-
     }
     _dna.pop(qLen);
   }
@@ -179,13 +174,9 @@ class VMIDC {
           Fluttertoast.showToast(msg: "블루투스 연결이 원활하지 않습니다.");
         }
         print('실패함');
-
-
       } else {
         print('성공함');
       }
-
-
     } catch (e) {
       print('오류 발생: $e');
     }
