@@ -14,6 +14,8 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleName</key>
 	<string>watchOS</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSupportedPlatforms</key>
@@ -32,7 +34,5 @@
 	<array>
 		<integer>4</integer>
 	</array>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
 </dict>
 </plist>
