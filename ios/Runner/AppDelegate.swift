@@ -67,12 +67,33 @@ import AVFoundation
         }
     }
 
-    // 블루투스/차량 연결 등 라우팅 변경 감지 → 세션 재설정 (딱 1번만 등록)
+    // 블루투스/차량 연결 등 라우팅 변경 감지 → 세션 재설정
     private func observeRouteChanges() {
         NotificationCenter.default.removeObserver(self, name: AVAudioSession.routeChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { [weak self] _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // 블루투스 연결 안정화 후 재설정
-                self?.configureAudioSession()
+        NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { [weak self] notification in
+            guard let reasonValue = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,
+                  let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else { return }
+
+            switch reason {
+            case .newDeviceAvailable,    // 블루투스/이어폰 연결됨
+                 .oldDeviceUnavailable:  // 블루투스/이어폰 해제됨
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self?.configureAudioSession()
+                }
+//            case .newDeviceAvailable:
+//                print("🔵 블루투스/이어폰 연결됨 → 세션 재설정")
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                    self?.configureAudioSession()
+//                    print("🔵 세션 재설정 완료")
+//                }
+//            case .oldDeviceUnavailable:
+//                print("🔴 블루투스/이어폰 해제됨 → 세션 재설정")
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                    self?.configureAudioSession()
+//                    print("🔴 세션 재설정 완료")
+//                }
+            default:
+                break // 녹음 시작/종료 등 나머지는 무시
             }
         }
     }

@@ -46,7 +46,6 @@ class VMIDC {
   var num = 1;
 
   Future<bool> init() async {
-    print('vmidc init');
 
     // 송출과 찾기를 동시에 하기위한 오디오 세션 설정
     final session = await AudioSession.instance;
