@@ -62,8 +62,6 @@ import AVFoundation
                 try session.setPreferredInput(builtInMic)
             }
 
-            try session.setActive(true) // 세션 활성화
-
         } catch {
             print("Audio session error: \(error)")
         }

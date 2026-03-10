@@ -53,15 +53,18 @@ class VMIDC {
     await session.configure(AudioSessionConfiguration(
       // iOS 설정
       avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
-      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.mixWithOthers | AVAudioSessionCategoryOptions.defaultToSpeaker | AVAudioSessionCategoryOptions.allowBluetooth,
-      avAudioSessionMode: AVAudioSessionMode.defaultMode,
+      avAudioSessionCategoryOptions:
+      AVAudioSessionCategoryOptions.mixWithOthers | // 다른 앱 오디오와 동시 재생
+      AVAudioSessionCategoryOptions.defaultToSpeaker | // 기본 설정 - 외부 스피커
+      AVAudioSessionCategoryOptions.allowBluetoothA2dp, // 고음질 블루투스 허용 - HFP(전화용) 차단
+      avAudioSessionMode: AVAudioSessionMode.measurement,
 
       // Android 설정
       androidAudioAttributes: AndroidAudioAttributes(
         contentType: AndroidAudioContentType.music,
         usage: AndroidAudioUsage.media,
       ),
-      androidAudioFocusGainType: AndroidAudioFocusGainType.gainTransientMayDuck,
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
       androidWillPauseWhenDucked: false, // 다른 앱 오디오 멈추지 않음
     ));
 
