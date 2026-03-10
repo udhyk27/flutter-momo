@@ -23,10 +23,13 @@ import AVFoundation
         // 3. 플러그인 등록
         GeneratedPluginRegistrant.register(with: flutterViewController)
 
-        // 4. 오디오 세션 설정
-        configureAudioSession()
+        // 4. 오디오 세션 설정 (딜레이 후 실행)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.configureAudioSession()
+            self.observeRouteChanges()
+        }
 
-        // 5. MethodChannel 등록 - 오디오 세션 설정 Flutter로 전달
+        // 5. MethodChannel 등록
         let channel = FlutterMethodChannel(
             name: "com.aiid.momo/audio_session",
             binaryMessenger: flutterViewController.binaryMessenger
@@ -41,18 +44,37 @@ import AVFoundation
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
-    // 오디오 세션 설정 함수
     func configureAudioSession() {
         do {
             let session = AVAudioSession.sharedInstance()
+            
             try session.setCategory(
                 .playAndRecord,
-                mode: .default,
-                options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth]
+                mode: .measurement,
+                options: [
+                    .mixWithOthers,
+                    .defaultToSpeaker,
+                    .allowBluetoothA2DP
+                ]
             )
+            
+            if let builtInMic = session.availableInputs?.first(where: { $0.portType == .builtInMic }) {
+                try session.setPreferredInput(builtInMic)
+            }
+            
             try session.setActive(true)
+            
         } catch {
             print("Audio session error: \(error)")
+        }
+    }
+
+    private func observeRouteChanges() {
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.routeChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { [weak self] _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self?.configureAudioSession()
+            }
         }
     }
 }

@@ -117,10 +117,21 @@
 		DFD422B3F6B23890D2F78EA6 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DFE177732F5E917C006C30BE /* Exceptions for "watchkitapp Watch App" folder in "watchkitapp Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DF4661DF2E0A6DDE00981289 /* watchkitapp Watch App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DF4661E12E0A6DDE00981289 /* watchkitapp Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				DFE177732F5E917C006C30BE /* Exceptions for "watchkitapp Watch App" folder in "watchkitapp Watch App" target */,
 			);
 			path = "watchkitapp Watch App";
 			sourceTree = "<group>";
