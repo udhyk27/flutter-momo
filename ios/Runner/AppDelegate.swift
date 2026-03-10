@@ -80,18 +80,6 @@ import AVFoundation
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self?.configureAudioSession()
                 }
-//            case .newDeviceAvailable:
-//                print("🔵 블루투스/이어폰 연결됨 → 세션 재설정")
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                    self?.configureAudioSession()
-//                    print("🔵 세션 재설정 완료")
-//                }
-//            case .oldDeviceUnavailable:
-//                print("🔴 블루투스/이어폰 해제됨 → 세션 재설정")
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                    self?.configureAudioSession()
-//                    print("🔴 세션 재설정 완료")
-//                }
             default:
                 break // 녹음 시작/종료 등 나머지는 무시
             }
