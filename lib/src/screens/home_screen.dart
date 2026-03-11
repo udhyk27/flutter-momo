@@ -13,12 +13,10 @@ import 'package:provider/provider.dart';
 import '../controller/home_controller.dart';
 import '../widgets/vmidc.dart';
 
-/**
- * stateVal
- * 0 => 노래 분석 중
- * 1 => 기본 화면
- * 2 => 분석 실패 화면
- */
+/// stateVal
+/// 0 => 노래 분석 중
+/// 1 => 기본 화면
+/// 2 => 분석 실패 화면
 
 // 홈 화면
 bool firstRecord = true;
@@ -40,14 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _vmidc.init();
     super.initState();
+    _vmidc.init();
   }
-
 
   // 음성 인식 시작
   Future<void> asyncFunction() async {
-
     // 네트워크 연결 확인
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
@@ -61,17 +57,19 @@ class _HomeScreenState extends State<HomeScreen> {
       await Permission.microphone.request();
       return;
     } else if (status == PermissionStatus.denied) { // 사용자가 마이크 권한 거부한 경우
-      // requestMicPermission(context);
-      Permission.microphone.request();
+
+      final result = await Permission.microphone.request();
+      if (result.isGranted) {
+        await _vmidc.start(); // 녹음 시작
+      }
+      return;
     }
-
-
 
     try {
       if (!mounted) return;
       await _vmidc.start(); // 녹음 시작
     } catch (e) {
-      print('녹음 실패! ################## $e');
+      print('녹음 실패 $e');
       controller.changeState(2);
     }
   }
@@ -102,7 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // 앱 실행하자마자 검색
     if (isChecked && !hasStarted) {
-
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         Future.delayed(const Duration(milliseconds: 500), () async {
           _asyncTask = asyncFunction(); // 비동기 작업 실행
@@ -265,20 +262,6 @@ void PermissionToast() {
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.CENTER
   );
-}
-
-// 마이크 권한이 거부된 경우
-Future<bool> requestMicPermission(BuildContext context) async {
-  PermissionStatus status = await Permission.microphone.request();
-  if (!status.isGranted) {  // 마이크 승인상태가 아닐시
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return _showDialog(context);
-        });
-    return false;
-  }
-  return true;
 }
 
 _showDialog(BuildContext context) { // 휴대폰 권한설정으로 이동

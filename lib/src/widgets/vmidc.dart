@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:momo/src/screens/song_info_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../main.dart';
 import '../controller/home_controller.dart';
@@ -46,7 +47,6 @@ class VMIDC {
   var num = 1;
 
   Future<bool> init() async {
-
     // 송출과 찾기를 동시에 하기위한 오디오 세션 설정
     final session = await AudioSession.instance;
     await session.configure(AudioSessionConfiguration(
@@ -128,9 +128,6 @@ class VMIDC {
       _wbuf.read(fftN * 2, _pcm);
       _dna.push(_pcm);
       _wbuf.pop(fftHop * 2);
-
-      // print('dna length :: ${_dna.length}');
-
       if (_dna.length == qLen) {
         _sendDnaToServerAndProcess();
       }
@@ -139,12 +136,8 @@ class VMIDC {
 
   // DNA 서버 전송 및 처리 로직
   Future<void> _sendDnaToServerAndProcess() async {
-    // print('DNA ${qLen}개 도달: ${DateTime.now()}');
-    // 여기서 HTTP 요청 호출
+    // HTTP 요청 호출
     Map m = await sendDnaToServer(_dna.pack());
-    // print('API 응답 시간: ${DateTime.now()}');
-    // print('돌아온 값 :: $m');
-
     // 에러 메시지가 존재할 때
     if (m['err_msg'] != '') {
       print('error msg 1 / 음악 인식 STOP');
@@ -152,9 +145,6 @@ class VMIDC {
     }
 
     if (m['data'] != '' && m.containsKey('data')) {
-      // print('찾기까지 걸린 종료시간 :: ${DateTime.now()}');
-      // print('곡 인식 성공 !!');
-      // print('print::${_recorder.isRecording}');
       HapticFeedback.lightImpact();
 
       _ctrl.sink.add(m);
@@ -211,20 +201,12 @@ class VMIDC {
     controller.changeState(0); // 검색 중
 
     try {
-
-      print('녹음 시작 : ${DateTime.now()}');
-
-
       await _recorder.startRecorder(
         toStream: recCtrl,
         codec: Codec.pcm16,
         numChannels: 1,
         sampleRate: srate,
       );
-
-      print('녹음 종료 : ${DateTime.now()}');
-
-      // print('녹음이 정상적으로 시작됨!');
 
       _recordTimer = Timer(Duration(seconds: ApiService().rc_timeOut), () async {
         // 곡 인식하거나 서버 연결 실패했는데 녹음만 되고있을 때 방지
@@ -240,9 +222,7 @@ class VMIDC {
   }
 
   Future<void> stop() async {
-    // print('vmid.stop()');
     num = 1;
-
     if (!_recorder.isRecording) return;
 
     _recordTimer?.cancel();
@@ -259,8 +239,6 @@ class VMIDC {
   }
 
   Future<void> dispose() async {
-    // print('vmidc dispose');
-
     if (_recorder.isRecording) {
       print('녹음중이면 stop');
       await stop();
