@@ -75,8 +75,8 @@ import AVFoundation
                   let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else { return }
 
             switch reason {
-            case .newDeviceAvailable,    // 블루투스/이어폰 연결됨
-                 .oldDeviceUnavailable:  // 블루투스/이어폰 해제됨
+            case .newDeviceAvailable,    // 블루투스 연결
+                 .oldDeviceUnavailable:  // 블루투스 해제
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self?.configureAudioSession()
                 }
