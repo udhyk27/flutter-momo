@@ -65,7 +65,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       if (!mounted) return;
-
       await _vmidc.start(); // 녹음 시작
     } catch (e) {
       print('녹음 실패 $e');
