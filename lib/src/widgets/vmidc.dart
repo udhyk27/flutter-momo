@@ -70,6 +70,23 @@ class VMIDC {
     await _recorder.openRecorder(); // 세션 설정 후 오픈
 
     if (Platform.isIOS) { // Native(Swift) 에서 세팅한 오디오 설정을 받아 다시 세팅
+
+      /// 오디오 세션 워밍업 (recorder 세션 미리 활성화)
+      final warmupCtrl = StreamController<Uint8List>();
+      final warmupSub = warmupCtrl.stream.listen((_) {});
+
+      await _recorder.startRecorder(
+        toStream: warmupCtrl,
+        codec: Codec.pcm16,
+        numChannels: 1,
+        sampleRate: srate,
+      );
+      await _recorder.stopRecorder();
+
+      await warmupSub.cancel();
+      await warmupCtrl.close();
+      ///
+
       await const MethodChannel('com.aiid.momo/audio_session')
           .invokeMethod('reconfigureSession');
     }
@@ -194,12 +211,18 @@ class VMIDC {
     controller.changeState(0); // 검색 중
 
     try {
+
+      print('녹음 시작 : ${DateTime.now()}');
+
+
       await _recorder.startRecorder(
         toStream: recCtrl,
         codec: Codec.pcm16,
         numChannels: 1,
         sampleRate: srate,
       );
+
+      print('녹음 종료 : ${DateTime.now()}');
 
       // print('녹음이 정상적으로 시작됨!');
 
