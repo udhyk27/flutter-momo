@@ -191,7 +191,7 @@ class VMIDC {
 
   // 녹음 시작
   Future<void> start() async {
-    // print('찾기까지 걸린 시작시간 :: ${DateTime.now()}');
+    print('vmidc start 호출됨');
     num = 1; // 몇 번째 녹음 데이터 전송인지
 
     if (_recorder.isRecording) {

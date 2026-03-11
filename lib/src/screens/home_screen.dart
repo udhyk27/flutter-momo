@@ -44,12 +44,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // 음성 인식 시작
   Future<void> asyncFunction() async {
+
     // 네트워크 연결 확인
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       return;
     }
-
     // 마이크 권한 요청
     PermissionStatus status = await Permission.microphone.status;
     if (status == PermissionStatus.permanentlyDenied) { // 마이크 권한 영구적으로 거부된 경우
@@ -57,16 +57,15 @@ class _HomeScreenState extends State<HomeScreen> {
       await Permission.microphone.request();
       return;
     } else if (status == PermissionStatus.denied) { // 사용자가 마이크 권한 거부한 경우
-
       final result = await Permission.microphone.request();
       if (result.isGranted) {
-        await _vmidc.start(); // 녹음 시작
+        await _vmidc.start();
       }
-      return;
     }
 
     try {
       if (!mounted) return;
+
       await _vmidc.start(); // 녹음 시작
     } catch (e) {
       print('녹음 실패 $e');
@@ -222,17 +221,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                 image: controller.stateVal.value == 0
-                                    ? themeValue == 1 ? AssetImage('assets/loading1_blue2.gif') : AssetImage('assets/loading1_pink2.gif')
-                                    : controller.stateVal.value == 1
-                                    ? AssetImage( // 기본 화면
-                                    themeValue == 1
-                                        ? 'assets/momo_assets/blue_logo.png'
-                                        : 'assets/momo_assets/berry_logo.png'
+                                  ? themeValue == 1 ? AssetImage('assets/loading1_blue2.gif') : AssetImage('assets/loading1_pink2.gif')
+                                  : controller.stateVal.value == 1
+                                  ? AssetImage( // 기본 화면
+                                  themeValue == 1
+                                    ? 'assets/momo_assets/blue_logo.png'
+                                    : 'assets/momo_assets/berry_logo.png'
                                 )
-                                    : AssetImage( // 노래 인식 X 화면
-                                    themeValue == 1
-                                        ? 'assets/momo_assets/blue_logo.png'
-                                        : 'assets/momo_assets/berry_logo.png'
+                                  : AssetImage( // 노래 인식 X 화면
+                                  themeValue == 1
+                                    ? 'assets/momo_assets/blue_logo.png'
+                                    : 'assets/momo_assets/berry_logo.png'
                                 ),
                                 fit: BoxFit.cover, // 이미지를 버튼 크기에 맞게 꽉 채움
                               ),
