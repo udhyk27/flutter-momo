@@ -24,7 +24,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   List<ApiSearch> fullSearchList = []; /// 전체 곡
   List<ApiSearch> searchList = []; /// 검색 필터링 곡
-
   List<ApiRecommend> recommendList = []; /// 추천 음악 리스트
 
   /// API 요청 추천 음악 리스트 받기

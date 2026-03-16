@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'src/controller/home_controller.dart';
 import 'src/screens/main_page.dart';
 import 'package:get/get.dart';
@@ -12,10 +13,8 @@ import 'src/services/api_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // 플러그인 사용
   await Firebase.initializeApp();
-
   ApiService apiService = ApiService();
   await apiService.getApiData();
-
   Get.put(HomeController());
   runApp(MyApp());
 }
