@@ -169,17 +169,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 : MainAxisAlignment.start,
                             children: [
                               controller.stateVal.value == 1
-                                  ? _GlassIconButton(
-                                icon: Image.asset(
-                                  'assets/settings.png',
-                                  width: 20,
-                                  height: 20,
-                                  color: Colors.white,
-                                ),
+                                  ? GestureDetector(
                                 onTap: () {
                                   context.read<MyAppState>().setPageIdx(3);
                                 },
-                                tokens: tokens,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Image.asset(
+                                    'assets/settings.png',
+                                    width: 25,
+                                    height: 25,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               )
                                   : _GlassIconButton(
                                 icon: Icon(
