@@ -282,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                           '다시 눌러 재시도해보세요',
                                           style: TextStyle(
                                             fontSize: 13,
-                                            color: tokens.labelColor.withOpacity(0.55),
+                                            color: tokens.labelColor.withValues(alpha: 0.55),
                                             letterSpacing: 0.3,
                                           ),
                                         ),
@@ -306,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               fontSize: 11,
                               letterSpacing: 4,
                               fontWeight: FontWeight.w300,
-                              color: tokens.labelColor.withOpacity(0.3),
+                              color: tokens.labelColor.withValues(alpha: 0.3),
                             ),
                           ),
                         ),
@@ -344,7 +344,7 @@ class _LogoContainer extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               blurRadius: 30,
               spreadRadius: 2,
               offset: const Offset(0, 8),
@@ -374,7 +374,7 @@ class _LogoContainer extends StatelessWidget {
         image: DecorationImage(image: image, fit: BoxFit.cover),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 30,
             spreadRadius: 2,
             offset: const Offset(0, 8),
@@ -483,7 +483,7 @@ class _StatusLabel extends StatelessWidget {
     return Column(
       children: [
         if (icon != null) ...[
-          Icon(icon, color: tokens.labelColor.withOpacity(0.5), size: 22),
+          Icon(icon, color: tokens.labelColor.withValues(alpha: 0.5), size: 22),
           const SizedBox(height: 8),
         ],
         Text(
@@ -526,7 +526,7 @@ class _GlassIconButton extends StatelessWidget {
           border: Border.all(color: tokens.glassBorder, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -586,10 +586,10 @@ class _ThemeTokens {
           bgTop: const Color(0xFF1A8FD1),
           bgBottom: const Color(0xFF9B1FBE),
           labelColor: Colors.white,
-          glassBg: Colors.white.withOpacity(0.18),
-          glassBorder: Colors.white.withOpacity(0.3),
-          decorColor: Colors.white.withOpacity(0.06),
-          ringColor: Colors.white.withOpacity(0.6),
+          glassBg: Colors.white.withValues(alpha: 0.18),
+          glassBorder: Colors.white.withValues(alpha: 0.3),
+          decorColor: Colors.white.withValues(alpha: 0.06),
+          ringColor: Colors.white.withValues(alpha: 0.6),
           overlayStyle: SystemUiOverlayStyle.light,
         );
       case 2: // Dark Mode
@@ -597,10 +597,10 @@ class _ThemeTokens {
           bgTop: const Color(0xFF0D0D0D),
           bgBottom: const Color(0xFF2A2A2A),
           labelColor: Colors.white,
-          glassBg: Colors.white.withOpacity(0.08),
-          glassBorder: Colors.white.withOpacity(0.12),
-          decorColor: Colors.white.withOpacity(0.03),
-          ringColor: Colors.white.withOpacity(0.4),
+          glassBg: Colors.white.withValues(alpha: 0.08),
+          glassBorder: Colors.white.withValues(alpha: 0.12),
+          decorColor: Colors.white.withValues(alpha: 0.03),
+          ringColor: Colors.white.withValues(alpha: 0.4),
           overlayStyle: SystemUiOverlayStyle.light,
         );
       default: // Berry Pink
@@ -608,10 +608,10 @@ class _ThemeTokens {
           bgTop: const Color(0xFFFF7BAC),
           bgBottom: const Color(0xFFFFD6E7),
           labelColor: const Color(0xFF3D1A26),
-          glassBg: Colors.white.withOpacity(0.3),
-          glassBorder: Colors.white.withOpacity(0.5),
-          decorColor: Colors.white.withOpacity(0.12),
-          ringColor: const Color(0xFFFF7BAC).withOpacity(0.7),
+          glassBg: Colors.white.withValues(alpha: 0.3),
+          glassBorder: Colors.white.withValues(alpha: 0.5),
+          decorColor: Colors.white.withValues(alpha: 0.12),
+          ringColor: const Color(0xFFFF7BAC).withValues(alpha: 0.7),
           overlayStyle: SystemUiOverlayStyle.dark,
         );
     }
@@ -673,7 +673,7 @@ _showDialog(BuildContext context) {
                 children: [
                   TextButton(
                     style: TextButton.styleFrom(
-                      backgroundColor: tokens.bgTop.withOpacity(0.1),
+                      backgroundColor: tokens.bgTop.withValues(alpha: 0.1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
