@@ -41,8 +41,8 @@ Watch  ←  BT RFCOMM  ←  Phone  ←──────────────
 
 ### 오디오 녹음 & DNA 변환
 
-iOS는 ~180ms 단위 대형 청크, Android는 ~20ms 단위 소형 청크로 수신.
-`fftHop * 2` 단위로 정규화해 `WaveBuf → DnaBuf` 파이프라인에 투입.
+iOS는 ~180ms 단위 대형 청크, Android는 ~20ms 단위 소형 청크로 수신
+`fftHop * 2` 단위로 정규화해 `WaveBuf → DnaBuf` 파이프라인에 투입
 
 ```dart
 _audioStream = recCtrl.stream.listen((buffer) async {
@@ -63,7 +63,7 @@ _audioStream = recCtrl.stream.listen((buffer) async {
 
 ### 서버 전송
 
-32프레임 DNA 누적 후 base64 인코딩해 POST. 5초 타임아웃 초과 시 즉시 종료.
+32프레임 DNA 누적 후 base64 인코딩해 POST. 5초 타임아웃 초과 시 즉시 종료
 
 ```dart
 Future<Map<String, dynamic>> sendDnaToServer(List<int> dna) async {
