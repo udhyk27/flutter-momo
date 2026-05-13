@@ -128,6 +128,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       builder: (controller) => AnnotatedRegion<SystemUiOverlayStyle>(
         value: tokens.overlayStyle,
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: tokens.bgTop,
           body: Container(
             decoration: BoxDecoration(
@@ -278,20 +279,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                       ),
                                     ),
 
-                                    // ── 서브 힌트 ────────────────────
+                                    // ── 서브 힌트 / 웨이브폼 ────────────────
                                     SizedBox(
-                                      height: 28,
-                                      child: AnimatedOpacity(
-                                        opacity: controller.stateVal.value == 2 ? 1.0 : 0.0,
+                                      height: 40,
+                                      child: AnimatedSwitcher(
                                         duration: const Duration(milliseconds: 300),
-                                        child: Text(
-                                          '다시 눌러 재시도해보세요',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            color: tokens.labelColor.withValues(alpha: 0.55),
-                                            letterSpacing: 0.3,
+                                        child: controller.stateVal.value == 0
+                                            ? _AudioWaveform(
+                                          key: const ValueKey('waveform'),
+                                          color: tokens.labelColor.withValues(alpha: 0.7),
+                                        )
+                                            : controller.stateVal.value == 2
+                                            ? Center(
+                                          key: const ValueKey('hint'),
+                                          child: Text(
+                                            '다시 눌러 재시도해보세요',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: tokens.labelColor.withValues(alpha: 0.55),
+                                              letterSpacing: 0.3,
+                                            ),
                                           ),
-                                        ),
+                                        )
+                                            : const SizedBox.shrink(key: ValueKey('empty')),
                                       ),
                                     ),
 
@@ -339,9 +349,9 @@ class _LogoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (stateVal == 0) {
-      final String gifPath = themeValue == 1
-          ? 'assets/loading1_blue2.gif'
-          : 'assets/loading1_pink2.gif';
+      final String gifPath = themeValue == 0
+          ? 'assets/loading1_pink2.gif'
+          : 'assets/loading1_blue2.gif';
 
       return Container(
         width: size,
@@ -391,7 +401,7 @@ class _LogoContainer extends StatelessWidget {
   }
 }
 
-// ── 파동 링 (분석 중 상태) ────────────────────────────────────────────
+// ── 파동 링 (분석 중 상태) - 다중 파동 ──────────────────────────────
 class _PulseRing extends StatefulWidget {
   final Widget child;
   final _ThemeTokens tokens;
@@ -402,61 +412,148 @@ class _PulseRing extends StatefulWidget {
   State<_PulseRing> createState() => _PulseRingState();
 }
 
-class _PulseRingState extends State<_PulseRing> with SingleTickerProviderStateMixin {
-  late AnimationController _ctrl;
-  late Animation<double> _anim;
+class _PulseRingState extends State<_PulseRing> with TickerProviderStateMixin {
+  late List<AnimationController> _controllers;
+  late List<Animation<double>> _animations;
+
+  static const int _ringCount = 3;
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(
-      duration: const Duration(milliseconds: 1400),
-      vsync: this,
-    )..repeat();
-    _anim = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
+
+    _controllers = List.generate(_ringCount, (i) {
+      final controller = AnimationController(
+        duration: const Duration(milliseconds: 2000),
+        vsync: this,
+      );
+      // 시차를 두고 시작
+      Future.delayed(Duration(milliseconds: i * 600), () {
+        if (mounted) controller.repeat();
+      });
+      return controller;
+    });
+
+    _animations = _controllers
+        .map((c) => CurvedAnimation(parent: c, curve: Curves.easeOut))
+        .toList();
   }
 
   @override
   void dispose() {
-    _ctrl.dispose();
+    for (var c in _controllers) {
+      c.dispose();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _anim,
-      builder: (_, child) {
-        return Stack(
-          alignment: Alignment.center,
-          clipBehavior: Clip.none, // 파동이 SizedBox 밖으로 넘쳐도 레이아웃 영향 없음
-          children: [
-            // 외부 파동 — overflow로 그리되 레이아웃 크기는 0
-            Positioned.fill(
-              child: OverflowBox(
-                maxWidth: double.infinity,
-                maxHeight: double.infinity,
-                child: Opacity(
-                  opacity: (1 - _anim.value).clamp(0.0, 1.0),
-                  child: Container(
-                    width: widget.logoSize + _anim.value * 70,
-                    height: widget.logoSize + _anim.value * 70,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: widget.tokens.ringColor,
-                        width: 2,
+    return Stack(
+      alignment: Alignment.center,
+      clipBehavior: Clip.none,
+      children: [
+        // 다중 파동 링
+        for (int i = 0; i < _ringCount; i++)
+          AnimatedBuilder(
+            animation: _animations[i],
+            builder: (_, __) {
+              final value = _animations[i].value;
+              return Positioned.fill(
+                child: OverflowBox(
+                  maxWidth: double.infinity,
+                  maxHeight: double.infinity,
+                  child: Opacity(
+                    opacity: (1 - value).clamp(0.0, 0.7),
+                    child: Container(
+                      width: widget.logoSize + value * 90,
+                      height: widget.logoSize + value * 90,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: widget.tokens.ringColor,
+                          width: 2,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            child!,
-          ],
+              );
+            },
+          ),
+        widget.child,
+      ],
+    );
+  }
+}
+
+// ── 오디오 웨이브폼 (분석 중 상태) ────────────────────────────────────
+class _AudioWaveform extends StatefulWidget {
+  final Color color;
+  const _AudioWaveform({super.key, required this.color});
+
+  @override
+  State<_AudioWaveform> createState() => _AudioWaveformState();
+}
+
+class _AudioWaveformState extends State<_AudioWaveform> with TickerProviderStateMixin {
+  late List<AnimationController> _controllers;
+  late List<Animation<double>> _animations;
+
+  static const int _barCount = 7;
+
+  // 각 막대마다 다른 속도(ms)
+  static const List<int> _durations = [500, 700, 600, 800, 550, 750, 650];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controllers = List.generate(_barCount, (i) {
+      return AnimationController(
+        duration: Duration(milliseconds: _durations[i]),
+        vsync: this,
+      )..repeat(reverse: true);
+    });
+
+    _animations = _controllers
+        .map((c) => Tween<double>(begin: 0.3, end: 1.0).animate(
+      CurvedAnimation(parent: c, curve: Curves.easeInOut),
+    ))
+        .toList();
+  }
+
+  @override
+  void dispose() {
+    for (var c in _controllers) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: List.generate(_barCount, (i) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 3),
+          child: AnimatedBuilder(
+            animation: _animations[i],
+            builder: (_, __) {
+              return Container(
+                width: 4,
+                height: 28 * _animations[i].value,
+                decoration: BoxDecoration(
+                  color: widget.color,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              );
+            },
+          ),
         );
-      },
-      child: widget.child,
+      }),
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '/main.dart';
 
 /// 공용 확인 / 취소 다이얼로그 (글자색으로만 구분)
 Future<void> showConfirmDialog(
@@ -14,24 +16,35 @@ Future<void> showConfirmDialog(
     context: context,
     barrierDismissible: barrierDismissible,
     builder: (context) {
+      final int themeValue = context.watch<MyAppState>().selectedValue;
+      final bool isDark = themeValue == 2;
+
+      final Color bgColor = isDark ? const Color(0xFF2A2A2A) : Colors.white;
+      final Color textColor = isDark ? Colors.white : const Color(0xFF222222);
+      final Color subTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
+
       return AlertDialog(
+        backgroundColor: bgColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(12),
         ),
         title: Text(
           title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
+            fontSize: 15.5,
+            fontWeight: FontWeight.w700,
+            color: textColor,
+            letterSpacing: -0.2,
           ),
         ),
         content: content == null
             ? null
             : Text(
           content,
-          style: const TextStyle(
-            fontSize: 14,
-            height: 1.4,
+          style: TextStyle(
+            fontSize: 13.5,
+            height: 1.5,
+            color: textColor.withOpacity(0.85),
           ),
         ),
         actionsPadding:
@@ -41,9 +54,10 @@ Future<void> showConfirmDialog(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               cancelText,
-              style: const TextStyle(
-                color: Colors.grey, // 취소는 회색
-                fontSize: 14,
+              style: TextStyle(
+                color: subTextColor,
+                fontSize: 13.5,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -55,8 +69,9 @@ Future<void> showConfirmDialog(
             child: Text(
               confirmText,
               style: const TextStyle(
-                color: Colors.redAccent, // 확인은 빨간색
-                fontSize: 14,
+                color: Colors.deepOrange,
+                fontSize: 13.5,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
