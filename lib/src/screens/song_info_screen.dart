@@ -153,6 +153,31 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     );
   }
 
+  /// 카드 컨테이너
+  Widget _sectionCard({
+    required Widget child,
+    required Color cardColor,
+    required bool isDark,
+    EdgeInsets? margin,
+  }) {
+    return Container(
+      margin: margin ?? const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDark ? 0.25 : 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+
   /// TV / RADIO 뱃지
   Widget _typeBadge(String type, bool isDark) {
     final bool isTv = type == 'TV';
@@ -180,8 +205,24 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int themeValue = context.watch<MyAppState>().selectedValue;
+    final bool isDark = themeValue == 2;
+
+    final Color bgColor = isDark ? Colors.black : const Color(0xFFF5F5F5);
+    final Color cardColor = isDark ? const Color(0xFF1F1F1F) : Colors.white;
+    final Color textColor = isDark ? Colors.white : const Color(0xFF222222);
+    final Color subTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
+    final Color dividerColor =
+    isDark ? const Color(0xFF424242) : const Color(0xFFEFEFEF);
+    final Color innerBoxColor =
+    isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF7F7F7);
+
+    var deviceWidth = MediaQuery.of(context).size.width;
+    var deviceHeight = MediaQuery.of(context).size.height;
+
     if (isLoading) {
       return Scaffold(
+        backgroundColor: bgColor,
         body: Center(
           child: SizedBox(
             width: 22,
@@ -195,184 +236,89 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       );
     }
 
-    int themeValue = context.watch<MyAppState>().selectedValue;
-    final bool isDark = themeValue == 2;
-
-    final Color bgColor = isDark ? Colors.black : const Color(0xFFF5F5F5);
-    final Color cardColor = isDark ? const Color(0xFF2A2A2A) : Colors.white;
-    final Color textColor = isDark ? Colors.white : const Color(0xFF222222);
-    final Color subTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
-    final Color dividerColor = isDark ? const Color(0xFF424242) : const Color(0xFFEFEFEF);
-    final Color imageBorderColor = isDark
-        ? const Color(0xFFBDBDBD)
-        : Colors.black.withOpacity(0.08);
-    final Color innerBoxColor = isDark
-        ? const Color(0xFF1F1F1F)
-        : const Color(0xFFF7F7F7);
-
     final isExist = programs.isEmpty;
     final isExist2 = song_recommends.isEmpty;
 
-    var deviceWidth = MediaQuery.of(context).size.width;
-    var deviceHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       backgroundColor: bgColor,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         scrolledUnderElevation: 0.0,
-        backgroundColor: bgColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back, color: textColor, size: 22),
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: _CircleIconButton(
+            icon: Icons.arrow_back,
+            onTap: () => Navigator.pop(context),
+          ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              Share.share(
-                '${ApiService().shareUrl}?f_id=${widget.song.songId}',
-                sharePositionOrigin: Rect.fromLTRB(0, 0, deviceWidth, deviceHeight * 0.5),
-              );
-            },
-            icon: Icon(Icons.share, color: textColor, size: 20),
-          )
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _CircleIconButton(
+              icon: Icons.share,
+              onTap: () {
+                Share.share(
+                  '${ApiService().shareUrl}?f_id=${widget.song.songId}',
+                  sharePositionOrigin:
+                  Rect.fromLTRB(0, 0, deviceWidth, deviceHeight * 0.5),
+                );
+              },
+            ),
+          ),
         ],
       ),
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              /// ── 히어로 섹션 (앨범 아트 + 그라데이션) ──
+              _HeroSection(
+                imageUrl: image,
+                title: title,
+                artist: artist,
+                album: album,
+                date: date_,
+              ),
 
-      body: SingleChildScrollView(
-        child: SafeArea(
-          bottom: Platform.isAndroid,
-          child: Container(
-            width: double.infinity,
-            margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-            decoration: BoxDecoration(
-              color: cardColor,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Column(
-              children: [
-                /// 곡 정보 박스
-                Container(
-                  decoration: BoxDecoration(
-                    color: innerBoxColor,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(width: 1, color: dividerColor),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      AspectRatio(
-                        aspectRatio: 1,
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(11),
-                            topRight: Radius.circular(11),
-                          ),
-                          child: ExtendedImage.network(
-                            '$image',
-                            fit: BoxFit.cover,
-                            loadStateChanged: (state) {
-                              if (state.extendedImageLoadState == LoadState.failed) {
-                                return SizedBox(
-                                  child: Image.asset(
-                                    'assets/no_image.png',
-                                    fit: BoxFit.cover,
-                                  ),
-                                );
-                              }
-                              return null;
-                            },
-                          ),
+              const SizedBox(height: 16),
+
+              /// ── 주간 방송 차트 카드 ──
+              _sectionCard(
+                cardColor: cardColor,
+                isDark: isDark,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _sectionTitle('주간 방송 차트', textColor),
+                    const SizedBox(height: 14),
+
+                    Container(
+                      width: double.infinity,
+                      height: 200,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: innerBoxColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: FractionallySizedBox(
+                          widthFactor: 0.95,
+                          heightFactor: 0.92,
+                          child: line_chart(broad_weeks_chart),
                         ),
                       ),
+                    ),
 
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.fromLTRB(18, 14, 18, 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              title,
-                              style: TextStyle(
-                                fontSize: 19.0,
-                                fontFamily: 'NotoSansKR-Medium',
-                                fontWeight: FontWeight.w700,
-                                color: textColor,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              artist,
-                              style: TextStyle(
-                                color: textColor.withOpacity(0.85),
-                                fontSize: 14.0,
-                                fontFamily: 'NotoSansKR-Regular',
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              album,
-                              style: TextStyle(
-                                color: subTextColor,
-                                fontSize: 12.0,
-                                fontFamily: 'NotoSansKR-Regular',
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              date_,
-                              style: TextStyle(
-                                color: subTextColor,
-                                fontSize: 11.5,
-                                fontFamily: 'NotoSansKR-Regular',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                    const SizedBox(height: 10),
 
-                /// 주간 방송 차트
-                Container(
-                  margin: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _sectionTitle('주간 방송 차트', textColor),
-                      const SizedBox(height: 12),
-
-                      isLoading
-                          ? SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          color: _accentColor,
-                          strokeWidth: 2.0,
-                        ),
-                      )
-                          : Container(
-                        width: deviceWidth,
-                        height: 200,
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: innerBoxColor,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(width: 1, color: dividerColor),
-                        ),
-                        child: Center(
-                          child: FractionallySizedBox(
-                            widthFactor: 0.9,
-                            heightFactor: 0.9,
-                            child: line_chart(broad_weeks_chart),
-                          ),
-                        ),
-                      ),
-
+                    /// 안내 문구
+                    if (broad_weeks_chart
+                        .map((e) => int.tryParse(e['RANK'].toString()) ?? 0)
+                        .any((r) => r > 0 && r <= 100)) ...[
                       const SizedBox(height: 10),
 
                       /// 안내 문구
@@ -399,7 +345,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 3),
-                                  Text(
+                                  const Text(
                                     '방송차트 자료는 에어모니터에서 제공받았습니다.',
                                     style: TextStyle(
                                       fontSize: 11,
@@ -413,156 +359,161 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                         ),
                       ),
                     ],
-                  ),
+                  ],
                 ),
+              ),
 
-                /// 방송 재생 정보 리스트
-                Container(
-                  margin: const EdgeInsets.fromLTRB(20, 28, 20, 0),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          _sectionTitle('최신 방송 재생 정보', textColor),
-                          const Spacer(),
-                          if (!isExist)
-                            GestureDetector(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetailScreen(
-                                    deviceId: "",
-                                    title: title,
-                                    image: image,
-                                    artist: artist,
-                                    songId: widget.song.songId,
-                                    album: album,
-                                  ),
+              /// ── 최신 방송 재생 정보 카드 ──
+              _sectionCard(
+                cardColor: cardColor,
+                isDark: isDark,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        _sectionTitle('최신 방송 재생 정보', textColor),
+                        const Spacer(),
+                        if (!isExist)
+                          GestureDetector(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailScreen(
+                                  deviceId: "",
+                                  title: title,
+                                  image: image,
+                                  artist: artist,
+                                  songId: widget.song.songId,
+                                  album: album,
                                 ),
                               ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    '더보기',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: subTextColor,
-                                      fontFamily: 'NotoSansKR-Regular',
-                                    ),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  '더보기',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: subTextColor,
+                                    fontFamily: 'NotoSansKR-Regular',
                                   ),
-                                  Icon(Icons.chevron_right,
-                                      size: 16, color: subTextColor),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      Container(
-                        height: isExist ? 100 : 430,
-                        child: programLoading
-                            ? Center(
-                          child: SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              color: _accentColor,
-                              strokeWidth: 2.0,
+                                ),
+                                Icon(Icons.chevron_right,
+                                    size: 16, color: subTextColor),
+                              ],
                             ),
                           ),
-                        )
-                            : isExist
-                            ? Center(
-                          child: Text(
-                            '최신 방송 재생정보가 없습니다.',
-                            style: TextStyle(
-                              color: subTextColor,
-                              fontFamily: 'NotoSansKR-Medium',
-                              fontSize: 13,
-                            ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Container(
+                      height: isExist ? 100 : 410,
+                      child: programLoading
+                          ? Center(
+                        child: SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            color: _accentColor,
+                            strokeWidth: 2.0,
                           ),
-                        )
-                            : Row(children: [_listView(programs)]),
-                      ),
-                      if (!isExist)
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(0, 4, 0, 24),
-                          child: Center(
-                            child: SmoothPageIndicator(
-                              controller: pageController,
-                              count: programs.isEmpty
-                                  ? 1
-                                  : (programs.length / 4).ceil(),
-                              effect: const WormEffect(
-                                activeDotColor: _accentColor,
-                                dotColor: Color(0xFFD9D9D9),
-                                dotHeight: 6,
-                                dotWidth: 6,
-                                type: WormType.thinUnderground,
-                              ),
+                        ),
+                      )
+                          : isExist
+                          ? Center(
+                        child: Text(
+                          '최신 방송 재생정보가 없습니다.',
+                          style: TextStyle(
+                            color: subTextColor,
+                            fontFamily: 'NotoSansKR-Medium',
+                            fontSize: 13,
+                          ),
+                        ),
+                      )
+                          : Row(children: [_listView(programs)]),
+                    ),
+                    if (!isExist)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Center(
+                          child: SmoothPageIndicator(
+                            controller: pageController,
+                            count: programs.isEmpty
+                                ? 1
+                                : (programs.length / 4).ceil(),
+                            effect: const WormEffect(
+                              activeDotColor: _accentColor,
+                              dotColor: Color(0xFFD9D9D9),
+                              dotHeight: 6,
+                              dotWidth: 6,
+                              type: WormType.thinUnderground,
                             ),
                           ),
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
+              ),
 
-                /// 추천 음악 리스트
-                Container(
-                  margin: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _sectionTitle('추천 음악', textColor),
-                      const SizedBox(height: 6),
-                      SizedBox(
-                        height: isExist2 ? 100 : 430,
-                        child: isLoading
-                            ? Center(
-                          child: SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              color: _accentColor,
-                              strokeWidth: 2.0,
-                            ),
+              /// ── 추천 음악 카드 ──
+              _sectionCard(
+                cardColor: cardColor,
+                isDark: isDark,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _sectionTitle('추천 음악', textColor),
+                    const SizedBox(height: 6),
+                    SizedBox(
+                      height: isExist2 ? 100 : 360,
+                      child: isLoading
+                          ? Center(
+                        child: SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            color: _accentColor,
+                            strokeWidth: 2.0,
                           ),
-                        )
-                            : isExist2
-                            ? Center(
-                          child: Text(
-                            '추천 음악이 없습니다.',
-                            style: TextStyle(
-                              color: subTextColor,
-                              fontFamily: 'NotoSansKR-Medium',
-                              fontSize: 13,
-                            ),
+                        ),
+                      )
+                          : isExist2
+                          ? Center(
+                        child: Text(
+                          '추천 음악이 없습니다.',
+                          style: TextStyle(
+                            color: subTextColor,
+                            fontFamily: 'NotoSansKR-Medium',
+                            fontSize: 13,
                           ),
-                        )
-                            : Row(children: [_listView2(song_recommends)]),
-                      ),
-                      if (!isExist2)
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(0, 4, 0, 24),
-                          child: Center(
-                            child: SmoothPageIndicator(
-                              controller: pageController2,
-                              count: (song_recommends.length / 4).ceil(),
-                              effect: const WormEffect(
-                                activeDotColor: _accentColor,
-                                dotColor: Color(0xFFD9D9D9),
-                                dotHeight: 6,
-                                dotWidth: 6,
-                                type: WormType.thinUnderground,
-                              ),
+                        ),
+                      )
+                          : Row(children: [_listView2(song_recommends)]),
+                    ),
+                    if (!isExist2)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Center(
+                          child: SmoothPageIndicator(
+                            controller: pageController2,
+                            count: (song_recommends.length / 4).ceil(),
+                            effect: const WormEffect(
+                              activeDotColor: _accentColor,
+                              dotColor: Color(0xFFD9D9D9),
+                              dotHeight: 6,
+                              dotWidth: 6,
+                              type: WormType.thinUnderground,
                             ),
                           ),
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+
+              const SizedBox(height: 12),
+            ],
           ),
         ),
       ),
@@ -666,7 +617,17 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
             curveSmoothness: 0.15,
             barWidth: 2.5,
             color: _accentColor,
-            belowBarData: BarAreaData(show: false),
+            belowBarData: BarAreaData(
+              show: true,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  _accentColor.withOpacity(0.25),
+                  _accentColor.withOpacity(0.0),
+                ],
+              ),
+            ),
             dotData: FlDotData(
               show: true,
               checkToShowDot: (spot, _) => spot.y > 0,
@@ -975,6 +936,225 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
             },
           );
         },
+      ),
+    );
+  }
+}
+
+/// ── 히어로 섹션 (앨범 아트 + 그라데이션 오버레이) ─────────────────────
+class _HeroSection extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+  final String artist;
+  final String album;
+  final String date;
+
+  const _HeroSection({
+    required this.imageUrl,
+    required this.title,
+    required this.artist,
+    required this.album,
+    required this.date,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+    final double imageSize = width;
+
+    return SizedBox(
+      width: width,
+      height: imageSize,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          /// 앨범 이미지
+          ExtendedImage.network(
+            imageUrl,
+            fit: BoxFit.cover,
+            loadStateChanged: (state) {
+              if (state.extendedImageLoadState == LoadState.failed) {
+                return Image.asset('assets/no_image.png', fit: BoxFit.cover);
+              }
+              return null;
+            },
+          ),
+
+          /// 그라데이션 오버레이
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.3),
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.4),
+                  Colors.black.withOpacity(0.85),
+                ],
+                stops: const [0.0, 0.4, 0.7, 1.0],
+              ),
+            ),
+          ),
+
+          /// 텍스트
+          Positioned(
+            left: 20,
+            right: 20,
+            bottom: 24,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontFamily: 'NotoSansKR-Medium',
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    letterSpacing: -0.5,
+                    height: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  artist,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontFamily: 'NotoSansKR-Regular',
+                    color: Colors.white.withOpacity(0.9),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  album,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    color: Colors.white.withOpacity(0.7),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  date,
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    color: Colors.white.withOpacity(0.6),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// ── 차트 인포 (최고/평균 순위) ────────────────────────────────────────
+class _ChartInfoRow extends StatelessWidget {
+  final List data;
+  final bool isDark;
+  final Color textColor;
+  final Color subTextColor;
+  final Color innerBoxColor;
+
+  const _ChartInfoRow({
+    required this.data,
+    required this.isDark,
+    required this.textColor,
+    required this.subTextColor,
+    required this.innerBoxColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ranks = data
+        .map((e) => int.tryParse(e['RANK'].toString()) ?? 0)
+        .where((r) => r > 0 && r <= 100)
+        .toList();
+
+    String bestRank = '-';
+    String avgRank = '-';
+
+    if (ranks.isNotEmpty) {
+      final int best = ranks.reduce((a, b) => a < b ? a : b);
+      final double avg = ranks.reduce((a, b) => a + b) / ranks.length;
+      bestRank = '$best위';
+      avgRank = '${avg.round()}위';
+    }
+
+    return Row(
+      children: [
+        Expanded(
+          child: _infoBox('최고 순위', bestRank, _accentColor),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: _infoBox('평균 순위', avgRank, textColor),
+        ),
+      ],
+    );
+  }
+
+  Widget _infoBox(String label, String value, Color valueColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: innerBoxColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              color: subTextColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w800,
+              color: valueColor,
+              letterSpacing: -0.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// ── 원형 아이콘 버튼 (AppBar용) ───────────────────────────────────────
+class _CircleIconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _CircleIconButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.35),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, size: 18, color: Colors.white),
       ),
     );
   }
