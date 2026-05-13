@@ -132,10 +132,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           body: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [tokens.bgTop, tokens.bgBottom],
-                stops: const [0.0, 1.0],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  tokens.bgTop,
+                  Color.lerp(tokens.bgTop, tokens.bgBottom, 0.55)!,
+                  tokens.bgBottom,
+                ],
+                stops: const [0.0, 0.55, 1.0],
               ),
             ),
             child: SafeArea(
@@ -492,7 +496,8 @@ class _StatusLabel extends StatelessWidget {
           text,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: stateVal == 1 ? 14 : 16,
+            // fontSize: stateVal == 1 ? 14 : 16,
+            fontSize: 16,
             fontWeight: stateVal == 0 ? FontWeight.w600 : FontWeight.w500,
             color: tokens.labelColor,
             letterSpacing: 0.2,
@@ -585,35 +590,35 @@ class _ThemeTokens {
     switch (themeValue) {
       case 1: // Ocean Blue
         return _ThemeTokens(
-          bgTop: const Color(0xFF1A8FD1),
-          bgBottom: const Color(0xFF9B1FBE),
+          bgTop: const Color(0xFF2BA5E0),
+          bgBottom: const Color(0xFF7E3FD4),
           labelColor: Colors.white,
           glassBg: Colors.white.withValues(alpha: 0.18),
           glassBorder: Colors.white.withValues(alpha: 0.3),
-          decorColor: Colors.white.withValues(alpha: 0.06),
-          ringColor: Colors.white.withValues(alpha: 0.6),
+          decorColor: Colors.white.withValues(alpha: 0.08),
+          ringColor: Colors.white.withValues(alpha: 0.65),
           overlayStyle: SystemUiOverlayStyle.light,
         );
       case 2: // Dark Mode
         return _ThemeTokens(
-          bgTop: const Color(0xFF0D0D0D),
-          bgBottom: const Color(0xFF2A2A2A),
+          bgTop: const Color(0xFF0F1115),
+          bgBottom: const Color(0xFF2C3038),
           labelColor: Colors.white,
           glassBg: Colors.white.withValues(alpha: 0.08),
-          glassBorder: Colors.white.withValues(alpha: 0.12),
-          decorColor: Colors.white.withValues(alpha: 0.03),
-          ringColor: Colors.white.withValues(alpha: 0.4),
+          glassBorder: Colors.white.withValues(alpha: 0.14),
+          decorColor: Colors.white.withValues(alpha: 0.04),
+          ringColor: Colors.white.withValues(alpha: 0.45),
           overlayStyle: SystemUiOverlayStyle.light,
         );
       default: // Berry Pink
         return _ThemeTokens(
-          bgTop: const Color(0xFFFF7BAC),
-          bgBottom: const Color(0xFFFFD6E7),
+          bgTop: const Color(0xFFFF6FA3),
+          bgBottom: const Color(0xFFFFC8DD),
           labelColor: const Color(0xFF3D1A26),
-          glassBg: Colors.white.withValues(alpha: 0.3),
-          glassBorder: Colors.white.withValues(alpha: 0.5),
-          decorColor: Colors.white.withValues(alpha: 0.12),
-          ringColor: const Color(0xFFFF7BAC).withValues(alpha: 0.7),
+          glassBg: Colors.white.withValues(alpha: 0.32),
+          glassBorder: Colors.white.withValues(alpha: 0.55),
+          decorColor: Colors.white.withValues(alpha: 0.14),
+          ringColor: const Color(0xFFFF5A95).withValues(alpha: 0.7),
           overlayStyle: SystemUiOverlayStyle.dark,
         );
     }

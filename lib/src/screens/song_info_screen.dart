@@ -31,9 +31,9 @@ var year;
 var cnt;
 
 var intY;
-List<num> listY = []; // SCH_CNT
+List<num> listY = [];
 var intX;
-List listX = []; // 월
+List listX = [];
 
 List<FlSpot> FlSpotDataAll = [];
 var sum;
@@ -59,9 +59,9 @@ List song_recommends = [];
 List reversedDate = [];
 List dateList = [];
 
-class SongInfoScreen extends StatefulWidget {
+const Color _accentColor = Colors.deepOrange;
 
-  // 넘어온 값
+class SongInfoScreen extends StatefulWidget {
   final ApiSearch song;
   const SongInfoScreen({super.key, required this.song});
 
@@ -75,26 +75,25 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
   bool isLoading = true;
   bool programLoading = true;
 
-  // API 요청
-  // API 요청
   Future<String> fetchData() async {
     try {
       final response = await http.get(
         Uri.parse(
           '${ApiService().detailUrl}/json'
-            '?id=${widget.song.songId}'
-            '&uid=${MyApp.uid}'
-            '&genre=${widget.song.genre}',
+              '?id=${widget.song.songId}'
+              '&uid=${MyApp.uid}'
+              '&genre=${widget.song.genre}',
         ),
       );
 
-      final Map<String, dynamic> detailList =
-      jsonDecode(response.body);
+      final Map<String, dynamic> detailList = jsonDecode(response.body);
 
       song_recommends = detailList['song_recommend'] ?? [];
       count = detailList['count'] ?? 0;
       song_cnts = detailList['song_cnts'] ?? [];
       broad_weeks_chart = detailList['broad_weeks_chart'] ?? [];
+
+      print('broad_weeks_chart: $broad_weeks_chart');
 
       setState(() {
         isLoading = false;
@@ -103,16 +102,12 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       print('노래 상세화면 API 통신 오류 ################ $e');
     }
 
-    ///// 프로그램 API 요청 & 응답 /////
     try {
       final programsResponse = await http.get(
-        Uri.parse(
-          '${ApiService().programsUrl}/json?id=${widget.song.songId}',
-        ),
+        Uri.parse('${ApiService().programsUrl}/json?id=${widget.song.songId}'),
       );
 
-      final List<dynamic> programList =
-      jsonDecode(programsResponse.body);
+      final List<dynamic> programList = jsonDecode(programsResponse.body);
 
       setState(() {
         programs = programList;
@@ -124,7 +119,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
     return 'done';
   }
-
 
   @override
   void initState() {
@@ -139,122 +133,203 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
     super.initState();
   }
 
+  /// 섹션 타이틀
+  Widget _sectionTitle(String text, Color textColor) {
+    return Row(
+      children: [
+        Container(width: 3, height: 16, color: _accentColor),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: TextStyle(
+            color: textColor,
+            fontFamily: 'NotoSansKR-Bold',
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+            letterSpacing: -0.2,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// TV / RADIO 뱃지
+  Widget _typeBadge(String type, bool isDark) {
+    final bool isTv = type == 'TV';
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: isTv
+            ? _accentColor.withOpacity(0.12)
+            : (isDark ? Colors.white12 : const Color(0xFFF0F0F0)),
+        borderRadius: BorderRadius.circular(3),
+      ),
+      child: Text(
+        isTv ? 'TV' : 'RADIO',
+        style: TextStyle(
+          fontSize: 9.5,
+          fontWeight: FontWeight.w700,
+          color: isTv
+              ? _accentColor
+              : (isDark ? Colors.grey[300] : Colors.grey[700]),
+          letterSpacing: 0.3,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    if (isLoading) return Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,));
+    if (isLoading) {
+      return Scaffold(
+        body: Center(
+          child: SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(
+              color: _accentColor,
+              strokeWidth: 2.0,
+            ),
+          ),
+        ),
+      );
+    }
 
     int themeValue = context.watch<MyAppState>().selectedValue;
-    Color textColor = themeValue == 2 ? Colors.white : Colors.black;
+    final bool isDark = themeValue == 2;
 
-    final isExist = programs.length == 0;
-    final isExist2 = song_recommends.length == 0;
+    final Color bgColor = isDark ? Colors.black : const Color(0xFFF5F5F5);
+    final Color cardColor = isDark ? const Color(0xFF2A2A2A) : Colors.white;
+    final Color textColor = isDark ? Colors.white : const Color(0xFF222222);
+    final Color subTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
+    final Color dividerColor = isDark ? const Color(0xFF424242) : const Color(0xFFEFEFEF);
+    final Color imageBorderColor = isDark
+        ? const Color(0xFFBDBDBD)
+        : Colors.black.withOpacity(0.08);
+    final Color innerBoxColor = isDark
+        ? const Color(0xFF1F1F1F)
+        : const Color(0xFFF7F7F7);
+
+    final isExist = programs.isEmpty;
+    final isExist2 = song_recommends.isEmpty;
 
     var deviceWidth = MediaQuery.of(context).size.width;
     var deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: themeValue == 2 ? Colors.black : Color.fromRGBO(245, 245, 245, 1.0),
+      backgroundColor: bgColor,
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
-        backgroundColor: themeValue == 2 ? Colors.black : Color.fromRGBO(245, 245, 245, 1.0),
+        backgroundColor: bgColor,
         leading: IconButton(
           onPressed: () {
-            // 검색 차트로 이동
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back, color: themeValue == 2 ? Colors.white : Colors.black,),
+          icon: Icon(Icons.arrow_back, color: textColor, size: 22),
         ),
         actions: [
           IconButton(
-            onPressed: () { // 공유
+            onPressed: () {
               Share.share(
                 '${ApiService().shareUrl}?f_id=${widget.song.songId}',
-                sharePositionOrigin:
-                Rect.fromLTRB(0, 0, deviceWidth, deviceHeight * 0.5)
+                sharePositionOrigin: Rect.fromLTRB(0, 0, deviceWidth, deviceHeight * 0.5),
               );
             },
-            icon: Icon(Icons.share, color: themeValue == 2 ? Colors.white : Colors.black,),
+            icon: Icon(Icons.share, color: textColor, size: 20),
           )
         ],
       ),
 
-      /** 곡 정보 */
       body: SingleChildScrollView(
         child: SafeArea(
           bottom: Platform.isAndroid,
           child: Container(
             width: double.infinity,
-            margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+            margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
             decoration: BoxDecoration(
-              color: themeValue == 2 ? Color.fromRGBO(90, 90, 90, 1.0) : Colors.white,
-              borderRadius: BorderRadius.circular(30),
+              color: cardColor,
+              borderRadius: BorderRadius.circular(15),
             ),
             child: Column(
               children: [
+                /// 곡 정보 박스
                 Container(
                   decoration: BoxDecoration(
-                    color: themeValue == 2 ? Colors.black54 : Colors.grey[100],
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      width: 1,
-                      color: themeValue == 2 ? Color.fromRGBO(50, 50, 50, 1) : Color.fromRGBO(219, 219, 219, 1),
-                    )
+                    color: innerBoxColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(width: 1, color: dividerColor),
                   ),
-
-                  // 선택한 곡 정보
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20)
-                        ),
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: ExtendedImage.network(
-                              '${image}',
-                              fit: BoxFit.cover,
-                              loadStateChanged: (state) {
-                                if (state.extendedImageLoadState == LoadState.failed) {
-                                  return SizedBox(child: Image.asset('assets/no_image.png', fit: BoxFit.cover,),);
-                                }
-                                return null;
-                              },
-                            ),
+                      AspectRatio(
+                        aspectRatio: 1,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(11),
+                            topRight: Radius.circular(11),
+                          ),
+                          child: ExtendedImage.network(
+                            '$image',
+                            fit: BoxFit.cover,
+                            loadStateChanged: (state) {
+                              if (state.extendedImageLoadState == LoadState.failed) {
+                                return SizedBox(
+                                  child: Image.asset(
+                                    'assets/no_image.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                              }
+                              return null;
+                            },
                           ),
                         ),
                       ),
 
-                      // 텍스트 컨테이너
                       Container(
                         width: double.infinity,
-                        margin: EdgeInsets.only(top: 10, bottom: 15, left: 20),
+                        padding: const EdgeInsets.fromLTRB(18, 14, 18, 16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               title,
                               style: TextStyle(
-                                fontSize: 22.0,
+                                fontSize: 19.0,
                                 fontFamily: 'NotoSansKR-Medium',
-                                color: textColor
+                                fontWeight: FontWeight.w700,
+                                color: textColor,
+                                letterSpacing: -0.3,
                               ),
                             ),
+                            const SizedBox(height: 4),
                             Text(
                               artist,
-                              style: TextStyle(color: textColor, fontSize: 16.0, fontFamily: 'NotoSansKR-Regular',),
+                              style: TextStyle(
+                                color: textColor.withOpacity(0.85),
+                                fontSize: 14.0,
+                                fontFamily: 'NotoSansKR-Regular',
+                              ),
                             ),
+                            const SizedBox(height: 2),
                             Text(
                               album,
-                              style: TextStyle(color: textColor, fontSize: 12.0, fontFamily: 'NotoSansKR-Regular',),
+                              style: TextStyle(
+                                color: subTextColor,
+                                fontSize: 12.0,
+                                fontFamily: 'NotoSansKR-Regular',
+                              ),
                             ),
+                            const SizedBox(height: 2),
                             Text(
                               date_,
-                              style: TextStyle(color: textColor, fontSize: 12.0, fontFamily: 'NotoSansKR-Regular',),
-                            )
+                              style: TextStyle(
+                                color: subTextColor,
+                                fontSize: 11.5,
+                                fontFamily: 'NotoSansKR-Regular',
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -262,261 +337,242 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                   ),
                 ),
 
-            Container(
-              margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
+                /// 주간 방송 차트
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        // margin: const EdgeInsets.only(top: 25),
-                        child: Text(
-                          '주간 방송 차트',
-                          style: TextStyle(
-                            color: themeValue == 2
-                            ? Colors.white
-                            : Color.fromRGBO(36, 36, 36, 1),
-                              fontFamily: 'NotoSansKR-Bold',
-                              fontSize: 18),
-                        )
-                      ),
-
-                      SizedBox(height: 10,),
+                      _sectionTitle('주간 방송 차트', textColor),
+                      const SizedBox(height: 12),
 
                       isLoading
-                        ? CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,)
-                        : Container(
-                          width: deviceWidth,
-                          height: 200, // 최소 높이 지정
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: themeValue == 2 ? Colors.grey.shade800 : Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Center(
-                            child: FractionallySizedBox(
-                              widthFactor: 0.9,  // 가로 길이
-                              heightFactor: 0.9, // 세로 높이
-                              child: line_chart(broad_weeks_chart),
-                            ),
-                          ),
-                        )
-                    ],
-                  ),
-
-                  Container(
-                    width: deviceWidth * 0.9,
-                    child: Row(
-                      children: [
-                        Image.asset('assets/result_search.png', width: 18),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                              child: Text('방송차트: 지상파(TV, RADIO) 집계기준',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: themeValue == 2
-                                    ? Colors.white
-                                    : Colors.black
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 5,),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text('방송차트 자료는 에어모니터에서 제공받았습니다.',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.red[500]
-                                )
-                              ),
-                            )
-                          ],
+                          ? SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          color: _accentColor,
+                          strokeWidth: 2.0,
                         ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // 방송 재생 정보 리스트
-            Container(
-              margin: const EdgeInsets.only(right: 20, left: 20),
-              child: Column(
-                mainAxisAlignment:
-                MainAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.only(top: 30.0),
-                        child: Text('최신 방송 재생 정보',
-                          style: TextStyle(
-                            color: themeValue == 2
-                            ? Colors.white
-                            : Color.fromRGBO(36, 36, 36, 1),
-                              fontFamily: 'NotoSansKR-Bold',
-                              fontSize: 18
-                          )
+                      )
+                          : Container(
+                        width: deviceWidth,
+                        height: 200,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: innerBoxColor,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(width: 1, color: dividerColor),
+                        ),
+                        child: Center(
+                          child: FractionallySizedBox(
+                            widthFactor: 0.9,
+                            heightFactor: 0.9,
+                            child: line_chart(broad_weeks_chart),
+                          ),
                         ),
                       ),
-                      Spacer(),
-                      Padding(
-                        padding:
-                        EdgeInsets.only(top: 40),
-                        child: GestureDetector(
-                          onTap: () => {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  DetailScreen(
+
+                      const SizedBox(height: 10),
+
+                      /// 안내 문구
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: innerBoxColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.asset('assets/result_search.png', width: 16),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '방송차트: 지상파(TV, RADIO) 집계기준',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: textColor,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    '방송차트 자료는 에어모니터에서 제공받았습니다.',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: _accentColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                /// 방송 재생 정보 리스트
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20, 28, 20, 0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          _sectionTitle('최신 방송 재생 정보', textColor),
+                          const Spacer(),
+                          if (!isExist)
+                            GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailScreen(
                                     deviceId: "",
                                     title: title,
                                     image: image,
                                     artist: artist,
                                     songId: widget.song.songId,
                                     album: album,
-                                  )
-                              )
-                            )
-                          },
-                          child: isExist ? Container() :
-                          Container(
-                            width: 50,
-                            height: 30,
-                            child: Text("더보기", style: TextStyle(fontSize: 13, color: Colors.grey, fontFamily: 'NotoSansKR-Regular',),
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '더보기',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: subTextColor,
+                                      fontFamily: 'NotoSansKR-Regular',
+                                    ),
+                                  ),
+                                  Icon(Icons.chevron_right,
+                                      size: 16, color: subTextColor),
+                                ],
+                              ),
                             ),
-                          )
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Container(
+                        height: isExist ? 100 : 430,
+                        child: programLoading
+                            ? Center(
+                          child: SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              color: _accentColor,
+                              strokeWidth: 2.0,
+                            ),
+                          ),
+                        )
+                            : isExist
+                            ? Center(
+                          child: Text(
+                            '최신 방송 재생정보가 없습니다.',
+                            style: TextStyle(
+                              color: subTextColor,
+                              fontFamily: 'NotoSansKR-Medium',
+                              fontSize: 13,
+                            ),
+                          ),
+                        )
+                            : Row(children: [_listView(programs)]),
+                      ),
+                      if (!isExist)
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(0, 4, 0, 24),
+                          child: Center(
+                            child: SmoothPageIndicator(
+                              controller: pageController,
+                              count: programs.isEmpty
+                                  ? 1
+                                  : (programs.length / 4).ceil(),
+                              effect: const WormEffect(
+                                activeDotColor: _accentColor,
+                                dotColor: Color(0xFFD9D9D9),
+                                dotHeight: 6,
+                                dotWidth: 6,
+                                type: WormType.thinUnderground,
+                              ),
+                            ),
+                          ),
                         ),
-                      )
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    height: isExist ? 100 : 430,
-                    child: programLoading
-                      ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,),) // 로딩 인디케이터
-                      : isExist
-                        ?
-                          Center(
-                            child: Text(
-                              '최신 방송 재생정보가 없습니다.',
-                              style: TextStyle(
-                                color: themeValue == 2 ? Colors.white : Colors.black,
-                                fontFamily: 'NotoSansKR-Medium',
-                                fontSize: 16
-                              )
-                            )
-                          )
-                        :
-                          Row(
-                            children: [
-                              _listView(programs)
-                            ],
-                          )
-                  ),
-                  isExist
-                      ? const SizedBox.shrink()
-                      : Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 40),
-                    child: Center(
-                      child: SmoothPageIndicator(
-                        controller: pageController,
-                        count: programs.isEmpty ? 1 : (programs.length / 4).ceil(),
-                        effect: const WormEffect(
-                          activeDotColor: Color.fromRGBO(254, 36, 61, 1),
-                          dotHeight: 7,
-                          dotWidth: 7,
-                          type: WormType.thinUnderground,
-                        ),
+                ),
+
+                /// 추천 음악 리스트
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _sectionTitle('추천 음악', textColor),
+                      const SizedBox(height: 6),
+                      SizedBox(
+                        height: isExist2 ? 100 : 430,
+                        child: isLoading
+                            ? Center(
+                          child: SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              color: _accentColor,
+                              strokeWidth: 2.0,
+                            ),
+                          ),
+                        )
+                            : isExist2
+                            ? Center(
+                          child: Text(
+                            '추천 음악이 없습니다.',
+                            style: TextStyle(
+                              color: subTextColor,
+                              fontFamily: 'NotoSansKR-Medium',
+                              fontSize: 13,
+                            ),
+                          ),
+                        )
+                            : Row(children: [_listView2(song_recommends)]),
                       ),
-                    ),
+                      if (!isExist2)
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(0, 4, 0, 24),
+                          child: Center(
+                            child: SmoothPageIndicator(
+                              controller: pageController2,
+                              count: (song_recommends.length / 4).ceil(),
+                              effect: const WormEffect(
+                                activeDotColor: _accentColor,
+                                dotColor: Color(0xFFD9D9D9),
+                                dotHeight: 6,
+                                dotWidth: 6,
+                                type: WormType.thinUnderground,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                ],
-              )
+                ),
+              ],
             ),
-
-            // 추천 음악 리스트
-            Container(
-              margin: const EdgeInsets.only(right: 20, left: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                    child: Text('추천 음악',
-                      style: TextStyle(
-                        color: themeValue == 2
-                          ? Colors.white
-                          : Color.fromRGBO(36, 36, 36, 1),
-                            fontFamily: 'NotoSansKR-Bold',
-                            fontSize: 18
-                      )
-                    ),
-                  ),
-                  SizedBox(
-                    height: isExist2 ? 100 : 430,
-                    child: Container(
-                      child: isLoading
-                        ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,),) // 로딩 인디케이터
-                        : isExist2
-                            ?
-                          Center(
-                            child: Text('추천 음악이 없습니다.',
-                              style: TextStyle(
-                                color: themeValue == 2 ? Colors.white : Colors.black,
-                                  fontFamily: 'NotoSansKR-Medium',
-                                  fontSize: 16
-                              )
-                            )
-                          )
-                            :
-                          Row(
-                            children: [
-                              _listView2(song_recommends)
-                            ],
-                          )
-                    )
-                  ),
-
-                  // 스와이프 페이징
-                  isExist2
-                      ? const SizedBox.shrink()
-                      : Container(
-                    margin: const EdgeInsets.fromLTRB(0, 10, 10, 40),
-                    child: Center(
-                      child: SmoothPageIndicator(
-                        controller: pageController2,
-                        count: (song_recommends.length / 4).ceil(),
-                        effect: const WormEffect(
-                          activeDotColor: Color.fromRGBO(254, 36, 61, 1),
-                          dotHeight: 7,
-                          dotWidth: 7,
-                          type: WormType.thinUnderground,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],)
-              )
-            ],),
           ),
         ),
       ),
     );
   }
 
-  // 차트
+  /// 차트
   Widget line_chart(broad_weeks_chart) {
     int themeValue = context.watch<MyAppState>().selectedValue;
 
-    // ===== 정렬 (MONTH → WEEK) =====
     broad_weeks_chart.sort((a, b) {
       final int aMonth = int.parse(a['MONTH'].toString());
       final int bMonth = int.parse(b['MONTH'].toString());
@@ -526,7 +582,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       return aMonth.compareTo(bMonth);
     });
 
-    // ===== 유효 순위만 필터 (1~100) =====
     final ranksIn100 = broad_weeks_chart
         .map((e) => int.tryParse(e['RANK'].toString()) ?? 0)
         .where((r) => r > 0 && r <= 100)
@@ -534,32 +589,26 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
     if (ranksIn100.isEmpty) {
       return Center(
-        child: SizedBox(
-          height: 50,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade400,
-              borderRadius: BorderRadius.circular(5.0)
-            ),
-            child: Center(
-              child: Text(
-                '주간 방송 차트 순위는 TOP 100만 제공됩니다.',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
-                ),
-              ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            color: themeValue == 2 ? Colors.grey.shade700 : Colors.grey.shade300,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Text(
+            '주간 방송 차트 순위는 TOP 100만 제공됩니다.',
+            style: TextStyle(
+              fontSize: 12,
+              color: themeValue == 2 ? Colors.white : Colors.black,
             ),
           ),
         ),
       );
     }
 
-    // ===== 최고/최악 순위 계산 =====
-    final int minRank = ranksIn100.reduce((a, b) => a < b ? a : b); // 가장 높은 순위
-    final int maxRank = ranksIn100.reduce((a, b) => a > b ? a : b); // 가장 낮은 순위
+    final int minRank = ranksIn100.reduce((a, b) => a < b ? a : b);
+    final int maxRank = ranksIn100.reduce((a, b) => a > b ? a : b);
 
-    // ===== FlSpot 생성 =====
     final List<FlSpot> spots = [];
     final List<int> showingIndicators = [];
 
@@ -568,34 +617,32 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       double y = 0;
 
       if (rank > 0) {
-        y = (maxRank - rank + 1).toDouble(); // 최고 순위가 차트 맨 위
+        y = (maxRank - rank + 1).toDouble();
       }
 
       spots.add(FlSpot(i.toDouble(), y));
 
-      if (y > 0) showingIndicators.add(i); // 상시 tooltip 표시
+      if (y > 0) showingIndicators.add(i);
     }
 
-    // ===== 차트 =====
     return LineChart(
       LineChartData(
         minX: 0,
         maxX: spots.length - 1,
         minY: 0,
-        maxY: (maxRank - minRank + 1).toDouble(), // 최고순위가 맨 위
+        maxY: (maxRank - minRank + 1).toDouble(),
         baselineY: 0,
         borderData: FlBorderData(show: false),
 
-        // ===== 눈금선 =====
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
-          horizontalInterval: 2, // 눈금 간격
+          horizontalInterval: 2,
           getDrawingHorizontalLine: (value) => FlLine(
             strokeWidth: 1,
             color: themeValue == 2
-                ? Colors.grey.withOpacity(0.6)
-                : Colors.grey.withOpacity(0.3),
+                ? Colors.grey.withOpacity(0.4)
+                : Colors.grey.withOpacity(0.25),
           ),
         ),
 
@@ -607,7 +654,6 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
             sideTitles: SideTitles(
               showTitles: true,
               interval: 1,
-              // reservedSize: 30,
               getTitlesWidget: bottomTitleWidgets,
             ),
           ),
@@ -618,11 +664,9 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
             spots: spots,
             isCurved: true,
             curveSmoothness: 0.15,
-            barWidth: 3,
-            color: const Color.fromRGBO(51, 211, 180, 1),
+            barWidth: 2.5,
+            color: _accentColor,
             belowBarData: BarAreaData(show: false),
-
-            // ===== 순위 상시 표시 =====
             dotData: FlDotData(
               show: true,
               checkToShowDot: (spot, _) => spot.y > 0,
@@ -632,7 +676,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
                 return RankDotPainter(
                   rank: originalRank,
-                  color: const Color.fromRGBO(51, 211, 180, 1),
+                  color: _accentColor,
                 );
               },
             ),
@@ -640,18 +684,13 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
           ),
         ],
 
-        // ===== 터치 세로줄 제거 =====
         lineTouchData: LineTouchData(
           enabled: true,
           handleBuiltInTouches: true,
           getTouchedSpotIndicator: (barData, spotIndexes) {
-            // 세로 라인 제거, dot도 안 보이게
             return spotIndexes.map((index) {
               return TouchedSpotIndicatorData(
-                FlLine(
-                  color: Colors.transparent, // 세로선 없앰
-                  strokeWidth: 0,
-                ),
+                FlLine(color: Colors.transparent, strokeWidth: 0),
                 FlDotData(show: false),
               );
             }).toList();
@@ -665,7 +704,7 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
                 return LineTooltipItem(
                   '$realRank위',
                   const TextStyle(
-                    color: Colors.green,
+                    color: _accentColor,
                     fontSize: 11,
                     fontFamily: 'NotoSansKR-Bold',
                   ),
@@ -680,9 +719,9 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     final index = value.toInt();
-    // build 시점에 리스트 재생성
     final dateList = broad_weeks_chart
-        .map((e) => '${int.parse(e['MONTH'].toString().substring(4, 6))}월 ${e['WEEK']}주차')
+        .map((e) =>
+    '${int.parse(e['MONTH'].toString().substring(4, 6))}월 ${e['WEEK']}주차')
         .toList();
 
     if (index < 0 || index >= dateList.length) {
@@ -694,246 +733,249 @@ class _SongInfoScreenState extends State<SongInfoScreen> {
       space: 8,
       child: Text(
         dateList[index],
-        style: const TextStyle(fontSize: 11),
+        style: const TextStyle(fontSize: 10.5),
       ),
     );
   }
 
-  // 최신 방송 재생 정보 리스트
+  /// 최신 방송 재생 정보 리스트
   Widget _listView(programs) {
     int themeValue = context.watch<MyAppState>().selectedValue;
-    var deviceWidth = MediaQuery.of(context).size.width;
+    final bool isDark = themeValue == 2;
+    final Color textColor = isDark ? Colors.white : const Color(0xFF222222);
+    final Color subTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
+    final Color dividerColor =
+    isDark ? const Color(0xFF424242) : const Color(0xFFEFEFEF);
+    final Color imageBorderColor =
+    isDark ? const Color(0xFFBDBDBD) : Colors.black.withOpacity(0.08);
 
     return Expanded(
       child: PageView.builder(
         itemCount: (programs.length / 4).ceil(),
         controller: pageController,
         itemBuilder: (BuildContext context, int pageIndex) {
-
           return ListView.builder(
             padding: EdgeInsets.zero,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: programs == null
-              ? 0
-              : min(4, programs.length - pageIndex * 4),
+                ? 0
+                : min(4, programs.length - pageIndex * 4),
             itemBuilder: (context, index) {
               final program = pageIndex == 0
-                ? programs[index]
-                : programs[index + (pageIndex * 4)];
+                  ? programs[index]
+                  : programs[index + (pageIndex * 4)];
 
               String programDate = program['F_DATE'];
-              String parseProgramDate = DateFormat('yyyy.MM.dd').format(DateTime.parse(programDate)).toString();
+              String parseProgramDate = DateFormat('yyyy.MM.dd')
+                  .format(DateTime.parse(programDate))
+                  .toString();
 
               return Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: dividerColor, width: 1),
+                  ),
+                ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(1),
-                      margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(
                           width: 1,
-                          color: themeValue == 2
-                            ? const Color.fromRGBO(189, 189, 189, 1)
-                            : Colors.black.withValues(alpha:0.3),
+                          color: imageBorderColor,
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(6),
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: SizedBox.fromSize(
-                          child: ExtendedImage.network(
-                            program['F_LOGO'],
-                            width: 80,
-                            height: 80,
-                            loadStateChanged: (state) {
-                              if (state.extendedImageLoadState == LoadState.failed) {
-                                return SizedBox(width: 80, height: 80, child: Image.asset('assets/no_image.png'),);
-                              }
-                              return null;
-                            },
-                          ),
+                        borderRadius: BorderRadius.circular(5),
+                        child: ExtendedImage.network(
+                          program['F_LOGO'],
+                          width: 64,
+                          height: 64,
+                          fit: BoxFit.cover,
+                          loadStateChanged: (state) {
+                            if (state.extendedImageLoadState == LoadState.failed) {
+                              return SizedBox(
+                                width: 64,
+                                height: 64,
+                                child: Image.asset('assets/no_image.png'),
+                              );
+                            }
+                            return null;
+                          },
                         ),
-                      )
+                      ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 2),
-                          child: program['F_TYPE'] == "TV"
-                            ? Image.asset('assets/momo_assets/icon_tv.png', scale: 4,)
-                            : Image.asset('assets/momo_assets/icon_radio.png', scale: 4),
-                        ),
-                        Container(
-                          width: deviceWidth * 0.5,
-                          child: Text(program['CL_NM'],
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _typeBadge(program['F_TYPE'], isDark),
+                          const SizedBox(height: 5),
+                          Text(
+                            program['CL_NM'],
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontFamily: 'NotoSansKR-Bold',
+                              fontWeight: FontWeight.w700,
+                              color: textColor,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            program['F_NAME'],
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                             style: TextStyle(
                               fontSize: 12,
-                              overflow: TextOverflow.ellipsis,
-                              fontFamily: 'NotoSansKR-Bold',
-                              color: themeValue == 2
-                                ? Colors.white
-                                : Colors.black
-                            )
-                          )
-                        ),
-                        Container(
-                          width:
-                          deviceWidth * 0.5,
-                          margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                          child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin:
-                                const EdgeInsets.only(bottom: 3),
-                                child: Text(program['F_NAME'],
-                                  style: const TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                    fontFamily: 'NotoSansKR-Bold',
-                                    fontSize: 12)
-                                ),
-                              ),
-                              Text(parseProgramDate,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: themeValue == 2
-                                    ? Colors.grey.withValues(alpha: 0.8)
-                                    : Colors.black.withValues(alpha: 0.3)
-                                )
-                              ),
-                            ],
+                              fontFamily: 'NotoSansKR-Medium',
+                              color: textColor.withOpacity(0.85),
+                            ),
                           ),
-                        )
-                      ]
-                    )
+                          const SizedBox(height: 2),
+                          Text(
+                            parseProgramDate,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: subTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               );
-            }
+            },
           );
-      })
+        },
+      ),
     );
   }
 
+  /// 추천 음악 리스트
   Widget _listView2(song_recommends) {
     int themeValue = context.watch<MyAppState>().selectedValue;
-    var deviceWidth = MediaQuery.of(context).size.width;
+    final bool isDark = themeValue == 2;
+    final Color textColor = isDark ? Colors.white : const Color(0xFF222222);
+    final Color subTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
+    final Color dividerColor =
+    isDark ? const Color(0xFF424242) : const Color(0xFFEFEFEF);
+    final Color imageBorderColor =
+    isDark ? const Color(0xFFBDBDBD) : Colors.black.withOpacity(0.08);
 
     return Expanded(
       child: PageView.builder(
-      itemCount: (song_recommends.length / 4).ceil(),
-      controller: pageController2,
-      itemBuilder: (BuildContext context, int pageIndex) {
-        return ListView.builder(
-          padding: EdgeInsets.zero,
-          physics: NeverScrollableScrollPhysics(),
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: song_recommends == null
-            ? 0
-            : min(4, song_recommends.length - pageIndex * 4),
-          itemBuilder: (context, index) {
-            final song_recommend = pageIndex == 0
-              ? song_recommends[index]
-              : song_recommends[index + (pageIndex * 4)];
-            return Column(
-              children: [
-                Row(
+        itemCount: (song_recommends.length / 4).ceil(),
+        controller: pageController2,
+        itemBuilder: (BuildContext context, int pageIndex) {
+          return ListView.builder(
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: song_recommends == null
+                ? 0
+                : min(4, song_recommends.length - pageIndex * 4),
+            itemBuilder: (context, index) {
+              final song_recommend = pageIndex == 0
+                  ? song_recommends[index]
+                  : song_recommends[index + (pageIndex * 4)];
+
+              return Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: dividerColor, width: 1),
+                  ),
+                ),
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                        padding: const EdgeInsets.all(1),
-                        margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            width: 1,
-                            color: themeValue == 2
-                                ? const Color.fromRGBO(189, 189, 189, 1)
-                                : Colors.black.withValues(alpha: 0.3),
-                          ),
-                          borderRadius: BorderRadius.circular(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          width: 1,
+                          color: imageBorderColor,
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SizedBox.fromSize(
-                            child: ExtendedImage.network(
-                              song_recommend['IMAGE'] ?? "",
-                              width: 80,
-                              height: 80,
-                              loadStateChanged: (state) {
-                                if (state.extendedImageLoadState == LoadState.failed) {
-                                  return SizedBox(width: 80, height: 80, child: Image.asset('assets/no_image.png'),);
-                                }
-                                return null;
-                              },
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: ExtendedImage.network(
+                          song_recommend['IMAGE'] ?? "",
+                          width: 64,
+                          height: 64,
+                          fit: BoxFit.cover,
+                          loadStateChanged: (state) {
+                            if (state.extendedImageLoadState == LoadState.failed) {
+                              return SizedBox(
+                                width: 64,
+                                height: 64,
+                                child: Image.asset('assets/no_image.png'),
+                              );
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            song_recommend['TITLE'] ?? "",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontFamily: 'NotoSansKR-Bold',
+                              fontWeight: FontWeight.w700,
+                              color: textColor,
                             ),
                           ),
-                        )
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: deviceWidth * 0.5,
-                          child: Text(song_recommend['TITLE'] ?? "",
+                          const SizedBox(height: 3),
+                          Text(
+                            song_recommend['ARTIST'] ?? "",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                             style: TextStyle(
                               fontSize: 12,
-                              overflow: TextOverflow.ellipsis,
-                              fontFamily: 'NotoSansKR-Bold',
-                              color: themeValue == 2
-                                ? Colors.white
-                                : Colors.black)
-                          )
-                        ),
-                        Container(
-                          width: deviceWidth * 0.5,
-                          margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                          child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 3),
-                                child: Text(song_recommend['ARTIST'] ?? "",
-                                    style: const TextStyle(
-                                        overflow:
-                                        TextOverflow.ellipsis,
-                                        fontFamily: 'NotoSansKR-Bold',
-                                        fontSize: 12
-                                    )
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 3),
-                                child: Text(song_recommend['ALBUM'] ?? "",
-                                  style: const TextStyle(
-                                      overflow:
-                                      TextOverflow.ellipsis,
-                                      fontFamily: 'NotoSansKR-Bold',
-                                      fontSize: 12
-                                  )
-                                ),
-                              ),
-                            ],
+                              fontFamily: 'NotoSansKR-Medium',
+                              color: textColor.withOpacity(0.85),
+                            ),
                           ),
-                        )
-                      ]
-                    )
+                          const SizedBox(height: 2),
+                          Text(
+                            song_recommend['ALBUM'] ?? "",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              color: subTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ],
-            );
-          });
-        }
-      )
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

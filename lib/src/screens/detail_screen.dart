@@ -10,9 +10,9 @@ import '/main.dart';
 import '../services/api_service.dart';
 import 'package:http/http.dart' as http;
 import '../model/api_detail_programs.dart';
+
 /** 모모 방송 재생 정보 */
 class DetailScreen extends StatefulWidget {
-  // Chart Screen 에서 넘어온 값
   final String title;
   final String image;
   final String artist;
@@ -38,13 +38,12 @@ class _DetailScreenState extends State<DetailScreen> {
   List<DetailProgram> detailProgram = [];
   bool isLoading = false;
 
+  static const Color accentColor = Colors.deepOrange;
 
-  // 프로그램 API 요청
   Future<void> fetchData() async {
     try {
       http.Response programs_response = await http.get(Uri.parse('${ApiService().programsUrl}/json?id=${widget.songId}'));
 
-      // programs data 파싱
       String programs_json = programs_response.body;
       List<dynamic> programsList = jsonDecode(programs_json);
 
@@ -66,18 +65,30 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     int themeValue = context.watch<MyAppState>().selectedValue;
-    Color textColor = themeValue == 2 ? Colors.white : Colors.black;
+    final bool isDark = themeValue == 2;
+
+    final Color bgColor = isDark ? Colors.black : const Color(0xFFF5F5F5);
+    final Color cardColor = isDark ? const Color(0xFF2A2A2A) : Colors.white;
+    final Color textColor = isDark ? Colors.white : const Color(0xFF222222);
+    final Color subTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
+    final Color dividerColor = isDark ? const Color(0xFF424242) : const Color(0xFFEFEFEF);
+    final Color imageBorderColor = isDark
+        ? const Color(0xFFBDBDBD)
+        : Colors.black.withOpacity(0.08);
 
     return Scaffold(
-      backgroundColor: themeValue == 2 ? Colors.black : Color.fromRGBO(245, 245, 245, 1.0),
+      backgroundColor: bgColor,
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
-        backgroundColor: themeValue == 2 ? Colors.black : Color.fromRGBO(245, 245, 245, 1.0),
-        title: Text('모모 방송 재생 정보',
+        backgroundColor: bgColor,
+        title: Text(
+          '모모 방송 재생 정보',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 17,
             fontFamily: 'NotoSansKR-Medium',
-            color: themeValue == 2 ? Colors.white : Colors.black
+            fontWeight: FontWeight.w600,
+            color: textColor,
+            letterSpacing: -0.2,
           ),
         ),
         centerTitle: true,
@@ -85,174 +96,253 @@ class _DetailScreenState extends State<DetailScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back, color: themeValue == 2 ? Colors.white : Colors.black,),
+          icon: Icon(Icons.arrow_back, color: textColor, size: 22),
         ),
       ),
       body: isLoading
-        ? Center(child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2.0,))
-        : SafeArea(
-          bottom: Platform.isAndroid,
-          child: Container(
-            width: double.infinity,
-            margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 5),
-            decoration: BoxDecoration(
-              color: themeValue == 2 ? Color.fromRGBO(90, 90, 90, 1.0) : Colors.white,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 20, 0, 5),
-                  // 선택한 곡 정보
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          border:Border.all(
-                              width: 1,
-                              color: themeValue == 2 ? Color.fromRGBO(189,189,189,1.0) : Colors.black.withValues(alpha:0.3)
-                          ),
-                          borderRadius: BorderRadius.circular(5)
+          ? Center(
+        child: SizedBox(
+          width: 22,
+          height: 22,
+          child: CircularProgressIndicator(
+            color: accentColor,
+            strokeWidth: 2.0,
+          ),
+        ),
+      )
+          : SafeArea(
+        bottom: Platform.isAndroid,
+        child: Container(
+          width: double.infinity,
+          margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
+          decoration: BoxDecoration(
+            color: cardColor,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            children: [
+              /// 선택한 곡 정보
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 20, 0, 16),
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 1,
+                          color: imageBorderColor,
                         ),
-
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: ExtendedImage.network(
-                            widget.image,
-                            width: 100,
-                            loadStateChanged: (state) {
-                              if (state.extendedImageLoadState == LoadState.failed) {
-                                return SizedBox(child: Image.asset('assets/no_image.png'),);
-                              }
-                              return null;
-                            },
-                          ),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: ExtendedImage.network(
+                          widget.image,
+                          width: 90,
+                          height: 90,
+                          fit: BoxFit.cover,
+                          loadStateChanged: (state) {
+                            if (state.extendedImageLoadState == LoadState.failed) {
+                              return SizedBox(
+                                width: 90,
+                                height: 90,
+                                child: Image.asset('assets/no_image.png'),
+                              );
+                            }
+                            return null;
+                          },
                         ),
                       ),
-                      Container(
-                        width: 140,
-                        margin: EdgeInsets.only(left: 15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.title,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'NotoSansKR-Bold',
+                              fontWeight: FontWeight.w700,
+                              color: textColor,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            widget.artist,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: textColor.withOpacity(0.85),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            widget.album,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 12.5,
+                              color: subTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(height: 1, color: dividerColor),
+
+              Expanded(
+                child: ListView.builder(
+                  itemCount: detailProgram.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
+                        child: Row(
                           children: [
+                            Container(
+                              width: 3,
+                              height: 14,
+                              color: accentColor,
+                            ),
+                            const SizedBox(width: 8),
                             Text(
-                              widget.title,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                              '최신 방송내역',
                               style: TextStyle(
                                 fontSize: 15,
-                                fontFamily: 'NotoSansKR-Bold',
-                                color: textColor
+                                fontFamily: 'NotoSansKR-Medium',
+                                fontWeight: FontWeight.w700,
+                                color: textColor,
+                                letterSpacing: -0.2,
                               ),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              widget.artist,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(color: textColor),
-                            ),
-                            Text(
-                              widget.album,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(color: textColor),
                             ),
                           ],
                         ),
+                      );
+                    }
+
+                    final program = detailProgram[index - 1];
+                    final bool isTv = program.type == 'TV';
+
+                    return Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: dividerColor, width: 1),
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-                Divider(color: themeValue == 2 ? Colors.white : Colors.black, thickness: 1.0),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: detailProgram.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return Column(
-                          children: [
-                            SizedBox(height: 5.0),
-                            Container(
-                              alignment: Alignment.bottomLeft,
-                              child: Text(
-                                '최신 방송내역',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontFamily: 'NotoSansKR-Medium',
-                                  color: textColor
-                                ),
+                      child: Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 1,
+                                color: imageBorderColor,
+                              ),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: ExtendedImage.network(
+                                program.logo,
+                                width: 64,
+                                height: 64,
+                                fit: BoxFit.cover,
+                                loadStateChanged: (state) {
+                                  if (state.extendedImageLoadState == LoadState.failed) {
+                                    return SizedBox(
+                                      width: 64,
+                                      height: 64,
+                                      child: Image.asset('assets/no_image.png'),
+                                    );
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
-                            SizedBox(height: 10.0)
-                          ],
-                        );
-                      } else {
-                        return Container(
-                          margin: EdgeInsets.symmetric(vertical: 5),
-                          child: Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border:Border.all(
-                                    width: 1,
-                                    color: themeValue == 2 ? Color.fromRGBO(189,189,189,1.0) : Colors.black.withValues(alpha:0.3)
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: ExtendedImage.network(
-                                    detailProgram[index - 1].logo,
-                                    width: 80,
-                                    height: 80,
-                                    loadStateChanged: (state) {
-                                      if (state.extendedImageLoadState == LoadState.failed) {
-                                        return SizedBox(width: 80, height: 80, child: Image.asset('assets/no_image.png'),);
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.5,
-                                  margin: EdgeInsets.symmetric(horizontal: 20),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Image.asset(
-                                        detailProgram[index - 1].type == 'TV' ? 'assets/momo_assets/icon_tv.png' : 'assets/momo_assets/icon_radio.png',
-                                        width: 50,
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        detailProgram[index - 1].channelName,
-                                        style: TextStyle(fontSize: 12, fontFamily:'NotoSansKR-Medium', color: textColor, overflow: TextOverflow.ellipsis),
-                                      ),
-                                      Text(
-                                        detailProgram[index - 1].name,
-                                        style: TextStyle(fontSize: 12, fontFamily: 'NotoSansKR-Medium', color: textColor, overflow: TextOverflow.ellipsis),
-                                      ),
-                                      Text(
-                                        detailProgram[index - 1].date,
-                                        style: TextStyle(fontSize: 10, color: Colors.grey[500]),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
                           ),
-                        );
-                      }
-                    },
-                  ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                /// TV / RADIO 뱃지
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: isTv
+                                        ? accentColor.withOpacity(0.12)
+                                        : (isDark
+                                        ? Colors.white12
+                                        : const Color(0xFFF0F0F0)),
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                  child: Text(
+                                    isTv ? 'TV' : 'RADIO',
+                                    style: TextStyle(
+                                      fontSize: 9.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: isTv
+                                          ? accentColor
+                                          : (isDark
+                                          ? Colors.grey[300]
+                                          : Colors.grey[700]),
+                                      letterSpacing: 0.3,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  program.channelName,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontFamily: 'NotoSansKR-Medium',
+                                    fontWeight: FontWeight.w600,
+                                    color: textColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  program.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: 'NotoSansKR-Medium',
+                                    color: textColor.withOpacity(0.85),
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  program.date,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: subTextColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
         ),
       ),
     );
