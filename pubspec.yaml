@@ -2,8 +2,7 @@ name: Momo
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-#### 설정 또는 사용할 자원 등록하는 파일
-version: 2.0.0+56
+version: 2.0.0+57
 
 environment:
   sdk: ^3.6.0

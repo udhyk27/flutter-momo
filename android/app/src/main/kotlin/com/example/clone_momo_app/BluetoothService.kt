@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
 import android.Manifest
 
-
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
@@ -34,28 +33,76 @@ class BluetoothService : Service() {
     }
 
     private var bluetoothSocket: BluetoothSocket? = null
+    private var serverSocket: BluetoothServerSocket? = null
     private val handlerThread = HandlerThread("BluetoothServerThread")
+    private var isServiceRunning = false
 
     override fun onCreate() {
         super.onCreate()
         Log.d("PhoneDebug", "[Service] Bluetooth Service onCreate 호출됨")
-        createNotificationChannel()
-        startForegroundServiceNotification()
 
-        handlerThread.start() // Bluetooth 서버 스레드 시작
-        startBluetoothServer()
+        try {
+            createNotificationChannel()
+            startForegroundServiceNotification()
+
+            // 1) 블루투스 어댑터 체크
+            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            if (bluetoothAdapter == null) {
+                Log.d("PhoneDebug", "[Service] 블루투스 어댑터 없음, 서비스 종료")
+                stopSelf()
+                return
+            }
+            if (!bluetoothAdapter.isEnabled) {
+                Log.d("PhoneDebug", "[Service] 블루투스 비활성화 상태, 서비스 종료")
+                stopSelf()
+                return
+            }
+
+            // 2) Android 12+ 블루투스 권한 체크
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    Log.d("PhoneDebug", "[Service] BLUETOOTH_CONNECT 권한 없음, 서비스 종료")
+                    stopSelf()
+                    return
+                }
+            }
+
+            isServiceRunning = true
+            handlerThread.start()
+            startBluetoothServer()
+        } catch (e: Exception) {
+            Log.e("PhoneDebug", "[Service] onCreate 오류: ${e.message}", e)
+            stopSelf()
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        return null // 바인딩은 사용하지 않음
+        return null
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        bluetoothSocket?.close() // Bluetooth 연결 종료
-        handlerThread.quitSafely() // 스레드 안전하게 종료
+        isServiceRunning = false
+
+        try {
+            bluetoothSocket?.close()
+            serverSocket?.close()
+        } catch (e: IOException) {
+            Log.e("PhoneDebug", "[Service] 소켓 종료 오류: ${e.message}", e)
+        }
+
+        try {
+            handlerThread.quitSafely()
+        } catch (e: Exception) {
+            Log.e("PhoneDebug", "[Service] 스레드 종료 오류: ${e.message}", e)
+        }
+
         Log.d("PhoneDebug", "[Service] Bluetooth 연결 종료")
-        stopForeground(true) // 서비스 알림 종료
+        stopForeground(true)
     }
 
     private fun startForegroundServiceNotification() {
@@ -81,20 +128,47 @@ class BluetoothService : Service() {
     }
 
     private fun startBluetoothServer() {
+        if (!isServiceRunning) {
+            Log.d("PhoneDebug", "[Service] 서비스가 종료된 상태, 서버 시작 중단")
+            return
+        }
+
         Log.d("PhoneDebug", "[Service] 블루투스 서버 시작")
 
-        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        val serverSocket: BluetoothServerSocket =
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter() ?: run {
+            Log.e("PhoneDebug", "[Service] 블루투스 어댑터 없음")
+            stopSelf()
+            return
+        }
+
+        // listenUsingRfcommWithServiceRecord 자체에서 예외가 발생할 수 있으므로 안전하게 처리
+        serverSocket = try {
             bluetoothAdapter.listenUsingRfcommWithServiceRecord(
                 SERVICE_NAME,
                 UUID.fromString(SERVER_UUID_STR)
             )
+        } catch (e: SecurityException) {
+            Log.e("PhoneDebug", "[Service] 블루투스 권한 오류: ${e.message}", e)
+            stopSelf()
+            return
+        } catch (e: IOException) {
+            Log.e("PhoneDebug", "[Service] 블루투스 서버 소켓 생성 오류: ${e.message}", e)
+            stopSelf()
+            return
+        } catch (e: Exception) {
+            Log.e("PhoneDebug", "[Service] 블루투스 서버 알 수 없는 오류: ${e.message}", e)
+            stopSelf()
+            return
+        }
 
         Thread {
             try {
                 Log.d("PhoneDebug", "[Service] 블루투스 연결 대기 중...")
 
-                val socket: BluetoothSocket = serverSocket.accept()
+                val socket: BluetoothSocket = serverSocket?.accept() ?: run {
+                    Log.e("PhoneDebug", "[Service] 서버 소켓이 null")
+                    return@Thread
+                }
                 bluetoothSocket = socket
 
                 Log.d("PhoneDebug", "[Service] 워치와 블루투스 연결됨!")
@@ -103,16 +177,13 @@ class BluetoothService : Service() {
                 val buffer = ByteArray(1024)
                 val stringBuffer = StringBuilder()
 
-                while (true) {
+                while (isServiceRunning) {
                     val bytesRead = inputStream.read(buffer)
                     if (bytesRead > 0) {
-
-
                         val receivedData = String(buffer, 0, bytesRead)
                         Log.d("PhoneDebug", "[Service] 받은 데이터: $receivedData")
 
                         stringBuffer.append(receivedData)
-                        Log.d("PhoneDebug", "[Service] 여기까진 오류 XXXX ## 11")
 
                         if (receivedData.trim().endsWith("}")) {
                             // JSON 완성
@@ -121,34 +192,30 @@ class BluetoothService : Service() {
 
                             Log.d("PhoneDebug", "[Service] 완성된 JSON: $completeJson")
 
-                            sendDataToServer(completeJson) // 서버에 전송
+                            sendDataToServer(completeJson)
                         } else if (receivedData.trim().endsWith(".getHistoryList")) {
-                            Log.d("PhoneDebug", "[Service] 히스토리 요청일때만 이곳에 들어와야 함 !!!!!!")
+                            Log.d("PhoneDebug", "[Service] 히스토리 요청")
 
                             val completeUid = receivedData.trim().removeSuffix(".getHistoryList")
                             Log.d("PhoneDebug", "정제된 UID: $completeUid")
 
                             stringBuffer.clear()
                             historyListServer(completeUid)
-
                         } else if (receivedData.trim().endsWith(".delHistoryList")) {
-                            Log.d("PhoneDebug", "[Service] 히스토리 삭제일때만 이곳에 들어와야 함 @@@")
+                            Log.d("PhoneDebug", "[Service] 히스토리 삭제 요청")
 
                             val completeUid = receivedData.trim().removeSuffix(".delHistoryList")
                             Log.d("PhoneDebug", "DELETE 정제된 UID: $completeUid")
 
                             stringBuffer.clear()
                             delHistoryList(completeUid)
-
                         }
-
                     }
                 }
-
             } catch (e: Exception) {
                 Log.e("PhoneDebug", "[Service] 블루투스 오류: ${e.message}", e)
 
-                try { // 블루투스 서버 다시 시작
+                try {
                     serverSocket?.close()
                     bluetoothSocket?.close()
                     bluetoothSocket = null
@@ -156,10 +223,16 @@ class BluetoothService : Service() {
                     Log.e("PhoneDebug", "[Service] 소켓 재시작 오류: ${closeEx.message}", closeEx)
                 }
 
-                // 잠깐 쉬고 재시작
-                Thread.sleep(1000)
-                Log.d("PhoneDebug", "[Service] 블루투스 서버 재시작")
-                startBluetoothServer()
+                // 서비스가 살아있을 때만 재시작
+                if (isServiceRunning) {
+                    try {
+                        Thread.sleep(1000)
+                        Log.d("PhoneDebug", "[Service] 블루투스 서버 재시작")
+                        startBluetoothServer()
+                    } catch (ie: InterruptedException) {
+                        Log.e("PhoneDebug", "[Service] 재시작 대기 중 중단됨", ie)
+                    }
+                }
             }
         }.start()
     }
@@ -180,7 +253,6 @@ class BluetoothService : Service() {
                     val responseBody = response.body?.string()
                     Log.d("PhoneDebug", "(Service History) 서버 응답 성공: $responseBody")
 
-                    // 서버 응답을 워치로 전송
                     sendDataToWatch(responseBody ?: "No Data")
                 } else {
                     Log.e("PhoneDebug", "(Service History) 서버 응답 실패: ${response.code}")
@@ -193,7 +265,7 @@ class BluetoothService : Service() {
         }.start()
     }
 
-    // hisotryList DELETE
+    // historyList DELETE
     private fun delHistoryList(uid: String) {
         Thread {
             val client = OkHttpClient()
@@ -207,13 +279,12 @@ class BluetoothService : Service() {
             try {
                 val response = client.newCall(request).execute()
 
-                // HTTP 200이면 성공
                 val message = if (response.isSuccessful) "del_success" else "del_fail"
                 Log.d("PhoneDebug", "히스토리 삭제 응답 코드: ${response.code}")
                 response.close()
 
                 sendDataToWatch(message)
-            } catch(e: IOException) {
+            } catch (e: IOException) {
                 Log.e("PhoneDebug", "(폰 코틀린) 히스토리 삭제 서버 통신 오류", e)
                 sendDataToWatch("del_fail")
             }
@@ -228,13 +299,13 @@ class BluetoothService : Service() {
         val requestBody = jsonString.toRequestBody(mediaType)
 
         val request = Request.Builder()
-            .url("https://www.mo-mo.co.kr/api/getdnasong") // 실제 API URL 사용
+            .url("https://www.mo-mo.co.kr/api/getdnasong")
             .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e("PhoneDebug",  "[Service] 서버 통신 실패: ${e.message}")
+                Log.e("PhoneDebug", "[Service] 서버 통신 실패: ${e.message}")
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -245,7 +316,6 @@ class BluetoothService : Service() {
                         val responseString = response.body?.string()
                         Log.d("PhoneDebug", "[Service] 서버 응답: $responseString")
 
-                        // 서버 응답 처리 후 워치로 데이터 전송
                         sendDataToWatch(responseString ?: "Error")
                     }
                 }
@@ -255,7 +325,7 @@ class BluetoothService : Service() {
 
     // 서버 응답을 워치로 전송
     private fun sendDataToWatch(responseString: String) {
-        Log.d("PhoneDebug", "[Service] 워치로 데이터 전송 하는 sendDataToWatch 호출됨 !!")
+        Log.d("PhoneDebug", "[Service] 워치로 데이터 전송 하는 sendDataToWatch 호출됨")
         Thread {
             try {
                 bluetoothSocket?.let { socket ->
