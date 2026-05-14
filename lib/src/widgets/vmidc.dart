@@ -11,11 +11,11 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
-import 'package:momo/src/screens/song_info_screen.dart';
 
 import '../../main.dart';
 import '../controller/home_controller.dart';
 import '../model/api_search.dart';
+import '../screens/song_info_screen.dart';
 import '../services/api_service.dart';
 import 'dnabuf.dart';
 import 'wavbuf.dart';

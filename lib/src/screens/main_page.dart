@@ -1,4 +1,4 @@
-import 'package:momo/src/screens/setting/terms_screen.dart';
+import 'package:Momo/src/screens/setting/terms_screen.dart';
 
 import '/src/widgets/app_bar.dart';
 import '/src/widgets/bottom_nav_bar.dart';
